@@ -1,53 +1,74 @@
-import { FC } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { CategoryLink } from './CategoryLink';
-import { cn } from '@/lib/utils';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import AddToCartButton from './AddToCartButton';
 
 interface ProductCardProps {
+  brand: string;
+  name: string;
   imageSrc: string;
-  category: string;
-  linkHref: string;
-  contentPosition?: string;
+  rating: number;
+  productName: string;
+  price: number;
 }
 
-const ProductCard: FC<ProductCardProps> = ({
+const ProductCard: React.FC<ProductCardProps> = ({
+  brand,
+  name,
   imageSrc,
-  category,
-  linkHref,
-  contentPosition = 'bottom',
+  rating,
+  productName,
+  price,
 }) => {
-  const contentClass =
-    contentPosition === 'top'
-      ? 'top-0 bg-gradient-to-b from-black to-transparent'
-      : 'bottom-0 bg-gradient-to-t from-black to-transparent';
+  const renderStars = (rating: number) => {
+    return '⭐'.repeat(Math.round(rating));
+  };
 
   return (
-    <Card className="w-56 h-80 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border-0 rounded-2xl">
-      <div className="relative h-full">
+    <Card className="rounded-2xl border-x border-gray-400 mx-1">
+      <CardHeader>
+        <p className="text-center text-xs">{brand}</p>
+        <h5 className="text-center">{name}</h5>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center justify-center">
         <Image
           src={imageSrc}
-          layout="fill"
-          objectFit="cover"
-          alt={category}
-          className="z-0"
-          sizes="(min-width: 1060px) 224px, calc(23.38vw - 19px)"
+          className="h-32"
+          width={150}
+          height={100}
+          alt={productName}
         />
-        <div className={cn('absolute left-0 right-0 p-4 z-10', contentClass)}>
-          <CardContent className="p-0 text-white">
-            <p className="text-xs uppercase my-2">CATEGORIES</p>
-            <h3 className="text-lg font-semibold my-2">{category}</h3>
-          </CardContent>
-          <CardFooter className="p-0 pt-2">
-            <CategoryLink
-              href={linkHref}
-              className="text-xs bg-opacity-80 hover:bg-opacity-100"
-            />
-          </CardFooter>
-        </div>
-      </div>
+      </CardContent>
+      <CardFooter className="flex flex-col p-1 pb-4 gap-1">
+        <p>{renderStars(rating)}</p>
+        <p className="text-gray-600 text-center w-full">{productName}</p>
+        <p className="text-gray-400 text-center w-full">
+          Rs. {price.toFixed(2)}
+        </p>
+        <AddToCartButton />
+      </CardFooter>
     </Card>
   );
 };
 
-export default ProductCard;
+// Component to render multiple product cards
+interface ProductGridProps {
+  products: ProductCardProps[];
+}
+
+const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {products.map((product, index) => (
+        <ProductCard key={index} {...product} />
+      ))}
+    </div>
+  );
+};
+
+export { ProductCard, ProductGrid };

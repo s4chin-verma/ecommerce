@@ -3,8 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { NextPage } from 'next';
 import { Icon } from '@iconify/react';
-import { CategoryLink } from './ui/CategoryLink';
-
+import { CategoryLink } from './ui';
 import {
   Carousel,
   CarouselContent,

@@ -1,4 +1,4 @@
-import ProductCard from './ui/ProductCard';
+import { HeroProductCard } from './ui';
 
 const TopCategories: React.FC = () => {
   const products = [
@@ -31,7 +31,7 @@ const TopCategories: React.FC = () => {
   return (
     <section className="max-w-5xl mx-auto flex gap-8 flex-row items-center justify-center mt-10">
       {products.map((product, index) => (
-        <ProductCard
+        <HeroProductCard
           key={index}
           imageSrc={product.imageSrc}
           category={product.category}
