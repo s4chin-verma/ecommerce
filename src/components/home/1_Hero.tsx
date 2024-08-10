@@ -31,8 +31,7 @@ const Hero: NextPage = () => {
                 <Image
                   src={src}
                   alt={`banner ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                   quality={100}
                   priority
                 />

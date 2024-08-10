@@ -27,8 +27,7 @@ const HeroProductCard: FC<HeroProductCardProps> = ({
       <div className="relative h-full">
         <Image
           src={imageSrc}
-          layout="fill"
-          objectFit="cover"
+          fill
           alt={category}
           className="z-0"
           sizes="(min-width: 1060px) 224px, calc(23.38vw - 19px)"

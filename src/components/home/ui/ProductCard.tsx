@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <Card className="rounded-2xl border-x border-gray-400 mx-1">
+    <Card className="rounded-2xl border-x border-gray-400 mx-4">
       <CardHeader>
         <p className="text-center text-xs">{brand}</p>
         <h5 className="text-center">{name}</h5>

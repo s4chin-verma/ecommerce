@@ -25,8 +25,7 @@ const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
         fill
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
-      <div className="flex-grow"></div>{' '}
-      {/* This will push the footer to the bottom */}
+      <div className="flex-grow"></div>
       <CardFooter className="relative z-10 p-4 flex-col">
         <CardDescription className="uppercase text-white">
           Categories
@@ -44,7 +43,7 @@ const Categories_2 = () => {
   console.log('Categories');
   return (
     <section className="max-w-5xl mx-auto py-10">
-      <CommonHeading>Gems from Earth's Treasure Chest</CommonHeading>
+      <CommonHeading>Exquisite Gems Collection</CommonHeading>
       <div className="px-6 mt-10 flex flex-row items-center justify-between w-full">
         {Categories.map((category, index) => (
           <Template key={index} imageUrl={`/cb4.png`}>
