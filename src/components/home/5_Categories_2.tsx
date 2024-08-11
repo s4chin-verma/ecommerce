@@ -18,16 +18,17 @@ interface TemplateProps {
 
 const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
   return (
-    <Card className="relative overflow-hidden h-52 w-56 rounded-2xl flex flex-col">
+    <Card className="relative overflow-hidden h-56 w-60 rounded-3xl flex flex-col mx-3">
       <Image
         src={imageUrl}
         alt=""
         fill
+        loading="lazy"
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
       <div className="flex-grow"></div>
       <CardFooter className="relative z-10 p-4 flex-col">
-        <CardDescription className="uppercase text-white">
+        <CardDescription className="uppercase text-white text-xs">
           Categories
         </CardDescription>
         <CardTitle className="capitalize text-white text-xl">
@@ -40,11 +41,10 @@ const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
 };
 
 const Categories_2 = () => {
-  console.log('Categories');
   return (
     <section className="max-w-5xl mx-auto py-10">
       <CommonHeading>Exquisite Gems Collection</CommonHeading>
-      <div className="px-6 mt-10 flex flex-row items-center justify-between w-full">
+      <div className="mt-10 flex flex-row items-center justify-between w-full">
         {Categories.map((category, index) => (
           <Template key={index} imageUrl={`/cb4.png`}>
             {category}

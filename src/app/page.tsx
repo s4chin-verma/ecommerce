@@ -8,6 +8,9 @@ import {
   Categories_3,
   Categories_4,
   Categories_5,
+  Categories_6,
+  Categories_7,
+  Categories_8,
 } from '@/components/home';
 import prisma from '@/lib/db';
 
@@ -23,6 +26,9 @@ const Home: NextPage = async () => {
         <Categories_3 />
         <Categories_4 />
         <Categories_5 />
+        <Categories_6 />
+        <Categories_7 />
+        <Categories_8 />
       </main>
     </>
   );

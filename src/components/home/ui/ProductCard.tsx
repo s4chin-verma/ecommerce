@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <Card className="rounded-2xl border-x border-gray-400 mx-4">
+    <Card className="rounded-2xl border-x border-gray-400 mx-2">
       <CardHeader>
         <p className="text-center text-xs">{brand}</p>
         <h5 className="text-center">{name}</h5>
@@ -56,7 +56,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-// Component to render multiple product cards
 interface ProductGridProps {
   products: ProductCardProps[];
 }
@@ -70,5 +69,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     </div>
   );
 };
+
+ProductCard.displayName = 'ProductCard';
+ProductGrid.displayName = 'ProductGrid';
 
 export { ProductCard, ProductGrid };

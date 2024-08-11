@@ -1,8 +1,7 @@
 import AddToCartButton from './AddToCartButton';
 import CategoryLink from './CategoryLink';
-import CommonHeading from './CommonHeading';
-import ProductCarouselWrapper from './ProductCarouselWrapper';
-import HeroProductCard from './HeroProductCard';
+import { CommonHeading } from './CommonHeading';
+import { ProductCarouselWrapper } from './ProductCarouselWrapper';
 import { ProductGrid, ProductCard } from './ProductCard';
 
 // Export all UI components for reusability
@@ -11,7 +10,6 @@ export {
   CategoryLink,
   CommonHeading,
   ProductCarouselWrapper,
-  HeroProductCard,
   ProductGrid,
   ProductCard,
 };

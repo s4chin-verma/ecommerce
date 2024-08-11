@@ -5,11 +5,13 @@ import { cn } from '@/lib/utils';
 interface CategoryLinkProps {
   href: string;
   className?: string;
+  children?: string;
 }
 
 const CategoryLink: React.FC<CategoryLinkProps> = ({
   href,
   className = '',
+  children = 'Go To Categories',
 }) => {
   return (
     <Link href={href}>
@@ -19,7 +21,7 @@ const CategoryLink: React.FC<CategoryLinkProps> = ({
           className
         )}
       >
-        <span>Go To Categories</span>
+        <span>{children}</span>
         <LogOut className="w-5 h-5 transition-transform duration-300 group-hover:rotate-45" />
       </button>
     </Link>

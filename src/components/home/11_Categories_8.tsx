@@ -1,0 +1,24 @@
+import { ProductCarouselWrapper, CommonHeading, ProductCard } from './ui';
+import { dummyProducts } from '@/data/data';
+
+const Categories_8 = () => {
+  return (
+    <section className="relative">
+      <div className="max-w-5xl mx-auto py-10">
+        <CommonHeading className="text-orange-100">
+          Trending jewellery For Everyone
+        </CommonHeading>
+        <div className="px-3 mt-10">
+          <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
+            {dummyProducts.map((product, index) => (
+              <ProductCard key={index} {...product} />
+            ))}
+          </ProductCarouselWrapper>
+        </div>
+      </div>
+      <div className="absolute top-0 right-0 left-0 bg-gray-800 h-72 -z-10"></div>
+    </section>
+  );
+};
+
+export default Categories_8;
