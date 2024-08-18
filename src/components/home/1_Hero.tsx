@@ -26,7 +26,7 @@ const Hero: NextPage = () => {
             {images.map((src, index) => (
               <CarouselItem
                 key={index}
-                className="relative min-h-[700px] w-full"
+                className="relative min-h-[800px] w-full"
               >
                 <Image
                   src={src}
@@ -40,7 +40,7 @@ const Hero: NextPage = () => {
           </CarouselContent>
         </Carousel>
         <div className="">
-          <div className="max-w-5xl mx-auto px-4">
+          <div className="max-w-screen-lg mx-auto px-4">
             <div className="max-w-[60%]">
               <h1 className="text-white font-bold text-6xl mb-4">
                 Sparking Brilliance Gemstone

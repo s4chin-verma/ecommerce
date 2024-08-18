@@ -2,8 +2,6 @@ import { CommonHeading, CategoryLink } from './ui';
 import Image from 'next/image';
 import {
   Card,
-  CardHeader,
-  CardContent,
   CardFooter,
   CardTitle,
   CardDescription,
@@ -18,7 +16,7 @@ interface TemplateProps {
 
 const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
   return (
-    <Card className="relative overflow-hidden h-56 w-60 rounded-3xl flex flex-col mx-3">
+    <Card className="relative overflow-hidden h-64 w-64 rounded-3xl flex flex-col mx-3">
       <Image
         src={imageUrl}
         alt=""
@@ -42,14 +40,16 @@ const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
 
 const Categories_2 = () => {
   return (
-    <section className="max-w-5xl mx-auto py-10">
-      <CommonHeading>Exquisite Gems Collection</CommonHeading>
-      <div className="mt-10 flex flex-row items-center justify-between w-full">
-        {Categories.map((category, index) => (
-          <Template key={index} imageUrl={`/cb4.png`}>
-            {category}
-          </Template>
-        ))}
+    <section>
+      <div className="max-w-6xl mx-auto py-10">
+        <CommonHeading>Exquisite Gems Collection</CommonHeading>
+        <div className="mt-10 flex flex-row items-center justify-between w-full">
+          {Categories.map((category, index) => (
+            <Template key={index} imageUrl={`/cb4.png`}>
+              {category}
+            </Template>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -23,7 +23,7 @@ const Template: FC<TemplateProps> = ({
       : 'bottom-0 bg-gradient-to-t from-black to-transparent';
 
   return (
-    <Card className="w-56 h-80 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border-0 rounded-2xl">
+    <Card className="w-64 h-96 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border-0 rounded-2xl ">
       <div className="relative h-full">
         <Image
           src={imageSrc}
@@ -35,12 +35,12 @@ const Template: FC<TemplateProps> = ({
         <div className={cn('absolute left-0 right-0 p-4 z-10', contentClass)}>
           <CardContent className="p-0 text-white">
             <p className="text-xs uppercase my-2">CATEGORIES</p>
-            <h3 className="text-lg font-semibold my-2">{category}</h3>
+            <h3 className="text-2xl font-semibold my-2">{category}</h3>
           </CardContent>
           <CardFooter className="p-0 pt-2">
             <CategoryLink
               href={linkHref}
-              className="text-xs bg-opacity-80 hover:bg-opacity-100"
+              className="bg-opacity-80 hover:bg-opacity-100"
             />
           </CardFooter>
         </div>
@@ -79,16 +79,18 @@ const TopCategories: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-5xl mx-auto flex gap-8 flex-row items-center justify-center mt-10">
-      {products.map((product, index) => (
-        <Template
-          key={index}
-          imageSrc={product.imageSrc}
-          category={product.category}
-          contentPosition={product.contentPosition}
-          linkHref={product.linkHref}
-        />
-      ))}
+    <section>
+      <div className="max-w-6xl mx-auto flex gap-8 flex-row items-center justify-center mt-10">
+        {products.map((product, index) => (
+          <Template
+            key={index}
+            imageSrc={product.imageSrc}
+            category={product.category}
+            contentPosition={product.contentPosition}
+            linkHref={product.linkHref}
+          />
+        ))}
+      </div>
     </section>
   );
 };

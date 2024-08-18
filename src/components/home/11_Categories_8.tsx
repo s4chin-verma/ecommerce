@@ -4,7 +4,7 @@ import { dummyProducts } from '@/data/data';
 const Categories_8 = () => {
   return (
     <section className="relative">
-      <div className="max-w-5xl mx-auto py-10">
+      <div className="max-w-6xl mx-auto py-10">
         <CommonHeading className="text-orange-100">
           Trending jewellery For Everyone
         </CommonHeading>

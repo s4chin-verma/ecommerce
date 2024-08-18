@@ -46,6 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </CardContent>
       <CardFooter className="flex flex-col p-1 pb-4 gap-1">
         <p>{renderStars(rating)}</p>
+        <h1 className="text-4xl">dropdown</h1>
         <p className="text-gray-600 text-center w-full">{productName}</p>
         <p className="text-gray-400 text-center w-full">
           Rs. {price.toFixed(2)}

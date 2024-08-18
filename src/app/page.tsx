@@ -13,6 +13,7 @@ import {
   Categories_8,
 } from '@/components/home';
 import prisma from '@/lib/db';
+import { Footer } from '@/components/Layouts/Footer';
 
 const Home: NextPage = async () => {
   return (

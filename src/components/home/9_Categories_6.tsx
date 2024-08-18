@@ -5,14 +5,14 @@ import { Input } from '../ui/input';
 const Categories_6 = () => {
   return (
     <section className="relative">
-      <div className="max-w-5xl mx-auto px-3">
-        <div className="bg-[url('/cms.webp')] bg-cover bg-center px-4 py-10  rounded-xl text-white">
+      <div className="max-w-6xl mx-auto px-3">
+        <div className="bg-[url('/cms.webp')] bg-cover bg-center px-4 py-10 rounded-xl text-white h-80">
           <div className="w-2/5">
             <p className="uppercase text-sm"> Categories</p>
             <h2 className="text-4xl font-bold my-2">
               Gemstones Jewels That Enchant
             </h2>
-            <p className="text-xs">
+            <p className="text-base">
               the essence of natural beauty. Whether you're seeking a pop of
               color or a harmonious blend, our Gemstone.
             </p>
@@ -29,7 +29,7 @@ const Categories_6 = () => {
           </div>
         </div>
       </div>
-      <div className="absolute w-full h-20 bg-gray-800 bottom-0 left-0 right-0 -z-10"></div>
+      <div className="absolute w-full h-28 bg-gray-800 bottom-0 left-0 right-0 -z-10"></div>
     </section>
   );
 };
