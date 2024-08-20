@@ -40,7 +40,7 @@ const Hero: NextPage = () => {
           </CarouselContent>
         </Carousel>
         <div className="">
-          <div className="max-w-screen-lg mx-auto px-4">
+          <div className="max-w-6xl mx-auto px-4">
             <div className="max-w-[60%]">
               <h1 className="text-white font-bold text-6xl mb-4">
                 Sparking Brilliance Gemstone

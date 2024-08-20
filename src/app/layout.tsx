@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
 import { Footer } from '@/components/Layouts/Footer';
+import { NavBar } from '@/components/Layouts/NavBar';
 
 const poppins = Poppins({
   weight: ['100', '400', '700'],
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -15,12 +17,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={poppins.className} suppressHydrationWarning={true}>
+        <NavBar />
         {children}
         <Footer />
       </body>
