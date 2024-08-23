@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
     { href: '/about-us', label: 'About us' },
     { href: '/contact-us', label: 'Contact us' },
     { href: '/faqs', label: "Faq's" },
-    { href: '#', label: 'Collection Page' },
+    { href: '/collections', label: 'Collection Page' },
     { href: '#', label: 'Blog Page' },
     { href: '#', label: 'Article Page' },
   ];
