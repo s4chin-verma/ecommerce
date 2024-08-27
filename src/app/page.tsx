@@ -19,7 +19,7 @@ const Home: NextPage = async () => {
   return (
     <>
       <main>
-        <Hero />
+        {/* <Hero />
         <TopCategories />
         <BrandCarousal />
         <Categories_1 />
@@ -29,7 +29,7 @@ const Home: NextPage = async () => {
         <Categories_5 />
         <Categories_6 />
         <Categories_7 />
-        <Categories_8 />
+        <Categories_8 /> */}
       </main>
     </>
   );

@@ -7,7 +7,7 @@ interface NavItemProps {
 }
 
 const NavItem: React.FC<NavItemProps> = ({ href, label }) => (
-  <li className="relative">
+  <li className="relative mt-1">
     <Link
       href={href}
       className="group hover:text-orange-700 hover:border-b-2 hover:border-orange-700"
@@ -29,7 +29,7 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ title, items }) => (
   <div className="flex-1">
-    <h6 className="uppercase font-semibold mb-4">{title}</h6>
+    <h6 className="uppercase font-semibold mb-2 md:mb-4">{title}</h6>
     <ul className="space-y-2 text-sm">
       {items.map((item, index) => (
         <NavItem key={index} href={item.href} label={item.label} />
@@ -40,38 +40,37 @@ const Section: React.FC<SectionProps> = ({ title, items }) => (
 
 const Footer: React.FC = () => {
   const navigationItems: IItems[] = [
-    { href: '#', label: 'Search' },
+    { href: '/', label: 'Home' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
-    { href: '#', label: 'Delivery Page' },
-    { href: '/term-conditions', label: 'Terms & Conditions' },
+    { href: '/delivery', label: 'Delivery Page' },
   ];
 
   const aboutUsItems: IItems[] = [
     { href: '/about-us', label: 'About us' },
     { href: '/contact-us', label: 'Contact us' },
     { href: '/faqs', label: "Faq's" },
-    { href: '/collections', label: 'Collection Page' },
-    { href: '#', label: 'Blog Page' },
-    { href: '#', label: 'Article Page' },
+    { href: '/blog', label: 'Blog Page' },
+    { href: '/article', label: 'Article Page' },
+    { href: '/term-conditions', label: 'Terms & Conditions' },
   ];
 
   const jewelryItems: IItems[] = [
-    { href: '#', label: 'Earrings' },
-    { href: '#', label: 'Necklace' },
-    { href: '#', label: 'Rings' },
-    { href: '#', label: 'Bracelet' },
+    { href: '/collections/earrings', label: 'Earrings' },
+    { href: '/collections/necklace', label: 'Necklace' },
+    { href: '/collections/ring', label: 'Rings' },
+    { href: '/collections/bracelet', label: 'Bracelet' },
+    { href: '/collections', label: 'Collection Page' },
   ];
 
   const otherAboutUsItems: IItems[] = [
-    { href: '#', label: 'Home' },
-    { href: '#', label: 'Catalog' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/collections/all', label: 'Catalog' },
+    { href: '/contact-us', label: 'Contact' },
   ];
 
   return (
-    <footer className="bg-gray-100 pt-20 pb-8">
-      <div className="max-w-6xl px-3 mx-auto flex flex-wrap gap-8">
-        <div className="max-w-64">
+    <footer className="bg-gray-100 pt-5 md:pt-20 pb-10">
+      <div className="max-w-6xl px-3 mx-auto flex flex-col md:flex-row gap-5 md:gap-8">
+        <div className="max-w-64 flex-1">
           <h6 className="text-4xl font-semibold mb-4">Gems</h6>
           <p className="text-sm mb-4">
             The variety and range of gemstones available allowed me to find the
@@ -94,7 +93,7 @@ const Footer: React.FC = () => {
         </div>
 
         <Section title="Navigation:" items={navigationItems} />
-        <Section title="About us:" items={aboutUsItems} />
+        <Section title="Help:" items={aboutUsItems} />
         <Section title="Navigation:" items={jewelryItems} />
         <Section title="About us:" items={otherAboutUsItems} />
       </div>

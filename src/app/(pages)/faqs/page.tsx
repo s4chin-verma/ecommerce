@@ -7,12 +7,12 @@ const Page: NextPage = () => {
   const p = `text-base text-justify my-2`;
 
   return (
-    <main className="pt-36 pb-20">
+    <main className="page-style">
       <section className="bg-theme py-20">
         <div className="max-w-6xl mx-auto px-3">
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <BackButton />
-            <h1 className="text-4xl font-bold my-6">Faq's</h1>
+            <h1 className="heading-primary">Faq's</h1>
             <p className="text-base">
               People will always seek help and advice. They are unwilling to
               pick up the phone, walk into a store, or wait hours (even minutes)
