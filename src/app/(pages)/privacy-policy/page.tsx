@@ -7,7 +7,7 @@ const Page: NextPage = () => {
   const p = `text-base text-justify my-2`;
 
   return (
-    <main className="py-20">
+    <main className="py-36 pb-20">
       <section className="bg-theme py-20">
         <div className="max-w-6xl mx-auto px-3">
           <div className="w-1/2">

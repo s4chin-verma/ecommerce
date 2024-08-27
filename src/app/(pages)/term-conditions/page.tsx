@@ -5,7 +5,7 @@ const Page: NextPage = () => {
   const h2 = `text-black text-2xl font-bold my-4`;
   const p = `text-base text-justify my-2`;
   return (
-    <main className="py-20">
+    <main className="pt-36 pb-20">
       <section className="bg-theme py-10">
         <div className="max-w-6xl mx-auto px-3">
           <div className="w-1/2">

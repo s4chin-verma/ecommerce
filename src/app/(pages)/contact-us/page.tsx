@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 
 const Page: NextPage = () => {
   return (
-    <main className="py-20">
+    <main className="pt-36 pb-20">
       <section className="bg-theme py-20">
         <div className="max-w-6xl mx-auto px-3">
           <div className="w-2/5">

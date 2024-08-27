@@ -27,7 +27,7 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
   ];
 
   return (
-    <main className="mt-36">
+    <main className="pt-36">
       <h1>{formattedCollectionName} Collection</h1>
       <ul>
         {products.map(product => (

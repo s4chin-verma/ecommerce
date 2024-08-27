@@ -28,19 +28,19 @@ const collections = [
   },
 ];
 
-const CollectionsPage: NextPage = () => {
+const Page: NextPage = () => {
   return (
-    <main>
-      <section className="mt-36 mb-20">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8">Collections</h1>
-          <div className="container mx-auto px-3">
-            <CollectionGrid collections={collections} />
-          </div>
+    <main className="pt-36 pb-20">
+      <section className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-8 mt-2">
+          Collections
+        </h1>
+        <div className="container mx-auto px-3">
+          <CollectionGrid collections={collections} />
         </div>
       </section>
     </main>
   );
 };
 
-export default CollectionsPage;
+export default Page;

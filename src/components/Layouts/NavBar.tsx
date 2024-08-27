@@ -3,6 +3,7 @@ import { Dropdown1, Dropdown2 } from '@/components/Layouts/ui/DropDown';
 import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
 import { IIcon } from '@/components/IIcon';
+import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
 
 const pagesLink = [
   { title: 'About us', href: '/about-us' },
@@ -37,7 +38,8 @@ const Collection = [
 
 const NavBar = () => {
   return (
-    <header className="mt-4 absolute top-0 left-0 right-0 z-50">
+    <header className="absolute top-0 left-0 right-0 z-50">
+      <HeaderStrip />
       <nav className="max-w-6xl mx-auto px-3 flex items-center">
         <Link href="/" className="text-4xl font-bold mr-12 cursor-pointer">
           Gems

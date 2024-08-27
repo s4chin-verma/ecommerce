@@ -115,7 +115,7 @@ const ContactForm: React.FC = () => {
                 <Textarea
                   placeholder="Write your message here..."
                   {...field}
-                  className="h-40"
+                  className="h-36"
                 />
               </FormControl>
               <FormMessage />
