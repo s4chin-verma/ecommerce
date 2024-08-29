@@ -1,11 +1,7 @@
-import { cn } from '@/lib/utils';
 import { NextPage } from 'next';
 import { BackButton } from '@/components/BackButton';
 
 const Page: NextPage = () => {
-  const h2 = `text-black text-2xl font-bold my-4`;
-  const p = `text-base text-justify my-2`;
-
   return (
     <main className="page-style">
       <section className="bg-theme py-20">

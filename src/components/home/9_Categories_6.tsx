@@ -7,12 +7,12 @@ const Categories_6 = () => {
     <section className="relative">
       <div className="max-w-6xl mx-auto px-3">
         <div className="bg-[url('/cms.webp')] bg-cover bg-center px-4 py-10 rounded-xl text-white h-80">
-          <div className="w-2/5">
+          <div className="md:w-2/5">
             <p className="uppercase text-sm"> Categories</p>
-            <h2 className="text-4xl font-bold my-2">
+            <h2 className="text-2xl md:text-4xl font-bold my-2">
               Gemstones Jewels That Enchant
             </h2>
-            <p className="text-base">
+            <p className="text-sm md:text-base">
               the essence of natural beauty. Whether you're seeking a pop of
               color or a harmonious blend, our Gemstone.
             </p>

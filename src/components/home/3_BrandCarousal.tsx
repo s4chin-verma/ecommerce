@@ -12,7 +12,7 @@ import Autoplay from 'embla-carousel-autoplay';
 const BrandCarousal: React.FC = () => {
   return (
     <section id="#top_categories">
-      <div className="max-w-6xl mx-auto py-20 px-14">
+      <div className="max-w-6xl mx-auto py-6 sm:py-15 md:py-20 px-14">
         <Carousel
           opts={{
             align: 'start',

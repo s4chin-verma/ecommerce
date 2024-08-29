@@ -14,9 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Textarea } from './ui/textarea';
-import { Checkbox } from './ui/checkbox';
-import { CategoryLink } from './home/ui';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 
 const contactSchema = z.object({
@@ -49,7 +48,7 @@ const ContactForm: React.FC = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 border-2 border-black rounded-2xl p-6 bg-white text-gray-950"
       >
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <FormField
             control={form.control}
             name="firstName"
@@ -77,7 +76,7 @@ const ContactForm: React.FC = () => {
             )}
           />
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <FormField
             control={form.control}
             name="email"
@@ -122,10 +121,10 @@ const ContactForm: React.FC = () => {
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div className="flex items-center gap-4 md:gap-2">
             <Checkbox />
-            <span className="text-sm">
+            <span className="text-xs md:text-sm">
               I have read and agree to the{' '}
               <Link
                 href="/term-conditions"
@@ -135,9 +134,9 @@ const ContactForm: React.FC = () => {
               </Link>
             </span>
           </div>
-          <CategoryLink href="#" className="text-sm">
+          <Button className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-black-600 rounded-3xl transition-all duration-300 hover:bg-orange-100 hover:shadow-lg hover:-translate-y-1 group">
             Send Message
-          </CategoryLink>
+          </Button>
         </div>
       </form>
     </Form>

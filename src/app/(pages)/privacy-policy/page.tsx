@@ -1,6 +1,8 @@
 import { NextPage } from 'next';
 import { BackButton } from '@/components/BackButton';
 
+//Responsive Done
+
 const Page: NextPage = () => {
   return (
     <main className="page-style">
@@ -9,7 +11,7 @@ const Page: NextPage = () => {
           <div className="md:w-1/2">
             <BackButton />
             <h1 className="heading-primary">Privacy Policy</h1>
-            <p className="text-base">
+            <p className="paragraph-primary">
               We value the diverse perspectives and experiences of our users,
               and we encourage collaboration and community engagement. Our
               platform provides opportunities for users to contribute their

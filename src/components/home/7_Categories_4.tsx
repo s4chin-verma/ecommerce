@@ -2,9 +2,9 @@ import { CategoryLink } from './ui';
 
 const Categories_4: React.FC = () => {
   return (
-    <section className="relative w-full h-[500px] bg-[url('/banner2.webp')] bg-cover bg-center bg-gray-700 bg-blend-overlay pt-56 -mt-40 -z-10">
+    <section className="relative w-full h-[400px] md:h-[500px] bg-[url('/banner2.webp')] bg-cover bg-center bg-gray-700 bg-blend-overlay pt-40 md:pt-56 -mt-40 -z-10">
       <div className="max-w-6xl mx-auto px-3">
-        <div className="relative z-10 h-full text-white text-center w-5/12">
+        <div className="relative z-10 h-full text-white text-center md:w-5/12">
           <h1 className="text-xl md:text-3xl font-bold mb-4 text-start">
             We Make Jewelry to...
           </h1>

@@ -15,8 +15,13 @@ const CommonHeading: React.FC<CommonHeadingProps> = ({
 }) => {
   return (
     <div className="mb-6 px-3">
-      <div className="flex justify-between items-center">
-        <h1 className={cn('text-gray-900 font-bold text-4xl', className)}>
+      <div className="flex flex-col md:flex-row items-start md:justify-between md:items-center">
+        <h1
+          className={cn(
+            'text-gray-900 font-bold text-2xl md:text-4xl mb-5 md:mb-0',
+            className
+          )}
+        >
           {children}
         </h1>
         <CategoryLink href={categoryHref} />
