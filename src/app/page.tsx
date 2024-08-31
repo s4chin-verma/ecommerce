@@ -19,7 +19,8 @@ const Home: NextPage = async () => {
   return (
     <>
       <main>
-        {/* <Hero /> */}
+        <Hero />
+
         <TopCategories />
         <BrandCarousal />
         <Categories_1 />
