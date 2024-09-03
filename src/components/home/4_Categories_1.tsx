@@ -6,7 +6,7 @@ const Categories_1 = () => {
     <section>
       <div className="max-w-6xl mx-auto py-10">
         <CommonHeading>Exquisite Gems Collection</CommonHeading>
-        <div className="px-3 mt-10">
+        <div className="mt-10">
           <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
             {dummyProducts.map((product, index) => (
               <ProductCard key={index} {...product} />

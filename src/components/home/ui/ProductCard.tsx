@@ -7,6 +7,8 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import AddToCartButton from './AddToCartButton';
+import { DropdownWithValue } from './DropDownWithValue';
+import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
   brand: string;
@@ -15,6 +17,7 @@ interface ProductCardProps {
   rating: number;
   productName: string;
   price: number;
+  color: string[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -24,13 +27,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
   productName,
   price,
+  color,
 }) => {
   const renderStars = (rating: number) => {
     return '⭐'.repeat(Math.round(rating));
   };
 
   return (
-    <Card className="rounded-2xl border-x border-gray-400 mx-2">
+    <Card className="rounded-2xl border-x border-gray-400 mx-3">
       <CardHeader>
         <p className="text-center text-xs">{brand}</p>
         <h5 className="text-center">{name}</h5>
@@ -44,9 +48,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           alt={productName}
         />
       </CardContent>
-      <CardFooter className="flex flex-col p-1 pb-4 gap-1">
+      <CardFooter className="flex flex-col p-1 px-3 pb-4 gap-2">
         <p>{renderStars(rating)}</p>
-        <h1 className="text-4xl">dropdown</h1>
+        <DropdownWithValue items={color} />
         <p className="text-gray-600 text-center w-full">{productName}</p>
         <p className="text-gray-400 text-center w-full">
           Rs. {price.toFixed(2)}
@@ -59,11 +63,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
 interface ProductGridProps {
   products: ProductCardProps[];
+  className?: string;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ products, className }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div
+      className={cn(
+        'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5',
+        className
+      )}
+    >
       {products.map((product, index) => (
         <ProductCard key={index} {...product} />
       ))}

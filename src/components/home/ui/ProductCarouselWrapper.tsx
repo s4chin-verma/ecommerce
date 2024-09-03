@@ -24,7 +24,7 @@ const getCarouselItemClasses = (slidesToShow: number) => {
     case 2:
       return 'md:basis-1/1 lg:basis-1/2';
     case 3:
-      return 'w-1/3';
+      return 'md:basis-1/2 lg:basis-1/3';
     case 4:
       return 'md:basis-1/2 lg:basis-1/4';
     default:

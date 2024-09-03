@@ -26,6 +26,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import {
+  ProductCard,
+  ProductCarouselWrapper,
+  ProductGrid,
+} from '@/components/home/ui';
+import { dummyProducts } from '@/data/data';
 
 interface Props {
   params: {
@@ -46,7 +52,7 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
     <main className="pt-36">
       <section>
         <div className="max-w-6xl mx-auto px-3 flex flex-row justify-stretch">
-          <div className="w-[25%]">
+          <div className="w-[25%] sticky top-36">
             <div className="border-b border-gray-500 h-16 flex items-center">
               <h1 className="text-2xl font-bold">Filters</h1>
             </div>
@@ -83,10 +89,13 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
                 </div>
               </div>
             </div>
+            <div className="pt-4 pl-3 pb-10">
+              <ProductGrid products={dummyProducts} />
+            </div>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" />
+                  <PaginationPrevious href={`/collections/${collectionName}`} />
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href="#">1</PaginationLink>

@@ -11,7 +11,7 @@ const Categories_7: React.FC = () => {
   return (
     <section className="bg-gray-800">
       <div className="max-w-6xl mx-auto py-10">
-        <div className="mt-10 flex flex-col gap-10 px-3">
+        <div className="mt-10 flex flex-col gap-10 pl-3">
           <div className="flex flex-col md:flex-row justify-between gap-6">
             <div className="md:w-1/2 text-orange-100 flex justify-center flex-col pr-10">
               <p className="text-xs ">CATEGORIES</p>

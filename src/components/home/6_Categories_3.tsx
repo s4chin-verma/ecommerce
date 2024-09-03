@@ -13,7 +13,7 @@ const Categories_3: React.FC = () => {
     <section>
       <div className="max-w-6xl mx-auto py-10">
         <CommonHeading>A perfect design for perfect women</CommonHeading>
-        <div className="mt-10 flex flex-col gap-10 px-3">
+        <div className="mt-10 flex flex-col gap-10 pl-3">
           <div className="flex flex-col sm:flex-row justify-between gap-6">
             <Card className="w-full sm:w-1/2 relative rounded-3xl bg-transparent overflow-hidden p-6 flex flex-col justify-between border-0">
               <Image

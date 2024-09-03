@@ -17,25 +17,25 @@ const TopCategories: React.FC = () => {
       imageSrc: '/cat3.png',
       category: 'Bracelet',
       contentPosition: 'bottom',
-      linkHref: '#',
+      linkHref: '/collections/bracelet',
     },
     {
       imageSrc: '/cat2.webp',
       category: 'Ring',
       contentPosition: 'top',
-      linkHref: '#',
+      linkHref: '/collections/ring',
     },
     {
       imageSrc: '/cat1.avif',
       category: 'Earrings',
       contentPosition: 'bottom',
-      linkHref: '#',
+      linkHref: '/collections/earrings',
     },
     {
       imageSrc: '/cat4.png',
       category: 'Necklace',
       contentPosition: 'top',
-      linkHref: '#',
+      linkHref: '/collections/necklace',
     },
   ];
 

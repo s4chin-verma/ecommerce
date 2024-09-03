@@ -8,7 +8,7 @@ const Categories_8 = () => {
         <CommonHeading className="text-orange-100">
           Trending jewellery For Everyone
         </CommonHeading>
-        <div className="px-3 mt-10">
+        <div className="mt-10">
           <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
             {dummyProducts.map((product, index) => (
               <ProductCard key={index} {...product} />
