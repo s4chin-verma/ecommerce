@@ -16,8 +16,8 @@ const pagesLink = [
 
 const userLinks = [
   { title: 'Profile', href: '#' },
-  { title: 'Login', href: '#' },
-  { title: 'Register', href: '#' },
+  { title: 'Login', href: '/account/login' },
+  { title: 'Register', href: '/account/register' },
   { title: 'wishlist', href: '#' },
 ];
 

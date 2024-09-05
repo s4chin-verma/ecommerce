@@ -18,6 +18,7 @@ interface ProductCardProps {
   productName: string;
   price: number;
   color: string[];
+  className?: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -28,13 +29,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
   productName,
   price,
   color,
+  className,
 }) => {
   const renderStars = (rating: number) => {
     return '⭐'.repeat(Math.round(rating));
   };
 
   return (
-    <Card className="rounded-2xl border-x border-gray-400 mx-3">
+    <Card
+      className={cn('rounded-2xl border-x border-gray-400 mx-3', className)}
+    >
       <CardHeader>
         <p className="text-center text-xs">{brand}</p>
         <h5 className="text-center">{name}</h5>
