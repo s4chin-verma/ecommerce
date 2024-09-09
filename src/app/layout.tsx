@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import { Footer } from '@/components/Layouts/Footer';
 import { NavBar } from '@/components/Layouts/NavBar';
+import { Toaster } from '@/components/ui/toaster';
 
 const poppins = Poppins({
   weight: ['100', '400', '700'],
@@ -25,7 +26,8 @@ export default function RootLayout({
       <body className={poppins.className} suppressHydrationWarning={true}>
         {/* <NavBar /> */}
         {children}
-        <Footer />
+        {/* <Footer /> */}
+        <Toaster />
       </body>
     </html>
   );
