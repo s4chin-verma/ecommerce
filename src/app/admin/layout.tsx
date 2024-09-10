@@ -31,6 +31,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               Customers
             </Button>
           </Link>
+          <Link href="/admin/inventory">
+            <Button variant="ghost" className="w-full justify-start">
+              <Package className="mr-2 h-4 w-4" />
+              Inventory
+            </Button>
+          </Link>
         </nav>
       </aside>
       <main className="flex-1 p-6">{children}</main>

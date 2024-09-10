@@ -40,31 +40,32 @@ const Section: React.FC<SectionProps> = ({ title, items }) => (
 
 const Footer: React.FC = () => {
   const navigationItems: IItems[] = [
-    { href: '/', label: 'Home' },
-    { href: '/privacy-policy', label: 'Privacy Policy' },
-    { href: '/delivery', label: 'Delivery Page' },
+    { href: '/shop', label: 'Home' },
+    { href: '/shop/privacy-policy', label: 'Privacy Policy' },
+    { href: '/shop/delivery', label: 'Delivery Page' },
   ];
 
   const aboutUsItems: IItems[] = [
-    { href: '/about-us', label: 'About us' },
-    { href: '/contact-us', label: 'Contact us' },
-    { href: '/faqs', label: "Faq's" },
-    { href: '/blog', label: 'Blog Page' },
-    { href: '/article', label: 'Article Page' },
-    { href: '/term-conditions', label: 'Terms & Conditions' },
+    { href: '/shop/about-us', label: 'About us' },
+    { href: '/shop/contact-us', label: 'Contact us' },
+    { href: '/shop/faqs', label: "Faq's" },
+    { href: '/shop/blog', label: 'Blog Page' },
+    { href: '/shop/article', label: 'Article Page' },
+    { href: '/shop/term-conditions', label: 'Terms & Conditions' },
   ];
 
   const jewelryItems: IItems[] = [
-    { href: '/collections/earrings', label: 'Earrings' },
-    { href: '/collections/necklace', label: 'Necklace' },
-    { href: '/collections/ring', label: 'Rings' },
-    { href: '/collections/bracelet', label: 'Bracelet' },
-    { href: '/collections', label: 'Collection Page' },
+    { href: '/shop/collections/earrings', label: 'Earrings' },
+    { href: '/shop/collections/necklace', label: 'Necklace' },
+    { href: '/shop/collections/ring', label: 'Rings' },
+    { href: '/shop/collections/bracelet', label: 'Bracelet' },
+    { href: '/shop/collections', label: 'Collection Page' },
   ];
 
   const otherAboutUsItems: IItems[] = [
-    { href: '/collections/all', label: 'Catalog' },
-    { href: '/contact-us', label: 'Contact' },
+    { href: '/shop/collections/all', label: 'Catalog' },
+    { href: '/shop/contact-us', label: 'Contact' },
+    { href: '/admin', label: 'Admin' },
   ];
 
   return (

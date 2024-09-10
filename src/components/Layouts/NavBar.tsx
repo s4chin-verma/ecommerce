@@ -4,21 +4,22 @@ import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
 import { IIcon } from '@/components/IIcon';
 import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
+import { ShoppingBag, ShoppingCart, User } from 'lucide-react';
 
 const pagesLink = [
-  { title: 'About us', href: '/about-us' },
-  { title: 'Contact us', href: '/contact-us' },
-  { title: "Faq's", href: '/faqs' },
-  { title: 'Collection Page', href: '#' },
-  { title: 'Blog Page', href: '#' },
-  { title: 'Article Page', href: '#' },
+  { title: 'About us', href: '/shop/about-us' },
+  { title: 'Contact us', href: '/shop/contact-us' },
+  { title: "Faq's", href: '/shop/faqs' },
+  { title: 'Collection Page', href: '/shop/collections' },
+  { title: 'Blog Page', href: '/shop/blog' },
+  { title: 'Article Page', href: '/shop/article' },
 ];
 
 const userLinks = [
-  { title: 'Profile', href: '#' },
-  { title: 'Login', href: '/account/login' },
-  { title: 'Register', href: '/account/register' },
-  { title: 'wishlist', href: '#' },
+  { title: 'Profile', href: '/shop/profile' },
+  { title: 'Login', href: '/shop/account/login' },
+  { title: 'Register', href: '/shop/account/register' },
+  { title: 'wishlist', href: '/shop/wishlist' },
 ];
 
 const products = [
@@ -30,10 +31,10 @@ const products = [
 ];
 
 const Collection = [
-  { title: 'Earings', href: '' },
-  { title: 'Neckless', href: '' },
-  { title: 'Rings', href: '' },
-  { title: 'Bracelet', href: '' },
+  { title: 'Earings', href: '/shop/collections/earrings' },
+  { title: 'Neckless', href: '/shop/collections/neckless' },
+  { title: 'Rings', href: '/shop/rings' },
+  { title: 'Bracelet', href: '/shop/bracelet' },
 ];
 
 const NavBar = () => {
@@ -61,7 +62,7 @@ const NavBar = () => {
             <div className="flex items-center border border-gray-600 rounded-full">
               <span className="mx-3">Cart 1:items</span>
               <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-                <IIcon icon="mdi:cart" className="h-6 w-6 text-white" />
+                <ShoppingCart className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { IIcon } from '@/components/IIcon';
 import Link from 'next/link';
+import { User } from 'lucide-react';
 
 interface UserMenuProps {
   userLinks: { href: string; title: string }[];
@@ -13,9 +14,9 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({ userLinks }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="">
+      <DropdownMenuTrigger className="outline-none">
         <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-          <IIcon icon="fa-solid:user" className="h-6 w-6 text-white" />
+          <User className="h-6 w-6 text-white" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

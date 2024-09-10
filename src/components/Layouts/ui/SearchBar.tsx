@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { IIcon } from '@/components/IIcon';
 import clsx from 'clsx';
+import { Search, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const SearchBar = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -40,15 +42,12 @@ const SearchBar = () => {
           />
         </div>
       ) : (
-        <button
+        <Button
           className="rounded-full bg-gray-800 p-2 cursor-pointer"
           onClick={() => setShowSearch(true)}
         >
-          <IIcon
-            icon="material-symbols:search"
-            className="h-6 w-6 text-white"
-          />
-        </button>
+          <Search className="h-6 w-6 text-white" />
+        </Button>
       )}
     </div>
   );
