@@ -8,6 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -17,7 +21,7 @@ model User {
   id            String    @id @default(uuid())
   name          String
   email         String    @unique
-  emailVerified DateTime?
+  emailVerified Boolean
   password      String
   address       Address[]
   phone         String?
@@ -27,8 +31,8 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   review        Review[]
-  Cart          Cart[]
-  Payment       Payment[]
+  cart          Cart[]
+  payment       Payment[]
 }
 
 model Review {
@@ -56,8 +60,8 @@ model Product {
   ratings      Float?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  OrderProduct OrderProduct[]
-  CartProduct  CartProduct[]
+  orderProduct OrderProduct[]
+  cartProduct  CartProduct[]
   Wishlist     Wishlist?      @relation(fields: [wishlistId], references: [id])
   wishlistId   String?
 }
@@ -73,8 +77,8 @@ model Order {
   status          String         @default("pending")
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  Payment         Payment[]
-  Shipping        Shipping[]
+  payment         Payment[]
+  shipping        Shipping[]
 }
 
 model OrderProduct {
