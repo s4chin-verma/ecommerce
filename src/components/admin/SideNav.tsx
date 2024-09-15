@@ -19,12 +19,12 @@ const SideNav: FC = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white p-6 shadow-md">
+    <aside className="w-64 bg-white p-6 shadow-md fixed left-o top-0 bottom-0">
       <nav className="flex space-y-4 flex-col">
-        {links.map(link => {
+        {links.map((link, i) => {
           const LinkIcon = link.icon;
           return (
-            <Link href={link.href}>
+            <Link href={link.href} key={i}>
               <Button
                 variant="ghost"
                 className={clsx('w-full justify-start', {

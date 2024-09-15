@@ -1,4 +1,3 @@
-import { NextPage } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -8,65 +7,86 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import prisma from '@/lib/prisma';
 
-const Page: NextPage = () => {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Customers</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead className="text-right">Total Spent</TableHead>
-              <TableHead className="text-right">Last Order</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">#1001</TableCell>
-              <TableCell>Olivia Martin</TableCell>
-              <TableCell>olivia.martin@email.com</TableCell>
-              <TableCell className="text-right">$3,249.00</TableCell>
-              <TableCell className="text-right">2023-06-15</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">#1002</TableCell>
-              <TableCell>Jackson Lee</TableCell>
-              <TableCell>jackson.lee@email.com</TableCell>
-              <TableCell className="text-right">$839.00</TableCell>
-              <TableCell className="text-right">2023-06-10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">#1003</TableCell>
-              <TableCell>Isabella Nguyen</TableCell>
-              <TableCell>isabella.nguyen@email.com</TableCell>
-              <TableCell className="text-right">$1,599.00</TableCell>
-              <TableCell className="text-right">2023-06-09</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">#1004</TableCell>
-              <TableCell>William Kim</TableCell>
-              <TableCell>william.kim@email.com</TableCell>
-              <TableCell className="text-right">$499.00</TableCell>
-              <TableCell className="text-right">2023-06-05</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">#1005</TableCell>
-              <TableCell>Sofia Davis</TableCell>
-              <TableCell>sofia.davis@email.com</TableCell>
-              <TableCell className="text-right">$2,099.00</TableCell>
-              <TableCell className="text-right">2023-06-02</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  );
+type UserWithAddress = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  address: {
+    addressLine1: string;
+    city: string;
+    state: string;
+    postalCode: string;
+  }[];
 };
 
-export default Page;
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function getUsers(): Promise<UserWithAddress[]> {
+  await delay(3000);
+
+  return prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      address: {
+        select: {
+          addressLine1: true,
+          city: true,
+          state: true,
+          postalCode: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 5,
+  });
+}
+
+export default async function Page() {
+  const users = await getUsers();
+
+  return (
+    <div className="bg-gray-100">
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Customers</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">SR. No</TableHead>
+                <TableHead className="w-[250px]">Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Phone</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((user, i) => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">{i + 1}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.address.length > 0
+                      ? `${user.address[0].addressLine1}, ${user.address[0].city}, ${user.address[0].state} ${user.address[0].postalCode}`
+                      : 'No address provided'}
+                  </TableCell>
+                  <TableCell>{user.phone || 'N/A'}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

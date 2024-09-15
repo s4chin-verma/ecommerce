@@ -1,3 +1,5 @@
+import { NextPage } from 'next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -6,83 +8,104 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AddProduct } from './components/AddProduct';
-import { DeleteProductButton } from './components/DeleteProductButton';
+import prisma from '@/lib/prisma';
+import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
+import Link from 'next/link';
 
-interface Product {
-  id: number;
+type Product = {
+  id: string;
   name: string;
   description: string;
   price: number;
+  sellingPrice: number | null;
   stock: number;
-  category: string;
-}
+  totalSale: number;
+  category: {
+    name: string;
+  };
+};
 
-const initialProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Diamond Ring',
-    description: 'Elegant diamond solitaire',
-    price: 1999.99,
-    stock: 10,
-    category: 'Rings',
-  },
-  {
-    id: 2,
-    name: 'Pearl Necklace',
-    description: 'Classic pearl strand',
-    price: 299.99,
-    stock: 15,
-    category: 'Necklaces',
-  },
-  {
-    id: 3,
-    name: 'Gold Bracelet',
-    description: 'Solid gold chain bracelet',
-    price: 599.99,
-    stock: 8,
-    category: 'Bracelets',
-  },
-];
+const Page: NextPage = async () => {
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export default function ProductManagement(): JSX.Element {
+  async function getProducts(): Promise<Product[]> {
+    await delay(2000);
+    return prisma.product.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        sellingPrice: true,
+        stock: true,
+        totalSale: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 5,
+    });
+  }
+
+  const products = await getProducts();
+
   return (
     <Card>
-      <CardHeader className="flex justify-between flex-row">
-        <CardTitle className="text-3xl font-bold">Product Management</CardTitle>
-        <AddProduct />
+      <CardHeader>
+        <CardTitle>Top Selling Products</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="bg-white rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Actions</TableHead>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">SKU</TableHead>
+              <TableHead>Product Name</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead className="text-right">Price</TableHead>
+              <TableHead className="text-right">Selling Price</TableHead>
+              <TableHead className="text-right">Stock</TableHead>
+              <TableHead className="text-right">Total Sale</TableHead>
+              <TableHead className="text-right">Edit</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {products.map((product, i) => (
+              <TableRow key={product.id}>
+                <TableCell className="font-medium">{i + 1}</TableCell>
+                <TableCell className="capitalize">{product.name}</TableCell>
+                <TableCell className="capitalize">
+                  {product.category.name}
+                </TableCell>
+                <TableCell className="text-right">
+                  &#8377;{product.price.toFixed(2)}
+                </TableCell>
+                <TableCell className="text-right">
+                  &#8377;{product.sellingPrice?.toFixed(2) || 0}
+                </TableCell>
+                <TableCell className="text-right">{product.stock}</TableCell>
+                <TableCell className="text-right">
+                  {product.totalSale}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Link href="/admin/inventory/edit">
+                    <Button variant="outline" size="sm">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {initialProducts.map(product => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.description}</TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>
-                    <DeleteProductButton children={product.name} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
-}
+};
+
+export default Page;

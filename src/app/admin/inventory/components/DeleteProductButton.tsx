@@ -19,13 +19,6 @@ interface DeleteProductButtonProps {
 const DeleteProductButton: FC<DeleteProductButtonProps> = ({ children }) => {
   return (
     <div className="flex space-x-2">
-      <Button
-        variant="outline"
-        size="sm"
-        // onClick={() => openEditDialog(product)}
-      >
-        <Pencil className="h-4 w-4" />
-      </Button>
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
@@ -58,7 +51,6 @@ const DeleteProductButton: FC<DeleteProductButtonProps> = ({ children }) => {
             </DialogClose>
             <Button
               variant="destructive"
-              //   onClick={() => handleDeleteProduct(product.id)}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
             >
               Delete Product

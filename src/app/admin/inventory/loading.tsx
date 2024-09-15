@@ -1,5 +1,4 @@
-import { TableSkeleton } from '@/components/Skelton';
-
+import { ProductSkelton } from '@/components/Skelton';
 export default function Loading() {
-  return <TableSkeleton />;
+  return <ProductSkelton />;
 }
