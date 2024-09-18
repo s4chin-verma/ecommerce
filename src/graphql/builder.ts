@@ -8,7 +8,7 @@ import prisma from '../lib/prisma';
 
 export const builder = new SchemaBuilder<{
   PrismaTypes: PrismaTypes;
-  Context: ReturnType<typeof createContext>;
+  Context: Awaited<ReturnType<typeof createContext>>;
   Scalars: {
     DateTime: { Input: Date; Output: Date };
     JSON: {
@@ -18,8 +18,8 @@ export const builder = new SchemaBuilder<{
   };
 }>({
   plugins: [PrismaPlugin, RelayPlugin],
-  relayOptions: {},
   prisma: { client: prisma },
+  relayOptions: {},
 });
 
 builder.queryType({});

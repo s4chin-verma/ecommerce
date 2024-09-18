@@ -74,51 +74,6 @@ builder.queryFields(t => ({
 //   }),
 // });
 
-// builder.prismaObject('Product', {
-//   fields: t => ({
-//     id: t.exposeID('id'),
-//     name: t.exposeString('name'),
-//     description: t.exposeString('description'),
-//     price: t.exposeFloat('price'),
-//     category: t.relation('category'),
-//     categoryId: t.exposeString('categoryId'),
-//     images: t.exposeStringList('images'),
-//     stock: t.exposeInt('stock'),
-//     reviews: t.relation('reviews'),
-//     ratings: t.exposeFloat('ratings', { nullable: true }),
-//     createdAt: t.expose('createdAt', { type: 'DateTime' }),
-//     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
-//   }),
-// });
-
-// builder.prismaObject('Order', {
-//   fields: t => ({
-//     id: t.exposeID('id'),
-//     user: t.relation('user'),
-//     userId: t.exposeString('userId'),
-//     products: t.relation('products'),
-//     totalAmount: t.exposeFloat('totalAmount'),
-//     shippingAddress: t.exposeString('shippingAddress'),
-//     billingAddress: t.exposeString('billingAddress'),
-//     status: t.exposeString('status'),
-//     createdAt: t.expose('createdAt', { type: 'DateTime' }),
-//     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
-//     payment: t.relation('payment'),
-//     shipping: t.relation('shipping'),
-//   }),
-// });
-
-// builder.prismaObject('OrderProduct', {
-//   fields: t => ({
-//     id: t.exposeID('id'),
-//     product: t.relation('product'),
-//     productId: t.exposeString('productId'),
-//     order: t.relation('order'),
-//     orderId: t.exposeString('orderId'),
-//     quantity: t.exposeInt('quantity'),
-//   }),
-// });
-
 // builder.prismaObject('Category', {
 //   fields: t => ({
 //     id: t.exposeID('id'),
@@ -126,29 +81,6 @@ builder.queryFields(t => ({
 //     products: t.relation('products'),
 //     createdAt: t.expose('createdAt', { type: 'DateTime' }),
 //     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
-//   }),
-// });
-
-// builder.prismaObject('Cart', {
-//   fields: t => ({
-//     id: t.exposeID('id'),
-//     user: t.relation('user'),
-//     userId: t.exposeString('userId'),
-//     products: t.relation('products'),
-//     totalAmount: t.exposeFloat('totalAmount'),
-//     createdAt: t.expose('createdAt', { type: 'DateTime' }),
-//     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
-//   }),
-// });
-
-// builder.prismaObject('CartProduct', {
-//   fields: t => ({
-//     id: t.exposeID('id'),
-//     product: t.relation('product'),
-//     productId: t.exposeString('productId'),
-//     cart: t.relation('cart'),
-//     cartId: t.exposeString('cartId'),
-//     quantity: t.exposeInt('quantity'),
 //   }),
 // });
 

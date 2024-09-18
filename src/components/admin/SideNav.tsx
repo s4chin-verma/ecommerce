@@ -10,7 +10,6 @@ import clsx from 'clsx';
 const links = [
   { title: 'Overview', href: '/admin', icon: Home },
   { title: 'Orders', href: '/admin/orders', icon: ShoppingCart },
-  { title: 'Products', href: '/admin/products', icon: Package },
   { title: 'Customers', href: '/admin/customers', icon: Users },
   { title: 'Inventory', href: '/admin/inventory', icon: Package },
 ];
@@ -20,6 +19,7 @@ const SideNav: FC = () => {
 
   return (
     <aside className="w-64 bg-white p-6 shadow-md fixed left-o top-0 bottom-0">
+      <h1 className="text-xl font-bold ml-2 mb-7">Admin Dashboard</h1>
       <nav className="flex space-y-4 flex-col">
         {links.map((link, i) => {
           const LinkIcon = link.icon;

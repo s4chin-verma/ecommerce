@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import prisma from '@/lib/prisma';
 import { Button } from '@/components/ui/button';
-import { Pencil } from 'lucide-react';
+import { Pencil, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 type Product = {
@@ -22,7 +22,7 @@ type Product = {
   stock: number;
   totalSale: number;
   category: {
-    name: string;
+    title: string;
   };
 };
 
@@ -42,7 +42,7 @@ const Page: NextPage = async () => {
         totalSale: true,
         category: {
           select: {
-            name: true,
+            title: true,
           },
         },
       },
@@ -57,8 +57,14 @@ const Page: NextPage = async () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Top Selling Products</CardTitle>
+      <CardHeader className="flex flex-row justify-between items-center">
+        <CardTitle>Products</CardTitle>
+        <Link href="/admin/inventory/create">
+          <Button size="sm" className="gap-2">
+            Add Product
+            <Plus className="h-4 w-4" />
+          </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <Table>
@@ -80,7 +86,7 @@ const Page: NextPage = async () => {
                 <TableCell className="font-medium">{i + 1}</TableCell>
                 <TableCell className="capitalize">{product.name}</TableCell>
                 <TableCell className="capitalize">
-                  {product.category.name}
+                  {product.category.title}
                 </TableCell>
                 <TableCell className="text-right">
                   &#8377;{product.price.toFixed(2)}
