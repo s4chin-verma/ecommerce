@@ -7,6 +7,7 @@ builder.prismaObject('Category', {
     id: t.exposeID('id'),
     title: t.exposeString('title'),
     description: t.exposeString('description'),
+    products: t.relation('products'),
   }),
 });
 

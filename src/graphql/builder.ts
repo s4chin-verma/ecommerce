@@ -18,8 +18,8 @@ export const builder = new SchemaBuilder<{
   };
 }>({
   plugins: [PrismaPlugin, RelayPlugin],
-  prisma: { client: prisma },
   relayOptions: {},
+  prisma: { client: prisma },
 });
 
 builder.queryType({});

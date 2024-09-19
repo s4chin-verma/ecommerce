@@ -105,19 +105,19 @@ model Product {
   images       String[]
   categoryId   String
   category     Category       @relation(fields: [categoryId], references: [id])
-  cartProduct  CartProduct[]
-  orderProduct OrderProduct[]
-  wishlistId   String?
+  OrderProduct OrderProduct[]
+  CartProduct  CartProduct[]
   Wishlist     Wishlist?      @relation(fields: [wishlistId], references: [id])
-  reviews      Review[]
+  wishlistId   String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  Review       Review[]
 }
 
 enum OrderStatus {
   ORDERED
   SHIPPED
-  OUTFOR
+  OUT_FOR_DELIVERY
   DELIVERED
 }
 
