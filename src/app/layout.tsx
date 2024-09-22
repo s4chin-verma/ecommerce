@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
-import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import { GraphqlProvider } from '@/lib/GraphqlProvider';
 
 const poppins = Poppins({
   weight: ['100', '400', '700'],
@@ -22,8 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className} suppressHydrationWarning={true}>
-        {children}
-        <Toaster />
+        <GraphqlProvider graphqlApiKey={process.env.GRAPHQL_API_KEY as string}>
+          {children}
+        </GraphqlProvider>
       </body>
     </html>
   );

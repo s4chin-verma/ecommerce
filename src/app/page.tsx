@@ -12,7 +12,7 @@ import {
   Categories_7,
   Categories_8,
 } from '@/components/home';
-import prisma from '@/lib/db';
+import prisma from '@/lib/prisma';
 
 const Home: NextPage = async () => {
   return (

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Dropdown1, Dropdown2 } from '@/components/Layouts/ui/DropDown';
 import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
-import { IIcon } from '@/components/IIcon';
 import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
 import { ShoppingBag, ShoppingCart, User } from 'lucide-react';
 
