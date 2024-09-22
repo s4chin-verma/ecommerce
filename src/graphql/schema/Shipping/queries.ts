@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 
 builder.prismaObject('Shipping', {
   fields: t => ({

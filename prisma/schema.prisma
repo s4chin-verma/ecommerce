@@ -11,6 +11,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  phone         String?
+  password      String
+  role          Role      @default(USER)
+  Account       Account[]
+  Session       Session[]
+  address       Address[]
+  cart          Cart[]
+  orderHistory  Order[]
+  payment       Payment[]
+  review        Review[]
+  wishlist      Wishlist?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -30,47 +55,12 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String    @unique
-  emailVerified Boolean
-  phone         String?
-  password      String
-  role          Role      @default(USER)
-  address       Address[]
-  cart          Cart[]
-  orderHistory  Order[]
-  payment       Payment[]
-  review        Review[]
-  wishlist      Wishlist?
-  Account       Account[]
-  Session       Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  Profile       Profile?
-}
-
-model Profile {
-  id    String  @id @default(cuid())
-  phone String?
-  img   String?
-  name  String?
-  email String  @unique
-  user  User    @relation(fields: [email], references: [email])
 }
 
 model VerificationToken {
@@ -96,13 +86,13 @@ model Review {
 model Product {
   id           String         @id @default(uuid())
   name         String
+  images       String[]
   description  String
   price        Float
   sellingPrice Float?
   stock        Int            @default(0)
   totalSale    Int            @default(0)
   ratings      Float?
-  images       String[]
   categoryId   String
   category     Category       @relation(fields: [categoryId], references: [id])
   OrderProduct OrderProduct[]
@@ -124,7 +114,6 @@ enum OrderStatus {
 model Order {
   id              String         @id @default(cuid())
   orderNumber     String         @unique
-  cart            Json[]
   orderDate       DateTime       @default(now())
   deliveryTime    DateTime?      @default(now())
   userName        String
@@ -162,8 +151,8 @@ model OrderProduct {
   productId String
   orderId   String
   quantity  Int
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
+  Order     Order   @relation(fields: [orderId], references: [id])
 }
 
 model Category {

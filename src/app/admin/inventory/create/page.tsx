@@ -2,17 +2,19 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useMutation } from '@urql/next';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useToast } from '@/components/ui/use-toast';
+import { productSchema, ProductSchemaType } from '@/lib/schema/zod';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Form,
   FormField,
@@ -21,40 +23,68 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useToast } from '@/components/ui/use-toast';
-import { productSchema } from '@/lib/schema/zod';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-
-type ProductFormData = z.infer<typeof productSchema>;
+  AddProductDocument,
+  AddProductMutation,
+  AddProductMutationVariables,
+} from '@/graphql/generated';
+import CategorySelect from '../components/CategorySelect';
 
 const Page = () => {
-  const form = useForm<ProductFormData>({
+  const { toast } = useToast();
+  const [_, addProduct] = useMutation<
+    AddProductMutation,
+    AddProductMutationVariables
+  >(AddProductDocument);
+
+  const form = useForm<ProductSchemaType>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
       description: '',
-      price: 0,
-      sellingPrice: 0,
-      stock: 0,
+      price: undefined,
+      sellingPrice: undefined,
+      stock: undefined,
       categoryId: '',
       images: [''],
     },
   });
 
-  const onSubmit = async (data: ProductFormData) => {
-    console.log(data);
-    // Handle form submission here
+  const onSubmit = async (data: ProductSchemaType) => {
+    try {
+      const response = await addProduct({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        sellingPrice: data.sellingPrice,
+        categoryId: data.categoryId,
+        images: data.images,
+        stock: data.stock,
+      });
+      if (response.error) {
+        console.error(response.error.message);
+        toast({
+          title: 'Error',
+          description: 'Failed to add product. Please try again.',
+          variant: 'destructive',
+        });
+      } else {
+        console.log('Product added:', response.data);
+        toast({
+          title: 'Success',
+          description: 'Product added successfully!',
+        });
+        form.reset();
+      }
+    } catch (error) {
+      console.error('Error adding product:', error);
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
-
   return (
     <Card>
       <CardHeader>
@@ -80,7 +110,6 @@ const Page = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="stock"
@@ -89,7 +118,7 @@ const Page = () => {
                     <FormLabel>Stock</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="29"
+                        placeholder="199"
                         type="number"
                         {...field}
                         onChange={e =>
@@ -109,22 +138,12 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Select>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">Ring</SelectItem>
-                        <SelectItem value="2">Ear Ring</SelectItem>
-                        <SelectItem value="3">Neck Lace</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <CategorySelect onValueChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* Description */}
             <FormField
               control={form.control}
               name="description"
@@ -138,9 +157,7 @@ const Page = () => {
                 </FormItem>
               )}
             />
-
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {/* Price */}
               <FormField
                 control={form.control}
                 name="price"
@@ -149,11 +166,13 @@ const Page = () => {
                     <FormLabel>Price</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="1000"
+                        placeholder="1999.99"
                         type="number"
                         {...field}
                         onChange={e =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(
+                            parseFloat(e.target.value) || undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -161,8 +180,6 @@ const Page = () => {
                   </FormItem>
                 )}
               />
-
-              {/* Selling Price */}
               <FormField
                 control={form.control}
                 name="sellingPrice"
@@ -171,7 +188,7 @@ const Page = () => {
                     <FormLabel>Selling Price</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="2000"
+                        placeholder="1899.99"
                         type="number"
                         {...field}
                         onChange={e =>
@@ -184,8 +201,6 @@ const Page = () => {
                 )}
               />
             </div>
-
-            {/* Image URL */}
             <FormField
               control={form.control}
               name="images"
@@ -203,7 +218,6 @@ const Page = () => {
                 </FormItem>
               )}
             />
-
             <Button type="submit" className="w-full md:w-auto">
               Add Product
             </Button>

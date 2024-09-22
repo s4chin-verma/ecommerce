@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 import prisma from '@/lib/prisma';
 import { OrderStatus } from './enum';
 
@@ -6,7 +6,6 @@ builder.prismaObject('Order', {
   fields: t => ({
     id: t.exposeID('id'),
     orderNumber: t.exposeID('orderNumber'),
-    // cart: t.exposL('Cart'),
     deliveryTime: t.expose('deliveryTime', { type: 'DateTime' }),
     userName: t.exposeID('userName'),
     userId: t.exposeID('userId'),

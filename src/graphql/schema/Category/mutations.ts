@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 import prisma from '@/lib/prisma';
 import { GraphQLError } from 'graphql';
 

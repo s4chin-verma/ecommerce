@@ -1,0 +1,36 @@
+query GetProduct($getProductId: String!) {
+  getProduct(id: $getProductId) {
+    categoryId
+    description
+    id
+    images
+    name
+    price
+    ratings
+    sellingPrice
+    stock
+    totalSale
+  }
+}
+
+mutation AddProduct(
+  $name: String!
+  $description: String!
+  $price: Float!
+  $sellingPrice: Float!
+  $categoryId: String!
+  $images: [String!]!
+  $stock: Int!
+) {
+  addProduct(
+    name: $name
+    description: $description
+    price: $price
+    sellingPrice: $sellingPrice
+    categoryId: $categoryId
+    images: $images
+    stock: $stock
+  ) {
+    id
+  }
+}

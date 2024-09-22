@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 
 export const OrderStatus = builder.enumType('OrderStatus', {
   values: ['ORDERED', 'SHIPPED', 'OUT_FOR_DELIVERY', 'DELIVERED'] as const,

@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 import { GraphQLError } from 'graphql';
 import { Role } from './enum';
 import prisma from '@/lib/prisma';

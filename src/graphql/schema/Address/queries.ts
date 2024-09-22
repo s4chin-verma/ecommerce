@@ -1,4 +1,4 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 import { GraphQLError } from 'graphql';
 import prisma from '@/lib/prisma';
 
@@ -19,7 +19,7 @@ builder.prismaObject('Address', {
 });
 
 builder.queryFields(t => ({
-  getAddress: t.prismaField({
+  getAddressByUserId: t.prismaField({
     type: 'Address',
     args: {
       userId: t.arg.string({ required: true }),
@@ -31,11 +31,39 @@ builder.queryFields(t => ({
           'You must be logged in as a user or an admin to perform this action'
         );
       }
-      const address = await prisma.address.findUniqueOrThrow({
+      const address = await prisma.address.findFirstOrThrow({
         ...query,
         where: { userId: args.userId },
       });
       return address;
+    },
+  }),
+  getAddressById: t.prismaField({
+    type: 'Address',
+    args: {
+      id: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _, args, context) => {
+      const userRole = (await context).user?.role;
+      if (userRole !== 'USER' && userRole !== 'ADMIN') {
+        throw new GraphQLError(
+          'You must be logged in as a user or an admin to perform this action'
+        );
+      }
+      return prisma.address.findUniqueOrThrow({
+        ...query,
+        where: { id: args.id },
+      });
+    },
+  }),
+  getAllAddresses: t.prismaField({
+    type: ['Address'],
+    resolve: async (query, _, __, context) => {
+      const userRole = (await context).user?.role;
+      if (userRole !== 'ADMIN') {
+        throw new GraphQLError('Only admins can fetch all addresses');
+      }
+      return prisma.address.findMany({ ...query });
     },
   }),
 }));

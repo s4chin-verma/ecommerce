@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
 import { Role } from './enum';
 import { GraphQLError } from 'graphql';
 

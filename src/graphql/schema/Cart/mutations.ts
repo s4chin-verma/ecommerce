@@ -1,1 +1,1 @@
-import { builder } from '@/graphql/builder';
+import { builder } from '../../builder';
