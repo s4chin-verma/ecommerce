@@ -6,7 +6,8 @@ import prisma from '@/lib/prisma';
 builder.prismaObject('User', {
   fields: t => ({
     id: t.exposeID('id'),
-    name: t.exposeString('name'),
+    firstName: t.exposeString('firstName'),
+    lastName: t.exposeString('lastName'),
     email: t.exposeString('email'),
     emailVerified: t.exposeBoolean('emailVerified'),
     password: t.exposeString('password'),

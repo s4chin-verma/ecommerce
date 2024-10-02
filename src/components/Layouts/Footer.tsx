@@ -1,5 +1,39 @@
+'use client';
+
+import { loginUrl, registerURl } from '@/lib/routes';
+
+const navigationItems: IItems[] = [
+  { href: '/shop', label: 'Home' },
+  { href: '/shop/privacy-policy', label: 'Privacy Policy' },
+  { href: '/shop/delivery', label: 'Delivery Page' },
+];
+
+const aboutUsItems: IItems[] = [
+  { href: '/shop/about-us', label: 'About us' },
+  { href: '/shop/contact-us', label: 'Contact us' },
+  { href: '/shop/faqs', label: "Faq's" },
+  { href: '/shop/blog', label: 'Blog Page' },
+  { href: '/shop/article', label: 'Article Page' },
+  { href: '/shop/term-conditions', label: 'Terms & Conditions' },
+];
+
+const jewelryItems: IItems[] = [
+  { href: '/shop/collections/earrings', label: 'Earrings' },
+  { href: '/shop/collections/necklace', label: 'Necklace' },
+  { href: '/shop/collections/ring', label: 'Rings' },
+  { href: '/shop/collections/bracelet', label: 'Bracelet' },
+  { href: '/shop/collections', label: 'Collection Page' },
+];
+
+const otherAboutUsItems: IItems[] = [
+  { href: '/shop/collections/all', label: 'Catalog' },
+  { href: '/shop/contact-us', label: 'Contact' },
+  { href: '/admin', label: 'Admin' },
+];
+
 import Link from 'next/link';
 import { Youtube, Twitter, Facebook, Instagram } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface NavItemProps {
   href: string;
@@ -39,35 +73,6 @@ const Section: React.FC<SectionProps> = ({ title, items }) => (
 );
 
 const Footer: React.FC = () => {
-  const navigationItems: IItems[] = [
-    { href: '/shop', label: 'Home' },
-    { href: '/shop/privacy-policy', label: 'Privacy Policy' },
-    { href: '/shop/delivery', label: 'Delivery Page' },
-  ];
-
-  const aboutUsItems: IItems[] = [
-    { href: '/shop/about-us', label: 'About us' },
-    { href: '/shop/contact-us', label: 'Contact us' },
-    { href: '/shop/faqs', label: "Faq's" },
-    { href: '/shop/blog', label: 'Blog Page' },
-    { href: '/shop/article', label: 'Article Page' },
-    { href: '/shop/term-conditions', label: 'Terms & Conditions' },
-  ];
-
-  const jewelryItems: IItems[] = [
-    { href: '/shop/collections/earrings', label: 'Earrings' },
-    { href: '/shop/collections/necklace', label: 'Necklace' },
-    { href: '/shop/collections/ring', label: 'Rings' },
-    { href: '/shop/collections/bracelet', label: 'Bracelet' },
-    { href: '/shop/collections', label: 'Collection Page' },
-  ];
-
-  const otherAboutUsItems: IItems[] = [
-    { href: '/shop/collections/all', label: 'Catalog' },
-    { href: '/shop/contact-us', label: 'Contact' },
-    { href: '/admin', label: 'Admin' },
-  ];
-
   return (
     <footer className="bg-gray-100 pt-5 md:pt-20 pb-10">
       <div className="max-w-6xl px-3 mx-auto flex flex-col md:flex-row gap-5 md:gap-8">
@@ -102,5 +107,4 @@ const Footer: React.FC = () => {
   );
 };
 
-Footer.displayName = 'Footer';
 export { Footer };

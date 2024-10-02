@@ -1,3 +1,9 @@
+import { FC, useCallback } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { useMutation } from 'urql';
+import { Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -8,21 +14,49 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash2, AlertTriangle } from 'lucide-react';
-import { FC } from 'react';
+import {
+  DeleteProductDocument,
+  DeleteProductMutation,
+  DeleteProductMutationVariables,
+} from '@/graphql/generated';
 
-interface DeleteProductButtonProps {
+interface Props {
   children: string;
+  productId: string;
 }
 
-const DeleteProductButton: FC<DeleteProductButtonProps> = ({ children }) => {
+const DeleteProductButton: FC<Props> = ({ children, productId }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [result, deleteProduct] = useMutation<
+    DeleteProductMutation,
+    DeleteProductMutationVariables
+  >(DeleteProductDocument);
+
+  const handleDelete = useCallback(async () => {
+    const response = await deleteProduct({ deleteProductId: productId });
+
+    if (response.error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete product. Please try again.',
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Success',
+        description: 'Product deleted successfully!',
+      });
+      router.push('/admin/inventory');
+    }
+  }, [deleteProduct, productId, toast, router]);
+
   return (
     <div className="flex space-x-2">
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Trash2 className="h-4 w-4" />
+          <Button variant="destructive">
+            <Trash2 className="h-7 w-6" />
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -52,8 +86,14 @@ const DeleteProductButton: FC<DeleteProductButtonProps> = ({ children }) => {
             <Button
               variant="destructive"
               className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+              onClick={handleDelete} // Trigger delete action
+              disabled={result.fetching}
             >
-              Delete Product
+              {result.fetching ? (
+                <Loader2 className="h-7 w-6 animate-spin" />
+              ) : (
+                'Delete Product'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

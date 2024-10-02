@@ -34,3 +34,40 @@ mutation AddProduct(
     id
   }
 }
+
+mutation DeleteProduct($deleteProductId: String!) {
+  deleteProduct(id: $deleteProductId) {
+    id
+  }
+}
+
+mutation UpdateProduct(
+  $updateProductId: String!
+  $categoryId: String
+  $description: String
+  $images: [String!]
+  $name: String
+  $price: Float
+  $sellingPrice: Float
+  $stock: Int
+) {
+  updateProduct(
+    id: $updateProductId
+    categoryId: $categoryId
+    description: $description
+    images: $images
+    name: $name
+    price: $price
+    sellingPrice: $sellingPrice
+    stock: $stock
+  ) {
+    categoryId
+    description
+    images
+    name
+    price
+    sellingPrice
+    stock
+    id
+  }
+}

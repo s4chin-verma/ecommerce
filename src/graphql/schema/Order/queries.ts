@@ -32,9 +32,9 @@ builder.prismaObject('Order', {
 builder.prismaObject('OrderProduct', {
   fields: t => ({
     id: t.exposeID('id'),
-    product: t.relation('product'),
+    product: t.relation('Product'),
     productId: t.exposeString('productId'),
-    order: t.relation('order'),
+    order: t.relation('Order'),
     orderId: t.exposeString('orderId'),
     quantity: t.exposeInt('quantity'),
   }),

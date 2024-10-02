@@ -29,10 +29,11 @@ import {
   AddProductMutationVariables,
 } from '@/graphql/generated';
 import CategorySelect from '../components/CategorySelect';
+import { Loader } from 'lucide-react';
 
 const Page = () => {
   const { toast } = useToast();
-  const [_, addProduct] = useMutation<
+  const [result, addProduct] = useMutation<
     AddProductMutation,
     AddProductMutationVariables
   >(AddProductDocument);
@@ -42,9 +43,9 @@ const Page = () => {
     defaultValues: {
       name: '',
       description: '',
-      price: undefined,
-      sellingPrice: undefined,
-      stock: undefined,
+      price: 0,
+      sellingPrice: 0,
+      stock: 0,
       categoryId: '',
       images: [''],
     },
@@ -62,14 +63,13 @@ const Page = () => {
         stock: data.stock,
       });
       if (response.error) {
-        console.error(response.error.message);
+        console.error('Error adding product:', response.error);
         toast({
           title: 'Error',
           description: 'Failed to add product. Please try again.',
           variant: 'destructive',
         });
       } else {
-        console.log('Product added:', response.data);
         toast({
           title: 'Success',
           description: 'Product added successfully!',
@@ -122,7 +122,7 @@ const Page = () => {
                         type="number"
                         {...field}
                         onChange={e =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(parseFloat(e.target.value))
                         }
                       />
                     </FormControl>
@@ -170,9 +170,7 @@ const Page = () => {
                         type="number"
                         {...field}
                         onChange={e =>
-                          field.onChange(
-                            parseFloat(e.target.value) || undefined
-                          )
+                          field.onChange(parseFloat(e.target.value))
                         }
                       />
                     </FormControl>
@@ -192,7 +190,7 @@ const Page = () => {
                         type="number"
                         {...field}
                         onChange={e =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(parseFloat(e.target.value))
                         }
                       />
                     </FormControl>
@@ -219,7 +217,11 @@ const Page = () => {
               )}
             />
             <Button type="submit" className="w-full md:w-auto">
-              Add Product
+              {result.fetching ? (
+                <Loader className="animate-spin h-6 w-6 mx-8" />
+              ) : (
+                'Add Product'
+              )}
             </Button>
           </form>
         </Form>

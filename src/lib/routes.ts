@@ -1,0 +1,16 @@
+export const loginUrl = '/shop/auth/login';
+export const logoutURl = '/shop/auth/logout';
+export const registerURl = '/shop/auth/register';
+export const profile = '/shop/profile';
+export const wishlist = '/shop/wishlist';
+export const products = '/shop/products';
+export const productDetail = '/shop/products/[id]';
+export const checkout = '/shop/checkout';
+export const categories = '/shop/categories';
+export const category = '/shop/categories/[id]';
+export const cart = '/shop/cart';
+export const order = '/shop/order';
+export const orderSuccess = '/shop/order/success';
+export const orderHistory = '/shop/order/history';
+export const orderDetail = '/shop/order/[id]';
+export const search = '/shop/search';

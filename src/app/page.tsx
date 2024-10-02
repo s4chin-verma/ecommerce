@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import {
-  BrandCarousal,
   Hero,
+  BrandCarousal,
   TopCategories,
   Categories_1,
   Categories_2,
@@ -12,11 +12,13 @@ import {
   Categories_7,
   Categories_8,
 } from '@/components/home';
-import prisma from '@/lib/prisma';
+import { Footer } from '@/components/Layouts/Footer';
+import { NavBar } from '@/components/Layouts/NavBar';
 
 const Home: NextPage = async () => {
   return (
     <>
+      <NavBar />
       <main>
         <Hero />
         <TopCategories />
@@ -30,6 +32,7 @@ const Home: NextPage = async () => {
         <Categories_7 />
         <Categories_8 />
       </main>
+      <Footer />
     </>
   );
 };

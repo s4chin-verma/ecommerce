@@ -27,10 +27,7 @@ type Product = {
 };
 
 const Page: NextPage = async () => {
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
   async function getProducts(): Promise<Product[]> {
-    await delay(2000);
     return prisma.product.findMany({
       select: {
         id: true,
@@ -99,7 +96,7 @@ const Page: NextPage = async () => {
                   {product.totalSale}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Link href="/admin/inventory/edit">
+                  <Link href={`/admin/inventory/edit/${product.id}`}>
                     <Button variant="outline" size="sm">
                       <Pencil className="h-4 w-4" />
                     </Button>

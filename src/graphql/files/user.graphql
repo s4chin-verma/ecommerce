@@ -1,0 +1,33 @@
+query GetUser($email: String!) {
+  getUser(email: $email) {
+    firstName
+    lastName
+  }
+}
+
+query GetUsers {
+  getUsers {
+    firstName
+    lastName
+    email
+    phone
+  }
+}
+
+mutation CreateUser(
+  $email: String!
+  $firstName: String!
+  $lastName: String!
+  $password: String!
+  $phone: String!
+) {
+  createUser(
+    email: $email
+    firstName: $firstName
+    lastName: $lastName
+    password: $password
+    phone: $phone
+  ) {
+    id
+  }
+}

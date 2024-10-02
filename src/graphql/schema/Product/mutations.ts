@@ -19,7 +19,6 @@ builder.mutationFields(t => ({
         throw new GraphQLError('You are not authorized to perform this action');
 
       const newProduct = await prisma.product.create({
-        ...query,
         data: { ...args },
       });
       return newProduct;
