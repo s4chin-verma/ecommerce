@@ -55,7 +55,7 @@ const DeleteProductButton: FC<Props> = ({ children, productId }) => {
     <div className="flex space-x-2">
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="destructive">
+          <Button variant="destructive" size="icon">
             <Trash2 className="h-7 w-6" />
           </Button>
         </DialogTrigger>

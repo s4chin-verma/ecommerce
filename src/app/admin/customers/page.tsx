@@ -11,7 +11,8 @@ import prisma from '@/lib/prisma';
 
 type UserWithAddress = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string | null;
   address: {
@@ -22,15 +23,12 @@ type UserWithAddress = {
   }[];
 };
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 async function getUsers(): Promise<UserWithAddress[]> {
-  await delay(3000);
-
   return prisma.user.findMany({
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      lastName: true,
       email: true,
       phone: true,
       address: {
@@ -63,7 +61,7 @@ export default async function Page() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">SR. No</TableHead>
-                <TableHead className="w-[250px]">Name</TableHead>
+                <TableHead className="w-[250px]">Full Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Phone</TableHead>
@@ -73,7 +71,9 @@ export default async function Page() {
               {users.map((user, i) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{i + 1}</TableCell>
-                  <TableCell>{user.name}</TableCell>
+                  <TableCell className="capitalize">
+                    {user.firstName.concat(' ').concat(user.lastName)}
+                  </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     {user.address.length > 0

@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { signIn, getSession } from 'next-auth/react';
+import { signIn, getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { User } from '@prisma/client';
@@ -40,6 +40,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
+import { getToken } from 'next-auth/jwt';
+import { LogoutDialog } from '@/components/LogoutDialog';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -47,9 +49,11 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
+  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
+  console.log(session.data);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -80,6 +84,7 @@ export default function LoginPage() {
         if (session?.user) {
           if ((session.user as User).role === 'ADMIN') {
             setIsAdmin(true);
+            console.log(session.user.role);
             toast({
               title: 'Logged in successfully!',
               description: 'Welcome back Admin!',
@@ -218,6 +223,7 @@ export default function LoginPage() {
           </AlertDialogContent>
         </AlertDialog>
       )}
+      <LogoutDialog />
     </main>
   );
 }
