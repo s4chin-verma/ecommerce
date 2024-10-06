@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['picsum.photos', 'via.placeholder.com', 'source.unsplash.com'], // Add your allowed domains here
+    domains: [
+      'picsum.photos',
+      'via.placeholder.com',
+      'source.unsplash.com',
+      'res.cloudinary.com',
+    ],
   },
 };
 

@@ -8,6 +8,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/components/ui/use-toast';
 import { productSchema, ProductSchemaType } from '@/lib/schema/zod';
+import { CategorySelect } from '../components/CategorySelect';
+import { Loader } from 'lucide-react';
+import { UploadImg } from '@/components/UploadImg';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { NextPage } from 'next';
 import {
   Card,
   CardContent,
@@ -28,10 +34,11 @@ import {
   AddProductMutation,
   AddProductMutationVariables,
 } from '@/graphql/generated';
-import CategorySelect from '../components/CategorySelect';
-import { Loader } from 'lucide-react';
 
-const Page = () => {
+const Page: NextPage = () => {
+  const [uploadedImages, setUploadedImages] = useState<string[]>(['']);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFields, setImageFields] = useState<number[]>([0]);
   const { toast } = useToast();
   const [result, addProduct] = useMutation<
     AddProductMutation,
@@ -52,6 +59,7 @@ const Page = () => {
   });
 
   const onSubmit = async (data: ProductSchemaType) => {
+    console.log(data);
     try {
       const response = await addProduct({
         name: data.name,
@@ -63,7 +71,6 @@ const Page = () => {
         stock: data.stock,
       });
       if (response.error) {
-        console.error('Error adding product:', response.error);
         toast({
           title: 'Error',
           description: 'Failed to add product. Please try again.',
@@ -77,7 +84,6 @@ const Page = () => {
         form.reset();
       }
     } catch (error) {
-      console.error('Error adding product:', error);
       toast({
         title: 'Error',
         description: 'An unexpected error occurred. Please try again.',
@@ -85,6 +91,21 @@ const Page = () => {
       });
     }
   };
+
+  const handleImageUpload = (index: number, url: string) => {
+    const updatedImages = [...uploadedImages];
+    updatedImages[index] = url;
+    setUploadedImages(updatedImages);
+    form.setValue('images', updatedImages);
+  };
+
+  const addMoreImageFields = () => {
+    if (imageFields.length < 7) {
+      setImageFields([...imageFields, imageFields.length]);
+      setUploadedImages([...uploadedImages, '']);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -199,30 +220,46 @@ const Page = () => {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="images"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://example.com/image.jpg"
-                      value={field.value[0]}
-                      onChange={e => field.onChange([e.target.value])}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full md:w-auto">
-              {result.fetching ? (
-                <Loader className="animate-spin h-6 w-6 mx-8" />
-              ) : (
-                'Add Product'
-              )}
-            </Button>
+            <div className="flex flex-row gap-4">
+              {imageFields.map((_, index) => (
+                <FormField
+                  key={index}
+                  control={form.control}
+                  name={`images.${index}`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Image {index + 1}</FormLabel>
+                      <FormControl>
+                        <UploadImg
+                          handleCallback={(fileUrl: string) =>
+                            handleImageUpload(index, fileUrl)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                onClick={addMoreImageFields}
+                variant="outline"
+                className="flex items-center gap-2"
+                disabled={imageFields.length >= 7}
+              >
+                <Plus className="h-4 w-4" /> Add another image
+              </Button>
+              <Button type="submit" className="w-full md:w-auto">
+                {result.fetching ? (
+                  <Loader className="animate-spin h-6 w-6 mx-8" />
+                ) : (
+                  'Add Product'
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>

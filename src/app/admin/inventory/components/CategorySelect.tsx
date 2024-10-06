@@ -41,7 +41,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onValueChange }) => {
 
   return (
     <Select onValueChange={onValueChange} onOpenChange={handleOpenChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px] cursor-pointer">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
@@ -61,7 +61,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onValueChange }) => {
             <SelectItem
               key={category.id}
               value={category.id || ''}
-              className="capitalize"
+              className="capitalize cursor-pointer"
             >
               {category.title}
             </SelectItem>
@@ -72,4 +72,4 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onValueChange }) => {
   );
 };
 
-export default CategorySelect;
+export { CategorySelect };

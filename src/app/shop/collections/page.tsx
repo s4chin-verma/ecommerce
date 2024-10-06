@@ -1,34 +1,36 @@
 import { NextPage } from 'next';
 import { CollectionGrid } from '@/components/CollectionCard';
+import prisma from '@/lib/prisma';
 
 const collections = [
   {
     imgSrc: '/collections/collection_1.png',
     title: 'Bracelet',
-    href: '/collections/bracelet',
+    href: '/shop/collections/bracelet',
     quantity: 10,
   },
   {
     imgSrc: '/collections/collection_2.png',
     title: 'Earings',
-    href: '/collections/earings',
+    href: '/shop/collections/earings',
     quantity: 10,
   },
   {
     imgSrc: '/collections/collection_3.png',
     title: 'Neckless',
-    href: '/collections/neckless',
+    href: '/shop/collections/neckless',
     quantity: 10,
   },
   {
     imgSrc: '/collections/collection_4.png',
     title: 'Rings',
-    href: '/collections/rings',
+    href: '/shop/collections/rings',
     quantity: 10,
   },
 ];
 
-const Page: NextPage = () => {
+const Page: NextPage = async () => {
+  const collectio = await prisma.category.findMany();
   return (
     <main className="pt-36 pb-20">
       <section className="max-w-6xl mx-auto">

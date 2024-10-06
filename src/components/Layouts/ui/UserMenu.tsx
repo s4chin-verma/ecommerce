@@ -1,3 +1,5 @@
+'use client';
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -7,11 +9,15 @@ import {
 import { IIcon } from '@/components/IIcon';
 import Link from 'next/link';
 import { User } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 interface UserMenuProps {
   userLinks: { href: string; title: string }[];
 }
+
 const UserMenu: React.FC<UserMenuProps> = ({ userLinks }) => {
+  const session = useSession();
+  console.log(session);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">

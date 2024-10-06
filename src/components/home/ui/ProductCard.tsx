@@ -7,7 +7,6 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import AddToCartButton from './AddToCartButton';
-import { DropdownWithValue } from './DropDownWithValue';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
@@ -17,6 +16,7 @@ interface ProductCardProps {
   rating: number;
   productName: string;
   price: number;
+  originalPrice: number;
   color: string[];
   className?: string;
 }
@@ -28,12 +28,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
   productName,
   price,
-  color,
+  originalPrice = 10000,
   className,
 }) => {
   const renderStars = (rating: number) => {
     return '⭐'.repeat(Math.round(rating));
   };
+
+  const calculateDiscount = (original: number, current: number) => {
+    const discount = ((original - current) / original) * 100;
+    return Math.round(discount);
+  };
+
+  const discountPercentage = calculateDiscount(originalPrice, price);
 
   return (
     <Card
@@ -52,14 +59,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           alt={productName}
         />
       </CardContent>
-      <CardFooter className="flex flex-col p-1 px-3 pb-4 gap-2">
+      <CardFooter className="flex flex-col p-1 px-3 pb-4">
         <p>{renderStars(rating)}</p>
-        <DropdownWithValue items={color} />
         <p className="text-gray-600 text-center w-full">{productName}</p>
-        <p className="text-gray-400 text-center w-full">
+        <p className="text-gray-700 text-center w-full text-base">
           Rs. {price.toFixed(2)}
         </p>
-        <AddToCartButton />
+
+        <p className="text-gray-400 text-center w-full line-through text-sm">
+          Rs. {originalPrice.toFixed(2)}
+        </p>
+        <p className="text-green-600 text-center w-full text-sm">
+          {discountPercentage}% off
+        </p>
+        <AddToCartButton className="mt-2" />
       </CardFooter>
     </Card>
   );

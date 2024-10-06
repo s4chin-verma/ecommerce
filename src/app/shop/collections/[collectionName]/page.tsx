@@ -41,6 +41,7 @@ interface Props {
 
 const CollectionPage: NextPage<Props> = ({ params }) => {
   const { collectionName } = params;
+  console.log(collectionName);
 
   if (!collectionName) notFound();
 

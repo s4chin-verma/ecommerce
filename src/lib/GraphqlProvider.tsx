@@ -9,6 +9,7 @@ import {
 } from '@urql/next';
 import React, { useMemo } from 'react';
 import { Toaster } from '@/components/ui/toaster';
+import { SonnerToaster } from '@/components/ui/sonner';
 
 type Props = {
   children: React.ReactNode;
@@ -38,6 +39,7 @@ const GraphqlProvider = ({ children, graphqlApiKey }: Props) => {
   return (
     <UrqlProvider client={client} ssr={ssr}>
       <Toaster />
+      <SonnerToaster />
       {children}
     </UrqlProvider>
   );

@@ -4,6 +4,8 @@ import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
 import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
 import { ShoppingBag, ShoppingCart, User } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { Cart } from '@/components/shop/Cart';
 
 const pagesLink = [
   { title: 'About us', href: '/shop/about-us' },
@@ -58,12 +60,7 @@ const NavBar = () => {
           <div className="flex gap-3">
             <SearchBar />
             <UserMenu userLinks={userLinks} />
-            <div className="flex items-center border border-gray-600 rounded-full">
-              <span className="mx-3">Cart 1:items</span>
-              <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-                <ShoppingCart className="h-6 w-6 text-white" />
-              </div>
-            </div>
+            <Cart />
           </div>
         </div>
       </nav>
