@@ -16,8 +16,6 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ userLinks }) => {
-  const session = useSession();
-  console.log(session);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">

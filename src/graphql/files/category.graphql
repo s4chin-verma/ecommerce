@@ -2,5 +2,6 @@ query GetCategories {
   getCategories {
     id
     title
+    image
   }
 }

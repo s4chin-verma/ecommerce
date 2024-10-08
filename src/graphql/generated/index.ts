@@ -59,6 +59,7 @@ export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -419,7 +420,7 @@ export type Wishlist = {
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories?: Array<{ __typename?: 'Category', id?: string | null, title?: string | null }> | null };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories?: Array<{ __typename?: 'Category', id?: string | null, title?: string | null, image?: string | null }> | null };
 
 export type GetProductQueryVariables = Exact<{
   getProductId: Scalars['String']['input'];
@@ -462,6 +463,16 @@ export type UpdateProductMutationVariables = Exact<{
 
 export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, id?: string | null } | null };
 
+export type GetProductsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null } | null };
+
 export type GetUserQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -491,6 +502,7 @@ export const GetCategoriesDocument = gql`
   getCategories {
     id
     title
+    image
   }
 }
     `;
@@ -574,6 +586,34 @@ export const UpdateProductDocument = gql`
 
 export function useUpdateProductMutation() {
   return Urql.useMutation<UpdateProductMutation, UpdateProductMutationVariables>(UpdateProductDocument);
+};
+export const GetProductsDocument = gql`
+    query GetProducts($first: Int, $after: String, $before: String, $last: Int) {
+  getProducts(first: $first, after: $after, before: $before, last: $last) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+        category {
+          title
+        }
+        images
+        name
+        price
+        ratings
+        sellingPrice
+      }
+    }
+  }
+}
+    `;
+
+export function useGetProductsQuery(options?: Omit<Urql.UseQueryArgs<GetProductsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductsQuery, GetProductsQueryVariables>({ query: GetProductsDocument, ...options });
 };
 export const GetUserDocument = gql`
     query GetUser($email: String!) {

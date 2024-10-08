@@ -162,6 +162,7 @@ model OrderProduct {
 model Category {
   id          String    @id @default(uuid())
   title       String
+  image       String
   description String
   products    Product[]
 }

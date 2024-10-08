@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, Package, ShoppingCart, Users } from 'lucide-react';
+import { Home, Package, ShoppingCart, Users, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -13,6 +13,7 @@ const links = [
   { title: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { title: 'Customers', href: '/admin/customers', icon: Users },
   { title: 'Inventory', href: '/admin/inventory', icon: Package },
+  { title: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 const SideNav: FC = () => {

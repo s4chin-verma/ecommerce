@@ -7,6 +7,7 @@ builder.prismaObject('Category', {
     id: t.exposeID('id'),
     title: t.exposeString('title'),
     description: t.exposeString('description'),
+    image: t.exposeString('image'),
     products: t.relation('products'),
   }),
 });
@@ -29,6 +30,11 @@ builder.queryFields(t => ({
   }),
   getCategories: t.prismaField({
     type: ['Category'],
-    resolve: query => prisma.category.findMany(query),
+    resolve: async query => {
+      const categories = await prisma.category.findMany({
+        ...query,
+      });
+      return categories;
+    },
   }),
 }));

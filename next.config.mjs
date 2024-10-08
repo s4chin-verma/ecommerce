@@ -6,6 +6,7 @@ const nextConfig = {
       'via.placeholder.com',
       'source.unsplash.com',
       'res.cloudinary.com',
+      'petuwmjatwjtvxvcngsm.supabase.co',
     ],
   },
 };

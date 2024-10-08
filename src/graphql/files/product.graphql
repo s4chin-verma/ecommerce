@@ -71,3 +71,26 @@ mutation UpdateProduct(
     id
   }
 }
+
+query GetProducts($first: Int, $after: String, $before: String, $last: Int) {
+  getProducts(first: $first, after: $after, before: $before, last: $last) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+        category {
+          title
+        }
+        images
+        name
+        price
+        ratings
+        sellingPrice
+      }
+    }
+  }
+}

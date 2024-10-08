@@ -1,36 +1,35 @@
 import { NextPage } from 'next';
 import { CollectionGrid } from '@/components/CollectionCard';
 import prisma from '@/lib/prisma';
+import { Category } from '@prisma/client';
 
-const collections = [
-  {
-    imgSrc: '/collections/collection_1.png',
-    title: 'Bracelet',
-    href: '/shop/collections/bracelet',
-    quantity: 10,
-  },
-  {
-    imgSrc: '/collections/collection_2.png',
-    title: 'Earings',
-    href: '/shop/collections/earings',
-    quantity: 10,
-  },
-  {
-    imgSrc: '/collections/collection_3.png',
-    title: 'Neckless',
-    href: '/shop/collections/neckless',
-    quantity: 10,
-  },
-  {
-    imgSrc: '/collections/collection_4.png',
-    title: 'Rings',
-    href: '/shop/collections/rings',
-    quantity: 10,
-  },
-];
+export type CategoryWithQuantity = Category & { quantity: number };
 
 const Page: NextPage = async () => {
-  const collectio = await prisma.category.findMany();
+  const getCategories = async (): Promise<CategoryWithQuantity[]> => {
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        title: true,
+        image: true,
+        description: true,
+      },
+    });
+
+    const categoriesWithCount = await Promise.all(
+      categories.map(async category => ({
+        ...category,
+        quantity: await prisma.product.count({
+          where: { categoryId: category.id },
+        }),
+      }))
+    );
+
+    return categoriesWithCount;
+  };
+
+  const collections = await getCategories();
+
   return (
     <main className="pt-36 pb-20">
       <section className="max-w-6xl mx-auto">
