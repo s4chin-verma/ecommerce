@@ -1,12 +1,37 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'picsum.photos',
-      'via.placeholder.com',
-      'source.unsplash.com',
-      'res.cloudinary.com',
-      'petuwmjatwjtvxvcngsm.supabase.co',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'source.unsplash.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'petuwmjatwjtvxvcngsm.supabase.co',
+        port: '',
+        pathname: '**',
+      },
     ],
   },
 };

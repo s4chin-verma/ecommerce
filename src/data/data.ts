@@ -7,7 +7,7 @@ export const dummyProducts = [
     images: ['/banner1.webp'],
     description: 'A beautiful silver cuff bracelet.',
     price: 999.99,
-    sellingPrice: 899.99, // Added selling price for discount
+    sellingPrice: 899.99,
     stock: 10,
     totalSale: 50,
     ratings: 4,
@@ -19,6 +19,7 @@ export const dummyProducts = [
     images: ['/banner1.webp'],
     description: 'A sparkling diamond ring.',
     price: 1499.99,
+    sellingPrice: 12000,
     stock: 5,
     totalSale: 30,
     ratings: 5,

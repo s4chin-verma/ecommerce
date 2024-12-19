@@ -1,69 +1,19 @@
-import Link from 'next/link';
-import { Dropdown1, Dropdown2 } from '@/components/Layouts/ui/DropDown';
-import { SearchBar } from '@/components/Layouts/ui/SearchBar';
-import { UserMenu } from '@/components/Layouts/ui/UserMenu';
-import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
-import { ShoppingBag, ShoppingCart, User } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { Cart } from '@/components/shop/Cart';
+'use client';
 
-const pagesLink = [
-  { title: 'About us', href: '/shop/about-us' },
-  { title: 'Contact us', href: '/shop/contact-us' },
-  { title: "Faq's", href: '/shop/faqs' },
-  { title: 'Collection Page', href: '/shop/collections' },
-  { title: 'Blog Page', href: '/shop/blog' },
-  { title: 'Article Page', href: '/shop/article' },
-];
-
-const userLinks = [
-  { title: 'Profile', href: '/shop/profile' },
-  { title: 'Login', href: '/shop/auth/login' },
-  { title: 'Register', href: '/shop/auth/register' },
-  { title: 'wishlist', href: '/shop/wishlist' },
-];
-
-const products = [
-  { title: 'Diamond Hoop Earrings', href: '' },
-  { title: 'Garnet Hoop Earrings', href: '' },
-  { title: 'Round Rope Bracelet', href: '' },
-  { title: 'Solitaire Pendant Necklace', href: '' },
-  { title: 'Topaz Round Rope Bracelet', href: '' },
-];
-
-const Collection = [
-  { title: 'Earings', href: '/shop/collections/earrings' },
-  { title: 'Neckless', href: '/shop/collections/neckless' },
-  { title: 'Rings', href: '/shop/rings' },
-  { title: 'Bracelet', href: '/shop/bracelet' },
-];
+import { MobileNav } from '@/components/Layouts/ui/MobileNav';
+import { DesktopNav } from '@/components/Layouts/ui/DesktopNav';
+import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 
 const NavBar = () => {
+  const windowWidth = useWindowWidth();
+
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
-      <HeaderStrip />
-      <nav className="max-w-6xl mx-auto px-3 flex items-center">
-        <Link href="/" className="text-4xl font-bold mr-12 cursor-pointer">
-          Gems
-        </Link>
-        <div className="bg-nav rounded-full w-full p-3.5 flex justify-between">
-          <div className="flex items-center">
-            <Dropdown1 title="All Products" links={products} />
-            <span className="ml-6 cursor-pointer hover:border-b-2 hover:border-orange-800">
-              Ring
-            </span>
-            <Dropdown2 title="Pages" links={pagesLink} />
-            <span className="cursor-pointer hover:border-b-2 hover:border-orange-800">
-              Diamond
-            </span>
-          </div>
-          <div className="flex gap-3">
-            <SearchBar />
-            <UserMenu userLinks={userLinks} />
-            <Cart />
-          </div>
-        </div>
-      </nav>
+      {windowWidth !== undefined && windowWidth > 768 ? (
+        <DesktopNav />
+      ) : (
+        <MobileNav />
+      )}
     </header>
   );
 };

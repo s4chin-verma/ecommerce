@@ -7,6 +7,7 @@ import {
   ProductCarouselWrapper,
 } from './ui';
 import Image from 'next/image';
+import { Product } from '@prisma/client';
 
 const Categories_3: React.FC = () => {
   return (
@@ -41,7 +42,7 @@ const Categories_3: React.FC = () => {
               {dummyProducts.slice(2, 5).map((product, index) => (
                 <ProductCard
                   key={index}
-                  {...product}
+                  product={product as Product}
                   className="mx-0 sm:mx-3"
                 />
               ))}

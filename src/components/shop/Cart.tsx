@@ -17,6 +17,7 @@ import {
 import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
+import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 
 const initialCartItems = [
   {
@@ -86,18 +87,23 @@ export function Cart() {
     0
   );
 
+  const windowWidth = useWindowWidth();
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className="flex items-center border border-gray-600 rounded-full cursor-pointer hover:bg-gray-100 transition-colors relative">
-          <span className="mx-3">Cart {totalItems} items</span>
-          <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-            <ShoppingCart className="h-6 w-6 text-white" />
+        {windowWidth !== undefined && windowWidth > 768 ? (
+          <div className="flex items-center border border-gray-600 rounded-full cursor-pointer hover:bg-gray-100 transition-colors relative">
+            <span className="mx-3">Cart {totalItems} items</span>
+            <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
+              <ShoppingCart className="h-6 w-6 text-white" />
+            </div>
+            <div className="h-6 w-6 rounded-full absolute -top-2 -right-2 bg-red-400 flex items-center justify-center">
+              <span className="text-white">{totalItems}</span>
+            </div>
           </div>
-          <div className="h-6 w-6 rounded-full absolute -top-2 -right-2 bg-red-400 flex items-center justify-center">
-            <span className="text-white">{totalItems}</span>
-          </div>
-        </div>
+        ) : (
+          <ShoppingCart />
+        )}
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[740px] ">
         <SheetHeader>

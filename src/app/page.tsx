@@ -1,4 +1,3 @@
-import { NextPage } from 'next';
 import {
   Hero,
   BrandCarousal,
@@ -15,7 +14,7 @@ import {
 import { Footer } from '@/components/Layouts/Footer';
 import { NavBar } from '@/components/Layouts/NavBar';
 
-const Home: NextPage = async () => {
+const Home = async () => {
   return (
     <>
       <NavBar />

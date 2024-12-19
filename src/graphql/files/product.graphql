@@ -77,6 +77,8 @@ query GetProducts($first: Int, $after: String, $before: String, $last: Int) {
     pageInfo {
       endCursor
       hasNextPage
+      startCursor
+      hasPreviousPage
     }
     edges {
       cursor

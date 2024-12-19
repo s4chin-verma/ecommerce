@@ -2,8 +2,10 @@
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 
 export default function SonnerDemo() {
+  const windowWidth = useWindowWidth();
   return (
     <Button
       variant="outline"

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LogIn, Loader2, Mail } from 'lucide-react';
+import { LogIn, Loader2 } from 'lucide-react';
 import { DeviconGoogle } from '@/lib/svg/DeviconGoogle';
 import { Facebook } from 'lucide-react';
 import {
@@ -40,8 +40,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
-import { getToken } from 'next-auth/jwt';
-import { LogoutDialog } from '@/components/LogoutDialog';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -53,7 +51,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
-  console.log(session.data);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -223,7 +220,6 @@ export default function LoginPage() {
           </AlertDialogContent>
         </AlertDialog>
       )}
-      <LogoutDialog />
     </main>
   );
 }

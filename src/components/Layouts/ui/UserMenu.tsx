@@ -1,27 +1,35 @@
 'use client';
 
+import { User } from 'lucide-react';
+import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
+import { FC } from 'react';
+import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { IIcon } from '@/components/IIcon';
-import Link from 'next/link';
-import { User } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 
-interface UserMenuProps {
-  userLinks: { href: string; title: string }[];
-}
+const userLinks = [
+  { title: 'Profile', href: '/shop/profile' },
+  { title: 'Login', href: '/shop/auth/login' },
+  { title: 'Register', href: '/shop/auth/register' },
+  { title: 'Wishlist', href: '/shop/wishlist' },
+];
 
-const UserMenu: React.FC<UserMenuProps> = ({ userLinks }) => {
+const UserMenu: FC = () => {
+  const windowWidth = useWindowWidth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
-        <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-          <User className="h-6 w-6 text-white" />
-        </div>
+        {windowWidth !== undefined && windowWidth > 768 ? (
+          <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
+            <User className="h-2 w-2 md:h-6 md:w-6 text-white" />
+          </div>
+        ) : (
+          <User />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {userLinks.map((link, index) => (

@@ -10,24 +10,11 @@ import AddToCartButton from './AddToCartButton';
 import { cn } from '@/lib/utils';
 import { Product } from '@prisma/client';
 
-interface ProductCardProps extends Product {
+interface ProductCardProps {
+  product: Product;
   className?: string;
 }
-
-const ProductCard: React.FC<ProductCardProps> = ({
-  id,
-  name,
-  images,
-  description,
-  price,
-  sellingPrice,
-  stock,
-  totalSale,
-  ratings,
-  categoryId,
-  className,
-  ...rest
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
   const renderStars = (rating: number | null) => {
     return rating ? '⭐'.repeat(Math.round(rating)) : '';
   };
@@ -37,8 +24,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return Math.round(discount);
   };
 
-  const discountPercentage = sellingPrice
-    ? calculateDiscount(price, sellingPrice)
+  const discountPercentage = product.sellingPrice
+    ? calculateDiscount(product.price, product.sellingPrice)
     : 0;
 
   return (
@@ -46,29 +33,34 @@ const ProductCard: React.FC<ProductCardProps> = ({
       className={cn('rounded-2xl border-x border-gray-400 mx-3', className)}
     >
       <CardHeader>
-        <h5 className="text-center">{name}</h5>
+        <h5 className="text-center">{product.name}</h5>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center">
-        {images.length > 0 && (
+        {product.images.length > 0 && (
           <Image
-            src={images[0]}
+            src={product.images[0]}
             className="h-32"
             width={150}
             height={100}
-            alt={name}
+            alt={product.name}
           />
         )}
       </CardContent>
       <CardFooter className="flex flex-col p-1 px-3 pb-4">
-        <p>{renderStars(ratings)}</p>
-        <p className="text-gray-600 text-center w-full">{description}</p>
-        <p className="text-gray-700 text-center w-full text-base">
-          Rs. {sellingPrice ? sellingPrice.toFixed(2) : price.toFixed(2)}
+        <p>{renderStars(product.ratings)}</p>
+        <p className="text-gray-600 text-center w-full">
+          {product.description}
         </p>
-        {sellingPrice && (
+        <p className="text-gray-700 text-center w-full text-base">
+          Rs.{' '}
+          {product.sellingPrice
+            ? product.sellingPrice.toFixed(2)
+            : product.price.toFixed(2)}
+        </p>
+        {product.sellingPrice && (
           <>
             <p className="text-gray-400 text-center w-full line-through text-sm">
-              Rs. {price.toFixed(2)}
+              Rs. {product.price.toFixed(2)}
             </p>
             <p className="text-green-600 text-center w-full text-sm">
               {discountPercentage}% off
@@ -95,7 +87,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, className }) => {
       )}
     >
       {products.map(product => (
-        <ProductCard key={product.id} {...product} />
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );

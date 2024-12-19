@@ -40,12 +40,39 @@ builder.queryFields(t => ({
     },
   }),
 
+  // getProducts: t.prismaConnection({
+  //   type: 'Product',
+  //   cursor: 'id',
+  //   resolve: async (query, _parent, _args, _context) => {
+  //     const menus = await prisma.product.findMany({ ...query });
+  //     return menus;
+  //   },
+  // }),
   getProducts: t.prismaConnection({
     type: 'Product',
     cursor: 'id',
-    resolve: async (query, _parent, _args, _context) => {
-      const menus = await prisma.product.findMany({ ...query });
-      return menus;
+    args: {
+      first: t.arg.int(),
+      after: t.arg.string(),
+      before: t.arg.string(),
+      last: t.arg.int(),
+    },
+    resolve: async (query, _parent, args, _context) => {
+      const products = await prisma.product.findMany({
+        ...query,
+        take: (args.first as number) ?? (args.last as number), // Use 'first' for forward, 'last' for backward
+        skip: 1, // Skip the current cursor
+        cursor: args.after
+          ? { id: args.after } // Use 'after' cursor for forward
+          : args.before
+          ? { id: args.before } // Use 'before' cursor for backward
+          : undefined,
+        orderBy: {
+          id: args.after ? 'asc' : 'desc', // Ensure proper ordering for forward/backward
+        },
+      });
+
+      return products;
     },
   }),
 }));

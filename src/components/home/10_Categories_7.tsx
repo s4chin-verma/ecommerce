@@ -6,6 +6,7 @@ import {
   ProductCard,
   ProductCarouselWrapper,
 } from './ui';
+import { Product } from '@prisma/client';
 
 const Categories_7: React.FC = () => {
   return (
@@ -27,7 +28,7 @@ const Categories_7: React.FC = () => {
             <div className="md:w-1/2">
               <ProductCarouselWrapper slidesToShow={2} autoplayDelay={4000}>
                 {dummyProducts.slice(2, 5).map((product, index) => (
-                  <ProductCard key={index} {...product} />
+                  <ProductCard key={index} product={product as Product} />
                 ))}
               </ProductCarouselWrapper>
             </div>
