@@ -1,103 +1,43 @@
-'use client';
+# query GetUser($getUserId: String!) {
+#   getUser(id: $getUserId) {
+#     firstName
+#     lastName
+#     password
+#     emailVerified
+#     phone
+#     email
+#   }
+# }
 
-import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, MapPin, Package, User } from 'lucide-react';
+# query GetProducts($first: Int, $after: String, $before: String, $last: Int) {
+#   getProducts(first: $first, after: $after, before: $before, last: $last) {
+#     pageInfo {
+#       endCursor
+#       hasNextPage
+#       startCursor
+#       hasPreviousPage
+#     }
+#     edges {
+#       cursor
+#       node {
+#         id
+#         category {
+#           title
+#         }
+#         images
+#         name
+#         price
 
-export default function UserProfile() {
-  const [user, setUser] = useState({
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    avatar: '/placeholder-avatar.jpg',
-  });
 
-  const orders = [
-    { id: '1234', date: '2023-05-01', status: 'Delivered', total: '$120.00' },
-    { id: '5678', date: '2023-06-15', status: 'Shipped', total: '$85.50' },
-    { id: '9012', date: '2023-07-20', status: 'Processing', total: '$200.00' },
-  ];
+#         ratings
+#         sellingPrice
+#       }
+#     }
+#   }
+# }
 
-  const addresses = [
-    { id: '1', type: 'Home', address: '123 Main St, Anytown, AT 12345' },
-    { id: '2', type: 'Work', address: '456 Office Blvd, Workville, WV 67890' },
-  ];
 
-  const paymentMethods = [
-    { id: '1', type: 'Visa', last4: '1234', expiry: '12/24' },
-    { id: '2', type: 'Mastercard', last4: '5678', expiry: '09/25' },
-  ];
-
-  return (
-    <div className="mx-auto py-10 mt-32 max-w-6xl px-3">
-      <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
-      <div className="flex items-center space-x-4 mb-6">
-        <Avatar className="w-20 h-20">
-          <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback>
-            {user.name
-              .split(' ')
-              .map(n => n[0])
-              .join('')}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h2 className="text-2xl font-semibold">{user.name}</h2>
-          <p className="text-muted-foreground">{user.email}</p>
-        </div>
-      </div>
-
-      <Tabs defaultValue="personal-info" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="personal-info">Personal Info</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="addresses">Addresses</TabsTrigger>
-          <TabsTrigger value="payment">Payment Methods</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="personal-info">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>
-                Update your personal details here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  value={user.name}
-                  onChange={e => setUser({ ...user, name: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={user.email}
-                  onChange={e => setUser({ ...user, email: e.target.value })}
-                />
-              </div>
-              <Button>Save Changes</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="orders">
+ <TabsContent value="orders">
           <Card>
             <CardHeader>
               <CardTitle>Order History</CardTitle>
@@ -209,7 +149,6 @@ export default function UserProfile() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
+
+
+         

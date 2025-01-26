@@ -10,16 +10,24 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-
-const userLinks = [
-  { title: 'Profile', href: '/shop/profile' },
-  { title: 'Login', href: '/shop/auth/login' },
-  { title: 'Register', href: '/shop/auth/register' },
-  { title: 'Wishlist', href: '/shop/wishlist' },
-];
+import { useSession } from 'next-auth/react';
+import { LogoutDialog } from '@/components/LogoutDialog';
 
 const UserMenu: FC = () => {
   const windowWidth = useWindowWidth();
+  const { data: session, status } = useSession();
+
+  const userLinks =
+    status === 'authenticated'
+      ? [
+          { title: 'Profile', href: `/shop/user/${session?.user?.id}` },
+          { title: 'Wishlist', href: '/shop/wishlist' },
+        ]
+      : [
+          { title: 'Login', href: '/shop/auth/login' },
+          { title: 'Register', href: '/shop/auth/register' },
+        ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
@@ -37,6 +45,13 @@ const UserMenu: FC = () => {
             <Link href={link.href}>{link.title}</Link>
           </DropdownMenuItem>
         ))}
+        {status === 'authenticated' && (
+          <DropdownMenuItem onSelect={e => e.preventDefault()}>
+            <LogoutDialog>
+              <span className="text-sm cursor-pointer">Log Out</span>
+            </LogoutDialog>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,15 +1,19 @@
-query GetUser($email: String!) {
-  getUser(email: $email) {
-    firstName
-    lastName
-  }
-}
-
 query GetUsers {
   getUsers {
     firstName
     lastName
     email
+    phone
+  }
+}
+
+query GetUser($getUserId: String!) {
+  getUser(id: $getUserId) {
+    id
+    firstName
+    lastName
+    email
+    password
     phone
   }
 }

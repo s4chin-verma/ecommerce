@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,29 +14,35 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
 
-export function LogoutDialog() {
-  const router = useRouter();
+interface Props {
+  children: ReactNode;
+}
 
+export const LogoutDialog: FC<Props> = ({ children }) => {
+  const router = useRouter();
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push('/');
-    toast({
-      title: 'Logged out successfully',
-      description: 'You have been securely logged out of your account.',
-      duration: 5000,
-    });
+    try {
+      await signOut({ redirect: false });
+      router.push('/');
+      toast({
+        title: 'Logged out successfully',
+        description: 'You have been securely logged out of your account.',
+        duration: 5000,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error logging out',
+        description: 'An unexpected error occurred. Please try again.',
+        duration: 5000,
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="gap-2 font-semibold text-red-500 hover:text-red-600 hover:bg-red-50"
-        >
-          <LogOut className="w-4 h-4" />
-          Log Out
-        </Button>
+        <div onClick={e => e.stopPropagation()}>{children}</div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -63,4 +68,4 @@ export function LogoutDialog() {
       </DialogContent>
     </Dialog>
   );
-}
+};

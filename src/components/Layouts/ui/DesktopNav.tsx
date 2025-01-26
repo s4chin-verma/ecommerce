@@ -37,7 +37,7 @@ const DesktopNav = () => {
       <HeaderStrip />
       <nav className="max-w-6xl mx-auto px-3 flex items-center">
         <Link href="/" className="text-4xl font-bold mr-12 cursor-pointer">
-          Gems
+          Luxe
         </Link>
         <div className="bg-nav rounded-full w-full p-3.5 flex justify-between">
           <div className="flex items-center">

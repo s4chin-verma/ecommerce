@@ -43,7 +43,7 @@ builder.queryFields(t => ({
   getUser: t.prismaField({
     type: 'User',
     args: {
-      email: t.arg.string({ required: true }),
+      id: t.arg.string({ required: true }),
     },
     resolve: async (query, _, args, context) => {
       const userRole = (await context).user?.role;
@@ -54,7 +54,7 @@ builder.queryFields(t => ({
       }
       const user = await prisma.user.findUniqueOrThrow({
         ...query,
-        where: { email: args?.email },
+        where: { id: args?.id },
       });
       return user;
     },

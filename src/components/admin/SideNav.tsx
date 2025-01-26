@@ -2,7 +2,14 @@
 
 import { FC } from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, Package, ShoppingCart, Users, Settings } from 'lucide-react';
+import {
+  Home,
+  Package,
+  ShoppingCart,
+  Users,
+  Settings,
+  LogOut,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -42,7 +49,15 @@ const SideNav: FC = () => {
           })}
         </nav>
       </div>
-      <LogoutDialog />
+      <LogoutDialog>
+        <Button
+          variant="outline"
+          className="gap-2 font-semibold text-red-500 hover:text-red-600 hover:bg-red-50"
+        >
+          <LogOut className="w-4 h-4" />
+          Log Out
+        </Button>
+      </LogoutDialog>
     </aside>
   );
 };

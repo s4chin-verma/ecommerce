@@ -81,17 +81,16 @@ export default function LoginPage() {
         if (session?.user) {
           if ((session.user as User).role === 'ADMIN') {
             setIsAdmin(true);
-            console.log(session.user.role);
             toast({
               title: 'Logged in successfully!',
               description: 'Welcome back Admin!',
             });
           } else {
+            router.push('/');
             toast({
               title: 'Logged in successfully!',
               description: 'Welcome back!',
             });
-            console.log(session.user.role);
           }
         }
       }

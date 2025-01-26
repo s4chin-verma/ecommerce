@@ -234,7 +234,6 @@ export type Order = {
   status?: Maybe<OrderStatus>;
   total?: Maybe<Scalars['Float']['output']>;
   user?: Maybe<User>;
-  userEmail?: Maybe<Scalars['ID']['output']>;
   userId?: Maybe<Scalars['ID']['output']>;
   userName?: Maybe<Scalars['ID']['output']>;
   userPhone?: Maybe<Scalars['String']['output']>;
@@ -301,10 +300,12 @@ export type Product = {
 export type Query = {
   __typename?: 'Query';
   getAddressById?: Maybe<Address>;
-  getAddressByUserId?: Maybe<Address>;
+  getAddressesByUserId?: Maybe<Array<Address>>;
   getAllAddresses?: Maybe<Array<Address>>;
   getCategories?: Maybe<Array<Category>>;
   getCategory?: Maybe<Category>;
+  getOrderByOrderId?: Maybe<Order>;
+  getOrderByUserId?: Maybe<Array<Order>>;
   getProduct?: Maybe<Product>;
   getProducts?: Maybe<QueryGetProductsConnection>;
   getUser?: Maybe<User>;
@@ -317,13 +318,23 @@ export type QueryGetAddressByIdArgs = {
 };
 
 
-export type QueryGetAddressByUserIdArgs = {
+export type QueryGetAddressesByUserIdArgs = {
   userId: Scalars['String']['input'];
 };
 
 
 export type QueryGetCategoryArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetOrderByOrderIdArgs = {
+  orderId: Scalars['String']['input'];
+};
+
+
+export type QueryGetOrderByUserIdArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -341,7 +352,7 @@ export type QueryGetProductsArgs = {
 
 
 export type QueryGetUserArgs = {
-  email: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 export type QueryGetProductsConnection = {
@@ -417,17 +428,24 @@ export type Wishlist = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
+export type GetAddressesByUserIdQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetAddressesByUserIdQuery = { __typename?: 'Query', getAddressesByUserId?: Array<{ __typename?: 'Address', addressLine1?: string | null, addressLine2?: string | null, city?: string | null, country?: string | null, id?: string | null, postalCode?: string | null, state?: string | null }> | null };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories?: Array<{ __typename?: 'Category', id?: string | null, title?: string | null, image?: string | null }> | null };
 
-export type GetProductQueryVariables = Exact<{
-  getProductId: Scalars['String']['input'];
+export type GetOrderByUserIdQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, totalSale?: number | null } | null };
+export type GetOrderByUserIdQuery = { __typename?: 'Query', getOrderByUserId?: Array<{ __typename?: 'Order', id?: string | null, orderNumber?: string | null, deliveryTime?: any | null, userName?: string | null, userPhone?: string | null, paid?: boolean | null, deliveryFee?: number | null, serviceFee?: number | null, discount?: number | null, total?: number | null, deliveryAddress?: { __typename?: 'Address', addressLine1?: string | null, addressLine2?: string | null, city?: string | null, state?: string | null, postalCode?: string | null, country?: string | null } | null }> | null };
 
 export type AddProductMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -463,27 +481,24 @@ export type UpdateProductMutationVariables = Exact<{
 
 export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, id?: string | null } | null };
 
-export type GetProductsQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Int']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
+export type GetProductQueryVariables = Exact<{
+  getProductId: Scalars['String']['input'];
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null } | null };
-
-export type GetUserQueryVariables = Exact<{
-  email: Scalars['String']['input'];
-}>;
-
-
-export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', firstName?: string | null, lastName?: string | null } | null };
+export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, totalSale?: number | null } | null };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null }> | null };
+
+export type GetUserQueryVariables = Exact<{
+  getUserId: Scalars['String']['input'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', id?: string | null, firstName?: string | null, lastName?: string | null, email?: string | null, password?: string | null, phone?: string | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -497,6 +512,23 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
 
 
+export const GetAddressesByUserIdDocument = gql`
+    query GetAddressesByUserId($userId: String!) {
+  getAddressesByUserId(userId: $userId) {
+    addressLine1
+    addressLine2
+    city
+    country
+    id
+    postalCode
+    state
+  }
+}
+    `;
+
+export function useGetAddressesByUserIdQuery(options: Omit<Urql.UseQueryArgs<GetAddressesByUserIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAddressesByUserIdQuery, GetAddressesByUserIdQueryVariables>({ query: GetAddressesByUserIdDocument, ...options });
+};
 export const GetCategoriesDocument = gql`
     query GetCategories {
   getCategories {
@@ -510,25 +542,33 @@ export const GetCategoriesDocument = gql`
 export function useGetCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>({ query: GetCategoriesDocument, ...options });
 };
-export const GetProductDocument = gql`
-    query GetProduct($getProductId: String!) {
-  getProduct(id: $getProductId) {
-    categoryId
-    description
+export const GetOrderByUserIdDocument = gql`
+    query GetOrderByUserId($userId: String!) {
+  getOrderByUserId(userId: $userId) {
     id
-    images
-    name
-    price
-    ratings
-    sellingPrice
-    stock
-    totalSale
+    orderNumber
+    deliveryTime
+    userName
+    userPhone
+    paid
+    deliveryAddress {
+      addressLine1
+      addressLine2
+      city
+      state
+      postalCode
+      country
+    }
+    deliveryFee
+    serviceFee
+    discount
+    total
   }
 }
     `;
 
-export function useGetProductQuery(options: Omit<Urql.UseQueryArgs<GetProductQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetProductQuery, GetProductQueryVariables>({ query: GetProductDocument, ...options });
+export function useGetOrderByUserIdQuery(options: Omit<Urql.UseQueryArgs<GetOrderByUserIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetOrderByUserIdQuery, GetOrderByUserIdQueryVariables>({ query: GetOrderByUserIdDocument, ...options });
 };
 export const AddProductDocument = gql`
     mutation AddProduct($name: String!, $description: String!, $price: Float!, $sellingPrice: Float!, $categoryId: String!, $images: [String!]!, $stock: Int!) {
@@ -587,45 +627,25 @@ export const UpdateProductDocument = gql`
 export function useUpdateProductMutation() {
   return Urql.useMutation<UpdateProductMutation, UpdateProductMutationVariables>(UpdateProductDocument);
 };
-export const GetProductsDocument = gql`
-    query GetProducts($first: Int, $after: String, $before: String, $last: Int) {
-  getProducts(first: $first, after: $after, before: $before, last: $last) {
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    edges {
-      cursor
-      node {
-        id
-        category {
-          title
-        }
-        images
-        name
-        price
-        ratings
-        sellingPrice
-      }
-    }
+export const GetProductDocument = gql`
+    query GetProduct($getProductId: String!) {
+  getProduct(id: $getProductId) {
+    categoryId
+    description
+    id
+    images
+    name
+    price
+    ratings
+    sellingPrice
+    stock
+    totalSale
   }
 }
     `;
 
-export function useGetProductsQuery(options?: Omit<Urql.UseQueryArgs<GetProductsQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetProductsQuery, GetProductsQueryVariables>({ query: GetProductsDocument, ...options });
-};
-export const GetUserDocument = gql`
-    query GetUser($email: String!) {
-  getUser(email: $email) {
-    firstName
-    lastName
-  }
-}
-    `;
-
-export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
+export function useGetProductQuery(options: Omit<Urql.UseQueryArgs<GetProductQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductQuery, GetProductQueryVariables>({ query: GetProductDocument, ...options });
 };
 export const GetUsersDocument = gql`
     query GetUsers {
@@ -640,6 +660,22 @@ export const GetUsersDocument = gql`
 
 export function useGetUsersQuery(options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({ query: GetUsersDocument, ...options });
+};
+export const GetUserDocument = gql`
+    query GetUser($getUserId: String!) {
+  getUser(id: $getUserId) {
+    id
+    firstName
+    lastName
+    email
+    password
+    phone
+  }
+}
+    `;
+
+export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserQuery, GetUserQueryVariables>({ query: GetUserDocument, ...options });
 };
 export const CreateUserDocument = gql`
     mutation CreateUser($email: String!, $firstName: String!, $lastName: String!, $password: String!, $phone: String!) {

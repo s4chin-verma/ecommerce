@@ -118,12 +118,10 @@ enum OrderStatus {
 model Order {
   id              String         @id @default(cuid())
   orderNumber     String         @unique
-  orderDate       DateTime       @default(now())
   deliveryTime    DateTime?      @default(now())
   userName        String
   userId          String
-  userEmail       String
-  user            User           @relation(fields: [userEmail], references: [email])
+  User            User?          @relation(fields: [userId], references: [id])
   userPhone       String
   paymentToken    String?
   paid            Boolean        @default(false)
@@ -136,6 +134,7 @@ model Order {
   note            String?
   discount        Float?
   total           Float
+  orderDate       DateTime       @default(now())
   OrderProduct    OrderProduct[]
   Payment         Payment[]
   Shipping        Shipping[]

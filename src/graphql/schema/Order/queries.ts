@@ -1,6 +1,7 @@
 import { builder } from '../../builder';
 import prisma from '@/lib/prisma';
 import { OrderStatus } from './enum';
+import { GraphQLError } from 'graphql';
 
 builder.prismaObject('Order', {
   fields: t => ({
@@ -9,8 +10,7 @@ builder.prismaObject('Order', {
     deliveryTime: t.expose('deliveryTime', { type: 'DateTime' }),
     userName: t.exposeID('userName'),
     userId: t.exposeID('userId'),
-    userEmail: t.exposeID('userEmail'),
-    user: t.relation('user'),
+    user: t.relation('User'),
     userPhone: t.exposeString('userPhone'),
     paymentToken: t.exposeString('paymentToken'),
     paid: t.exposeBoolean('paid'),
@@ -39,3 +39,42 @@ builder.prismaObject('OrderProduct', {
     quantity: t.exposeInt('quantity'),
   }),
 });
+
+builder.queryFields(t => ({
+  getOrderByUserId: t.prismaField({
+    type: ['Order'],
+    args: {
+      userId: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _, args, __) => {
+      return prisma.order.findMany({
+        ...query,
+        where: { userId: args.userId },
+        include: {
+          deliveryAddress: true,
+          User: true,
+        },
+      });
+    },
+  }),
+
+  getOrderByOrderId: t.prismaField({
+    type: 'Order',
+    args: {
+      orderId: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _, args, __) => {
+      const order = await prisma.order.findUnique({
+        ...query,
+        where: { id: args.orderId },
+        include: {
+          deliveryAddress: true,
+          User: true,
+        },
+      });
+
+      if (!order) throw new GraphQLError('Order not found');
+      return order;
+    },
+  }),
+}));

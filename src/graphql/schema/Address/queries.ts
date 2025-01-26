@@ -19,8 +19,8 @@ builder.prismaObject('Address', {
 });
 
 builder.queryFields(t => ({
-  getAddressByUserId: t.prismaField({
-    type: 'Address',
+  getAddressesByUserId: t.prismaField({
+    type: ['Address'],
     args: {
       userId: t.arg.string({ required: true }),
     },
@@ -31,11 +31,16 @@ builder.queryFields(t => ({
           'You must be logged in as a user or an admin to perform this action'
         );
       }
-      const address = await prisma.address.findFirstOrThrow({
+
+      const addresses = await prisma.address.findMany({
         ...query,
         where: { userId: args.userId },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
-      return address;
+
+      return addresses;
     },
   }),
   getAddressById: t.prismaField({
@@ -67,3 +72,5 @@ builder.queryFields(t => ({
     },
   }),
 }));
+
+builder.queryFields(t => ({}));
