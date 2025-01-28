@@ -6,37 +6,30 @@ import { GraphQLError } from 'graphql';
 builder.prismaObject('Order', {
   fields: t => ({
     id: t.exposeID('id'),
-    orderNumber: t.exposeID('orderNumber'),
-    deliveryTime: t.expose('deliveryTime', { type: 'DateTime' }),
-    userName: t.exposeID('userName'),
-    userId: t.exposeID('userId'),
-    user: t.relation('User'),
+    orderNumber: t.exposeString('orderNumber'),
+    userId: t.exposeString('userId'),
+    userName: t.exposeString('userName'),
     userPhone: t.exposeString('userPhone'),
-    paymentToken: t.exposeString('paymentToken'),
-    paid: t.exposeBoolean('paid'),
-    delivery: t.relation('delivery'),
-    addressId: t.exposeID('addressId'),
-    deliveryAddress: t.relation('deliveryAddress'),
+    productId: t.exposeString('productId'),
+    paymentToken: t.exposeString('paymentToken', { nullable: true }),
+    quantity: t.exposeInt('quantity'),
+    addressId: t.exposeString('addressId'),
     deliveryFee: t.exposeFloat('deliveryFee'),
     serviceFee: t.exposeFloat('serviceFee'),
+    discount: t.exposeFloat('discount', { nullable: true }),
+    subtotal: t.exposeFloat('subtotal'),
+    paid: t.exposeBoolean('paid'),
+    orderDate: t.expose('orderDate', { type: 'DateTime' }),
+    deliveryTime: t.expose('deliveryTime', {
+      type: 'DateTime',
+      nullable: true,
+    }),
     status: t.expose('status', { type: OrderStatus }),
-    note: t.exposeString('note'),
-    discount: t.exposeFloat('discount'),
-    total: t.exposeFloat('total'),
-    orderProduct: t.relation('OrderProduct'),
-    payment: t.relation('Payment'),
-    shipping: t.relation('Shipping'),
-  }),
-});
-
-builder.prismaObject('OrderProduct', {
-  fields: t => ({
-    id: t.exposeID('id'),
-    product: t.relation('Product'),
-    productId: t.exposeString('productId'),
-    order: t.relation('Order'),
-    orderId: t.exposeString('orderId'),
-    quantity: t.exposeInt('quantity'),
+    deliveryAddress: t.relation('deliveryAddress'),
+    User: t.relation('User', { nullable: true }),
+    product: t.relation('product', { nullable: true }),
+    Payment: t.relation('Payment'),
+    Shipping: t.relation('Shipping'),
   }),
 });
 
@@ -46,13 +39,14 @@ builder.queryFields(t => ({
     args: {
       userId: t.arg.string({ required: true }),
     },
-    resolve: async (query, _, args, __) => {
+    resolve: async (query, _, args) => {
       return prisma.order.findMany({
         ...query,
         where: { userId: args.userId },
         include: {
           deliveryAddress: true,
           User: true,
+          product: true,
         },
       });
     },
@@ -63,7 +57,7 @@ builder.queryFields(t => ({
     args: {
       orderId: t.arg.string({ required: true }),
     },
-    resolve: async (query, _, args, __) => {
+    resolve: async (query, _, args) => {
       const order = await prisma.order.findUnique({
         ...query,
         where: { id: args.orderId },

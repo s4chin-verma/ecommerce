@@ -2,21 +2,14 @@ query GetOrderByUserId($userId: String!) {
   getOrderByUserId(userId: $userId) {
     id
     orderNumber
-    deliveryTime
-    userName
-    userPhone
-    paid
-    deliveryAddress {
-      addressLine1
-      addressLine2
-      city
-      state
-      postalCode
-      country
+    orderDate
+    status
+    quantity
+    subtotal
+    product {
+      images
+      name
+      price
     }
-    deliveryFee
-    serviceFee
-    discount
-    total
   }
 }

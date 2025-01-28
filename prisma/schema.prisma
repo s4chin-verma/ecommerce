@@ -88,74 +88,59 @@ model Review {
 }
 
 model Product {
-  id           String         @id @default(uuid())
+  id           String        @id @default(uuid())
   name         String
   images       String[]
   description  String
   price        Float
   sellingPrice Float?
-  stock        Int            @default(0)
-  totalSale    Int            @default(0)
+  stock        Int           @default(0)
+  totalSale    Int           @default(0)
   ratings      Float?
   categoryId   String
-  category     Category       @relation(fields: [categoryId], references: [id])
-  OrderProduct OrderProduct[]
+  category     Category      @relation(fields: [categoryId], references: [id])
   CartProduct  CartProduct[]
-  Wishlist     Wishlist?      @relation(fields: [wishlistId], references: [id])
+  Wishlist     Wishlist?     @relation(fields: [wishlistId], references: [id])
   wishlistId   String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   Review       Review[]
+  Order        Order[]
 }
 
 enum OrderStatus {
   ORDERED
+  CONFIRMED
   SHIPPED
   OUT_FOR_DELIVERY
   DELIVERED
+  CANCELLED
+  RETURNED
 }
 
 model Order {
-  id              String         @id @default(cuid())
-  orderNumber     String         @unique
-  deliveryTime    DateTime?      @default(now())
-  userName        String
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
   userId          String
-  User            User?          @relation(fields: [userId], references: [id])
+  userName        String
   userPhone       String
+  productId       String
   paymentToken    String?
-  paid            Boolean        @default(false)
-  delivery        Delivery?
+  quantity        Int
   addressId       String
-  deliveryAddress Address        @relation(fields: [addressId], references: [id])
-  deliveryFee     Float          @default(4)
-  serviceFee      Float          @default(3)
-  status          OrderStatus    @default(ORDERED)
-  note            String?
+  deliveryFee     Float       @default(4)
+  serviceFee      Float       @default(3)
   discount        Float?
-  total           Float
-  orderDate       DateTime       @default(now())
-  OrderProduct    OrderProduct[]
+  subtotal        Float
+  paid            Boolean     @default(false)
+  orderDate       DateTime    @default(now())
+  deliveryTime    DateTime?   @default(now())
+  status          OrderStatus @default(ORDERED)
+  deliveryAddress Address     @relation(fields: [addressId], references: [id])
+  User            User?       @relation(fields: [userId], references: [id])
+  product         Product?    @relation(fields: [productId], references: [id])
   Payment         Payment[]
   Shipping        Shipping[]
-}
-
-model Delivery {
-  id          String @id @default(cuid())
-  driverName  String
-  driverEmail String
-  driverPhone String
-  order       Order  @relation(fields: [orderNum], references: [orderNumber])
-  orderNum    String @unique
-}
-
-model OrderProduct {
-  id        String  @id @default(uuid())
-  productId String
-  orderId   String
-  quantity  Int
-  Product   Product @relation(fields: [productId], references: [id])
-  Order     Order   @relation(fields: [orderId], references: [id])
 }
 
 model Category {

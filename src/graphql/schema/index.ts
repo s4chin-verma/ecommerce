@@ -9,7 +9,6 @@ import './Order';
 import './Review';
 import './Wishlist';
 import './Payment';
-import './Delivery';
 import './Shipping';
 
 export const schema = builder.toSchema({});

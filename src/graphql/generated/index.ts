@@ -64,16 +64,6 @@ export type Category = {
   title?: Maybe<Scalars['String']['output']>;
 };
 
-export type Delivery = {
-  __typename?: 'Delivery';
-  driverEmail?: Maybe<Scalars['String']['output']>;
-  driverName?: Maybe<Scalars['String']['output']>;
-  driverPhone?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  order?: Maybe<Order>;
-  orderNum?: Maybe<Scalars['String']['output']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   addCategory?: Maybe<Category>;
@@ -216,44 +206,38 @@ export type MutationUpdateStockArgs = {
 
 export type Order = {
   __typename?: 'Order';
-  addressId?: Maybe<Scalars['ID']['output']>;
-  delivery?: Maybe<Delivery>;
+  Payment?: Maybe<Array<Payment>>;
+  Shipping?: Maybe<Array<Shipping>>;
+  User?: Maybe<User>;
+  addressId?: Maybe<Scalars['String']['output']>;
   deliveryAddress?: Maybe<Address>;
   deliveryFee?: Maybe<Scalars['Float']['output']>;
   deliveryTime?: Maybe<Scalars['DateTime']['output']>;
   discount?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  note?: Maybe<Scalars['String']['output']>;
-  orderNumber?: Maybe<Scalars['ID']['output']>;
-  orderProduct?: Maybe<Array<OrderProduct>>;
+  orderDate?: Maybe<Scalars['DateTime']['output']>;
+  orderNumber?: Maybe<Scalars['String']['output']>;
   paid?: Maybe<Scalars['Boolean']['output']>;
-  payment?: Maybe<Array<Payment>>;
   paymentToken?: Maybe<Scalars['String']['output']>;
-  serviceFee?: Maybe<Scalars['Float']['output']>;
-  shipping?: Maybe<Array<Shipping>>;
-  status?: Maybe<OrderStatus>;
-  total?: Maybe<Scalars['Float']['output']>;
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['ID']['output']>;
-  userName?: Maybe<Scalars['ID']['output']>;
-  userPhone?: Maybe<Scalars['String']['output']>;
-};
-
-export type OrderProduct = {
-  __typename?: 'OrderProduct';
-  id?: Maybe<Scalars['ID']['output']>;
-  order?: Maybe<Order>;
-  orderId?: Maybe<Scalars['String']['output']>;
   product?: Maybe<Product>;
   productId?: Maybe<Scalars['String']['output']>;
   quantity?: Maybe<Scalars['Int']['output']>;
+  serviceFee?: Maybe<Scalars['Float']['output']>;
+  status?: Maybe<OrderStatus>;
+  subtotal?: Maybe<Scalars['Float']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  userName?: Maybe<Scalars['String']['output']>;
+  userPhone?: Maybe<Scalars['String']['output']>;
 };
 
 /** Order Status */
 export enum OrderStatus {
+  Cancelled = 'CANCELLED',
+  Confirmed = 'CONFIRMED',
   Delivered = 'DELIVERED',
   Ordered = 'ORDERED',
   OutForDelivery = 'OUT_FOR_DELIVERY',
+  Returned = 'RETURNED',
   Shipped = 'SHIPPED'
 }
 
@@ -445,7 +429,7 @@ export type GetOrderByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetOrderByUserIdQuery = { __typename?: 'Query', getOrderByUserId?: Array<{ __typename?: 'Order', id?: string | null, orderNumber?: string | null, deliveryTime?: any | null, userName?: string | null, userPhone?: string | null, paid?: boolean | null, deliveryFee?: number | null, serviceFee?: number | null, discount?: number | null, total?: number | null, deliveryAddress?: { __typename?: 'Address', addressLine1?: string | null, addressLine2?: string | null, city?: string | null, state?: string | null, postalCode?: string | null, country?: string | null } | null }> | null };
+export type GetOrderByUserIdQuery = { __typename?: 'Query', getOrderByUserId?: Array<{ __typename?: 'Order', id?: string | null, orderNumber?: string | null, orderDate?: any | null, status?: OrderStatus | null, quantity?: number | null, subtotal?: number | null, product?: { __typename?: 'Product', images?: Array<string> | null, name?: string | null, price?: number | null } | null }> | null };
 
 export type AddProductMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -547,22 +531,15 @@ export const GetOrderByUserIdDocument = gql`
   getOrderByUserId(userId: $userId) {
     id
     orderNumber
-    deliveryTime
-    userName
-    userPhone
-    paid
-    deliveryAddress {
-      addressLine1
-      addressLine2
-      city
-      state
-      postalCode
-      country
+    orderDate
+    status
+    quantity
+    subtotal
+    product {
+      images
+      name
+      price
     }
-    deliveryFee
-    serviceFee
-    discount
-    total
   }
 }
     `;
