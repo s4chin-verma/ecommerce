@@ -71,3 +71,32 @@ query GetProduct($getProductId: String!) {
     totalSale
   }
 }
+
+query GetProducts($first: Int, $after: String) {
+  getProducts(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        name
+        description
+        price
+        sellingPrice
+        stock
+        images
+        ratings
+        createdAt
+        categoryId
+        wishlistId
+        updatedAt
+        category {
+          title
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

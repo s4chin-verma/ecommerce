@@ -472,6 +472,14 @@ export type GetProductQueryVariables = Exact<{
 
 export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, totalSale?: number | null } | null };
 
+export type GetProductsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, images?: Array<string> | null, ratings?: number | null, createdAt?: any | null, categoryId?: string | null, wishlistId?: string | null, updatedAt?: any | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null } } | null };
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -623,6 +631,40 @@ export const GetProductDocument = gql`
 
 export function useGetProductQuery(options: Omit<Urql.UseQueryArgs<GetProductQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductQuery, GetProductQueryVariables>({ query: GetProductDocument, ...options });
+};
+export const GetProductsDocument = gql`
+    query GetProducts($first: Int, $after: String) {
+  getProducts(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        name
+        description
+        price
+        sellingPrice
+        stock
+        images
+        ratings
+        createdAt
+        categoryId
+        wishlistId
+        updatedAt
+        category {
+          title
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    `;
+
+export function useGetProductsQuery(options?: Omit<Urql.UseQueryArgs<GetProductsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductsQuery, GetProductsQueryVariables>({ query: GetProductsDocument, ...options });
 };
 export const GetUsersDocument = gql`
     query GetUsers {

@@ -1,20 +1,7 @@
 'use client';
 
-import { FC, useState } from 'react';
-import { NextPage } from 'next';
-import { notFound } from 'next/navigation';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { ChevronDown, Divide, Heading1 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { AvailabilityFilter } from '@/components/filters/Availability';
-import { ProductTypeFilter } from '@/components/filters/ProductType';
-import { PriceFilter } from '@/components/filters/Price';
+import React, { use, useState } from 'react';
+import { useQuery } from 'urql';
 import {
   Pagination,
   PaginationContent,
@@ -24,78 +11,117 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { ProductCard, ProductGrid } from '@/components/home/ui';
-import { useQuery } from 'urql';
+import { Card } from '@/components/ui/card';
 import {
+  GetProductsDocument,
   GetProductsQuery,
   GetProductsQueryVariables,
-  GetProductsDocument,
 } from '@/graphql/generated';
-import { Product, User } from '@prisma/client';
+import { notFound } from 'next/navigation';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { AvailabilityFilter } from '@/components/filters/Availability';
+import { ProductTypeFilter } from '@/components/filters/ProductType';
+import { PriceFilter } from '@/components/filters/Price';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { ChevronDown, Loader2 } from 'lucide-react';
+import { ProductCard } from '@/components/home/ui';
+import { Skeleton } from '@/components/ui/skeleton';
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  sellingPrice: number;
+  stock: number;
+  images: string[];
+  categoryId: string;
+  wishlistId: string;
+  ratings: number | null;
+  category: { title: string };
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface ProductEdge {
+  node: Product;
+  cursor: string;
+}
 
-interface Props {
-  params: {
-    collectionName: string;
+export interface PageInfo {
+  hasNextPage: boolean;
+  endCursor: string | null;
+}
+
+export interface ProductsResponse {
+  getProducts: {
+    edges: ProductEdge[];
+    pageInfo: PageInfo;
   };
 }
 
-const CollectionPage: NextPage<Props> = ({ params }) => {
-  const { collectionName } = params;
+const ITEMS_PER_PAGE = 9;
+
+const ProductCardSkelton = () => (
+  <Card className="mx-3">
+    <Skeleton className="h-80 w-15" />
+  </Card>
+);
+
+export default function Page({
+  params,
+}: {
+  params: Promise<{ collectionName: string }>;
+}) {
+  const resolvedParams = use(params);
+  const collectionName = resolvedParams.collectionName;
   if (!collectionName) notFound();
 
-  const [first, setFirst] = useState(9); // Items per page for forward
-  const [last, setLast] = useState(9); // Items per page for backward
-  const [after, setAfter] = useState<string | null>(null); // Cursor for forward pagination
-  const [before, setBefore] = useState<string | null>(null); // Cursor for backward pagination
-
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [{ data, fetching, error }] = useQuery<
     GetProductsQuery,
     GetProductsQueryVariables
   >({
     query: GetProductsDocument,
-    variables: after ? { first, after } : { last, before }, // Use after or before based on state
+    variables: {
+      first: ITEMS_PER_PAGE,
+      after: cursor,
+    },
   });
+
+  if (error)
+    return <div className="text-red-500 p-4">Error: {error.message}</div>;
 
   const products = data?.getProducts?.edges?.map(edge => edge?.node) || [];
   const pageInfo = data?.getProducts?.pageInfo;
 
-  // Function to handle going to the next page
-
-  const handleNextPage = () => {
-    if (pageInfo?.hasNextPage && pageInfo?.endCursor) {
-      setAfter(pageInfo.endCursor); // Set the 'after' cursor for the next page
-      setBefore(null); // Reset 'before' to null as we are going forward
+  const handlePageChange = (pageNumber: number): void => {
+    if (pageNumber < currentPage) {
+      // TODO: Implement backward pagination
+      return;
     }
-  };
-  // Function to handle going to the previous page
-  const handlePreviousPage = () => {
-    if (before) {
-      setBefore(pageInfo?.startCursor); // Set 'before' cursor for the previous page
-      setAfter(null); // Reset 'after' as we are moving backward
-    } else {
-      setAfter(null); // If we are on the first page, reset both
-      setBefore(null);
-    }
+
+    setCurrentPage(pageNumber);
+    setCursor(pageInfo?.endCursor || null);
   };
 
-  const handleFilterChange = () => {
-    // Add logic here to update filters and refetch products
-  };
-
-  // Handling loading and error states
-
-  if (error) return <div>Error: {error.message}</div>;
+  const totalPages = pageInfo?.hasNextPage ? currentPage + 1 : currentPage;
+  const handleFilterChange = () => {};
 
   return (
     <main className="pt-36">
       <section>
         <div className="max-w-6xl mx-auto px-3 flex flex-row justify-stretch">
-          {/* Filters Section */}
-          <div className="w-[25%] sticky top-36">
+          <div className="w-[25%] sticky top-36 border-r">
             <div className="border-b border-gray-500 h-16 flex items-center">
               <h1 className="text-2xl font-bold">Filters</h1>
             </div>
-            <ScrollArea className="h-[600px] rounded-md border-0 p-0">
+            <ScrollArea className="h-[600px]">
               <AvailabilityFilter onFilterChange={handleFilterChange} />
               <ProductTypeFilter onFilterChange={handleFilterChange} />
               <PriceFilter
@@ -105,12 +131,10 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
               />
             </ScrollArea>
           </div>
-
-          {/* Products Section */}
-          <div className="w-[75%] border-l border-gray-500">
+          <div className="flex flex-col w-[75%] h-full border-l border-gray-500">
             <div className="border-b py-2 px-3 border-gray-500 h-16">
               <div className="flex items-center justify-between">
-                <h1>
+                <h1 className="ml-3">
                   Home / <span className="capitalize">{collectionName}</span>
                 </h1>
                 <div className="flex gap-4 items-center">
@@ -130,8 +154,15 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
                 </div>
               </div>
             </div>
+
             {fetching ? (
-              <div>Loading...</div>
+              <div className="pt-4 pb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
+                  {[1, 2, 3, 4, 5, 6].map(i => (
+                    <ProductCardSkelton key={i} />
+                  ))}
+                </div>
+              </div>
             ) : (
               <>
                 {!products || products.length === 0 ? (
@@ -148,43 +179,63 @@ const CollectionPage: NextPage<Props> = ({ params }) => {
                     </div>
                   </div>
                 )}
+
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() =>
+                          currentPage > 1 && handlePageChange(currentPage - 1)
+                        }
+                        className={
+                          currentPage === 1
+                            ? 'pointer-events-none opacity-50'
+                            : ''
+                        }
+                      />
+                    </PaginationItem>
+
+                    {[...Array(Math.min(totalPages, 5))].map((_, index) => (
+                      <PaginationItem key={index + 1}>
+                        <PaginationLink
+                          href="#"
+                          onClick={e => {
+                            e.preventDefault();
+                            handlePageChange(index + 1);
+                          }}
+                          isActive={currentPage === index + 1}
+                        >
+                          {index + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    {totalPages > 5 && (
+                      <PaginationItem>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    )}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() =>
+                          pageInfo?.hasNextPage &&
+                          handlePageChange(currentPage + 1)
+                        }
+                        className={
+                          !pageInfo?.hasNextPage
+                            ? 'pointer-events-none opacity-50'
+                            : ''
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </>
             )}
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious onClick={handlePreviousPage} />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => {
-                      setAfter(null);
-                      setBefore(null);
-                    }}
-                    isActive={!after && !before}
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-
-                {after && (
-                  <PaginationItem>
-                    <PaginationLink isActive>2</PaginationLink>
-                  </PaginationItem>
-                )}
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext onClick={handleNextPage} />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
           </div>
         </div>
       </section>
     </main>
   );
-};
-
-export default CollectionPage;
+}

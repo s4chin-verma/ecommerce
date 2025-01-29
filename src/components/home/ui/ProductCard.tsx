@@ -8,12 +8,28 @@ import {
 } from '@/components/ui/card';
 import AddToCartButton from './AddToCartButton';
 import { cn } from '@/lib/utils';
-import { Product } from '@prisma/client';
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  sellingPrice: number;
+  stock: number;
+  images: string[];
+  categoryId: string;
+  wishlistId: string;
+  ratings: number | null;
+  category: { title: string };
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface ProductCardProps {
   product: Product;
   className?: string;
 }
+
 const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
   const renderStars = (rating: number | null) => {
     return rating ? '⭐'.repeat(Math.round(rating)) : '';
@@ -33,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
       className={cn('rounded-2xl border-x border-gray-400 mx-3', className)}
     >
       <CardHeader>
-        <h5 className="text-center">{product.name}</h5>
+        <h5 className="text-center">{product.category.title}</h5>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center">
         {product.images.length > 0 && (
@@ -47,9 +63,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
         )}
       </CardContent>
       <CardFooter className="flex flex-col p-1 px-3 pb-4">
-        <p>{renderStars(product.ratings)}</p>
-        <p className="text-gray-600 text-center w-full">
-          {product.description}
+        <p>{renderStars(product.ratings) || 'No Ratings'}</p>
+        <p className="text-gray-600 font-bold text-center w-full">
+          {product.name}
         </p>
         <p className="text-gray-700 text-center w-full text-base">
           Rs.{' '}

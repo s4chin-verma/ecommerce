@@ -183,11 +183,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             }}
           />
         </TabsContent>
-
         <TabsContent value="orders">
           <OrderHistory
             orders={ordersData?.getOrderByUserId as Order[]}
             isLoading={ordersFetching}
+            onRefresh={async () => {
+              await executeOrdersQuery({
+                requestPolicy: 'network-only', // This forces a fresh fetch from the server
+              });
+            }}
           />
         </TabsContent>
       </Tabs>

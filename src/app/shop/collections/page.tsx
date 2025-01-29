@@ -45,3 +45,12 @@ const Page: NextPage = async () => {
 };
 
 export default Page;
+
+// Bracelet
+// https://petuwmjatwjtvxvcngsm.supabase.co/storage/v1/object/public/luxe/categories/collection_1.png
+// Earrings
+// https://petuwmjatwjtvxvcngsm.supabase.co/storage/v1/object/public/luxe/categories/collection_2.png
+// Necklace
+// https://petuwmjatwjtvxvcngsm.supabase.co/storage/v1/object/public/luxe/categories/collection_3.png
+// Ring
+// https://petuwmjatwjtvxvcngsm.supabase.co/storage/v1/object/public/luxe/categories/collection_4.png
