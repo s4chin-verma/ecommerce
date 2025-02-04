@@ -16,7 +16,7 @@ const CollectionCard: FC<CategoryWithQuantity> = ({
   quantity,
 }) => {
   return (
-    <Link href={`/shop/collections/${title}`}>
+    <Link href={`/shop/collections/${title.toLowerCase()}`}>
       <Card className="h-full rounded-xl overflow-hidden border border-gray-500 group">
         <CardContent className="p-0 overflow-hidden">
           <div className="overflow-hidden">

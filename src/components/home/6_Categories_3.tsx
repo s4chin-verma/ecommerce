@@ -34,7 +34,7 @@ const Categories_3: React.FC = () => {
                 delights await. Our collection showcases an array of exquisite
                 gemstones.
               </CardDescription>
-              <CategoryLink href="" className="mt-4" />
+              <CategoryLink href="/shop/categories" className="mt-4" />
             </div>
           </Card>
           <div className="w-full sm:w-1/2 mt-5 sm:mt-0">

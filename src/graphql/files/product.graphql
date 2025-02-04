@@ -59,16 +59,16 @@ mutation UpdateProduct(
 
 query GetProduct($getProductId: String!) {
   getProduct(id: $getProductId) {
-    categoryId
-    description
     id
-    images
     name
+    description
+    images
     price
     ratings
     sellingPrice
-    stock
-    totalSale
+    category {
+      title
+    }
   }
 }
 

@@ -74,7 +74,9 @@ const Hero: NextPage = () => {
             exceptional quality.
           </p>
           <div className="flex flex-col md:flex-row my-8 gap-4">
-            <CategoryLink href="/collections">Go To Collections</CategoryLink>
+            <CategoryLink href="/shop/collections">
+              Go To Collections
+            </CategoryLink>
             <Button className="bg-white text-black rounded-full max-w-52 gap-2">
               <span>Get BestSellers Now</span>
               <LogOut className="w-5 h-5" />

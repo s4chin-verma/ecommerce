@@ -32,6 +32,12 @@ const nextConfig = {
         port: '',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'gems-workdo.myshopify.com',
+        port: '',
+        pathname: '**',
+      },
     ],
   },
 };

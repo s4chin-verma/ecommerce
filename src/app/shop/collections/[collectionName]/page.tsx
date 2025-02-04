@@ -29,9 +29,10 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { ProductCard } from '@/components/home/ui';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 export interface Product {
   id: string;
   name: string;
@@ -67,8 +68,8 @@ export interface ProductsResponse {
 const ITEMS_PER_PAGE = 9;
 
 const ProductCardSkelton = () => (
-  <Card className="mx-3">
-    <Skeleton className="h-80 w-15" />
+  <Card className="mx-3 rounded-2xl">
+    <Skeleton className="h-96 w-15 rounded-2xl" />
   </Card>
 );
 
@@ -114,8 +115,8 @@ export default function Page({
   const handleFilterChange = () => {};
 
   return (
-    <main className="pt-36">
-      <section>
+    <main>
+      <section className="pt-36">
         <div className="max-w-6xl mx-auto px-3 flex flex-row justify-stretch">
           <div className="w-[25%] sticky top-36 border-r">
             <div className="border-b border-gray-500 h-16 flex items-center">
@@ -156,7 +157,7 @@ export default function Page({
             </div>
 
             {fetching ? (
-              <div className="pt-4 pb-10">
+              <div className="pt-4 pb-10 pl-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
                   {[1, 2, 3, 4, 5, 6].map(i => (
                     <ProductCardSkelton key={i} />
@@ -171,15 +172,17 @@ export default function Page({
                   <div className="pt-4 pl-3 pb-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
                       {products.map(product => (
-                        <ProductCard
+                        <Link
+                          href={`/shop/collections/${collectionName}/${product?.id}`}
                           key={product?.id}
-                          product={product as Product}
-                        />
+                        >
+                          <ProductCard product={product as Product} />
+                        </Link>
                       ))}
                     </div>
                   </div>
                 )}
-
+                s
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>

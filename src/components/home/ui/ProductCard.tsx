@@ -51,21 +51,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
       <CardHeader>
         <h5 className="text-center">{product.category.title}</h5>
       </CardHeader>
-      <CardContent className="flex flex-col items-center justify-center">
+      <CardContent className="flex flex-col items-center justify-center pb-0">
         {product.images.length > 0 && (
-          <Image
-            src={product.images[0]}
-            className="h-32"
-            width={150}
-            height={100}
-            alt={product.name}
-          />
+          <div className="h-40 w-48 flex items-center justify-center overflow-hidden">
+            <Image
+              src={product.images[0]}
+              className="w-full h-full object-contain"
+              width={150}
+              height={100}
+              alt={product.name}
+            />
+          </div>
         )}
       </CardContent>
       <CardFooter className="flex flex-col p-1 px-3 pb-4">
         <p>{renderStars(product.ratings) || 'No Ratings'}</p>
-        <p className="text-gray-600 font-bold text-center w-full">
-          {product.name}
+        <p className="text-gray-600 font-semibold text-center w-full text-xl">
+          {product.name.length > 15
+            ? product.name.slice(0, 15).concat('...')
+            : product.name}
         </p>
         <p className="text-gray-700 text-center w-full text-base">
           Rs.{' '}

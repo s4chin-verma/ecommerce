@@ -26,7 +26,7 @@ const BrandCarousal: React.FC = () => {
             {Array.from({ length: 10 }).map((_, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/5">
                 <div className="p-1 w-full">
-                  <h6 className="text-3xl font-semibold text-center">Logo</h6>
+                  <h6 className="text-3xl font-semibold text-center">Luxe</h6>
                 </div>
               </CarouselItem>
             ))}

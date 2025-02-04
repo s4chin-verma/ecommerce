@@ -470,7 +470,7 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', categoryId?: string | null, description?: string | null, id?: string | null, images?: Array<string> | null, name?: string | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, totalSale?: number | null } | null };
+export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
 
 export type GetProductsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -615,16 +615,16 @@ export function useUpdateProductMutation() {
 export const GetProductDocument = gql`
     query GetProduct($getProductId: String!) {
   getProduct(id: $getProductId) {
-    categoryId
-    description
     id
-    images
     name
+    description
+    images
     price
     ratings
     sellingPrice
-    stock
-    totalSale
+    category {
+      title
+    }
   }
 }
     `;

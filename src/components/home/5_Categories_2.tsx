@@ -53,7 +53,9 @@ const Categories_2 = () => {
   return (
     <section>
       <div className="max-w-6xl mx-auto py-10">
-        <CommonHeading>Exquisite Gems Collection</CommonHeading>
+        <CommonHeading categoryHref="/shop/collections">
+          Exquisite Gems Collection
+        </CommonHeading>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-3">
           {Categories.map((category, index) => (
             <Template key={index} imageUrl={category.imageUrl}>

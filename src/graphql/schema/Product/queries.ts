@@ -40,14 +40,6 @@ builder.queryFields(t => ({
     },
   }),
 
-  // getProducts: t.prismaConnection({
-  //   type: 'Product',
-  //   cursor: 'id',
-  //   resolve: async (query, _parent, _args, _context) => {
-  //     const menus = await prisma.product.findMany({ ...query });
-  //     return menus;
-  //   },
-  // }),
   getProducts: t.prismaConnection({
     type: 'Product',
     cursor: 'id',
