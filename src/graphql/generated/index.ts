@@ -492,7 +492,14 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
+export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
+
+export type GetProductForCheckOutQueryVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type GetProductForCheckOutQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, images?: Array<string> | null, name?: string | null, sellingPrice?: number | null, price?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
 
 export type GetProductsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -665,6 +672,7 @@ export const GetProductDocument = gql`
     price
     ratings
     sellingPrice
+    stock
     category {
       title
     }
@@ -674,6 +682,25 @@ export const GetProductDocument = gql`
 
 export function useGetProductQuery(options: Omit<Urql.UseQueryArgs<GetProductQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductQuery, GetProductQueryVariables>({ query: GetProductDocument, ...options });
+};
+export const GetProductForCheckOutDocument = gql`
+    query GetProductForCheckOut($productId: String!) {
+  getProduct(id: $productId) {
+    id
+    images
+    name
+    sellingPrice
+    price
+    stock
+    category {
+      title
+    }
+  }
+}
+    `;
+
+export function useGetProductForCheckOutQuery(options: Omit<Urql.UseQueryArgs<GetProductForCheckOutQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductForCheckOutQuery, GetProductForCheckOutQueryVariables>({ query: GetProductForCheckOutDocument, ...options });
 };
 export const GetProductsDocument = gql`
     query GetProducts($first: Int, $after: String) {

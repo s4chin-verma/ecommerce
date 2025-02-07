@@ -2,24 +2,10 @@
 
 import React, { use, useState } from 'react';
 import Image from 'next/image';
-import {
-  Heart,
-  Minus,
-  Plus,
-  Edit2,
-  Scissors,
-  ShoppingCart,
-  Zap,
-} from 'lucide-react';
+import { Minus, Plus, Edit2, Scissors, ShoppingCart, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BackButton } from '@/components/BackButton';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   Collapsible,
   CollapsibleContent,
@@ -27,16 +13,13 @@ import {
 } from '@/components/ui/collapsible';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  AddToWishlistDocument,
-  AddToWishlistMutation,
-  AddToWishlistMutationVariables,
   GetProductDocument,
   GetProductQuery,
   GetProductQueryVariables,
 } from '@/graphql/generated';
-import { useMutation, useQuery } from 'urql';
-import { useToast } from '@/components/ui/use-toast';
-import { WishListIcon } from '../../components/wishlist';
+import { useQuery } from 'urql';
+import { WishListIcon } from '@/app/shop/collections/components/wishlist';
+import Link from 'next/link';
 
 const ProductDetailSkeleton = () => (
   <div className="grid md:grid-cols-2 gap-8 px-3">
@@ -109,6 +92,7 @@ interface Product {
   price: number | null;
   ratings: number | null;
   sellingPrice: number | null;
+  stock: number | null;
   category: {
     title: string | null;
   } | null;
@@ -158,6 +142,7 @@ export default function Page({
   const sellingPrice = product.sellingPrice || 0;
   const originalPrice = product.price || 0;
   const rating = product.ratings || 0;
+  const stock = product.stock || 0;
 
   return (
     <main className="pt-36">
@@ -280,15 +265,33 @@ export default function Page({
                     </div>
                   </div>
 
-                  <div className="flex gap-5 justify-start pt-6 pr-20">
-                    <Button className="flex-1 gap-2 items-center bg-white text-gray-900 hover:bg-gray-100 rounded-3xl">
+                  <div className="flex gap-4 justify-start pt-6 pr-20">
+                    {/* Add to Cart Button */}
+                    <Button className="w-full flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 rounded-3xl border border-gray-300 shadow-sm transition-all">
                       <span>Add To Cart</span>
                       <ShoppingCart className="h-5 w-5" />
                     </Button>
-                    <Button className="flex-1 gap-2 items-center bg-white text-gray-900 hover:bg-gray-100 rounded-3xl">
-                      Buy it now
-                      <Zap className="h-5 w-5" />
-                    </Button>
+
+                    {/* Buy It Now / Out of Stock Button */}
+                    {stock > 0 ? (
+                      <Link
+                        href={`/shop/checkouts/${product.id}?quantity=${quantity}`}
+                        className="w-full"
+                      >
+                        <Button className="w-full flex items-center gap-2 bg-black text-white hover:bg-gray-900 rounded-3xl border border-gray-800 shadow-md transition-all">
+                          <span>Buy it now</span>
+                          <Zap className="h-5 w-5" />
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        disabled
+                        variant="destructive"
+                        className="w-full flex items-center gap-2 bg-gray-300 text-gray-600 rounded-3xl border border-gray-400 cursor-not-allowed"
+                      >
+                        <span>Out of Stock</span>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

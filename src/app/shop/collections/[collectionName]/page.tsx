@@ -19,9 +19,9 @@ import {
 } from '@/graphql/generated';
 import { notFound } from 'next/navigation';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { AvailabilityFilter } from '@/components/filters/Availability';
-import { ProductTypeFilter } from '@/components/filters/ProductType';
-import { PriceFilter } from '@/components/filters/Price';
+import { AvailabilityFilter } from '@/app/shop/collections/components/Availability';
+import { ProductTypeFilter } from '@/app/shop/collections/components/ProductType';
+import { PriceFilter } from '@/app/shop/collections/components/Price';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -33,6 +33,7 @@ import { ChevronDown } from 'lucide-react';
 import { ProductCard } from '@/components/home/ui';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
+
 export interface Product {
   id: string;
   name: string;

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '../ui/label';
+import { Label } from '../../../../components/ui/label';
 
 interface Filters {
   inStock: boolean;

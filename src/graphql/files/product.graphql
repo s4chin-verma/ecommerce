@@ -66,6 +66,21 @@ query GetProduct($getProductId: String!) {
     price
     ratings
     sellingPrice
+    stock
+    category {
+      title
+    }
+  }
+}
+
+query GetProductForCheckOut($productId: String!) {
+  getProduct(id: $productId) {
+    id
+    images
+    name
+    sellingPrice
+    price
+    stock
     category {
       title
     }
