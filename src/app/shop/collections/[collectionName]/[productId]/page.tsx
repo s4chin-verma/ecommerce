@@ -27,11 +27,16 @@ import {
 } from '@/components/ui/collapsible';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
+  AddToWishlistDocument,
+  AddToWishlistMutation,
+  AddToWishlistMutationVariables,
   GetProductDocument,
   GetProductQuery,
   GetProductQueryVariables,
 } from '@/graphql/generated';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
+import { useToast } from '@/components/ui/use-toast';
+import { WishListIcon } from '../../components/wishlist';
 
 const ProductDetailSkeleton = () => (
   <div className="grid md:grid-cols-2 gap-8 px-3">
@@ -165,7 +170,9 @@ export default function Page({
                   <Image
                     src={images[currentImage] || '/placeholder.svg'}
                     alt={productName}
+                    sizes="50"
                     fill
+                    priority
                     className="object-contain p-8"
                   />
                 </Card>
@@ -197,16 +204,7 @@ export default function Page({
                   <BackButton href="/shop/collections">
                     <span>Back to {categoryTitle}</span>
                   </BackButton>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Button variant="ghost" size="icon">
-                          <Heart className="h-6 w-6" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Add to wishlist</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <WishListIcon productId={product.id as string} />
                 </div>
 
                 <div className="flex items-center gap-2">

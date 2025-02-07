@@ -1,0 +1,13 @@
+mutation AddToWishlist($productId: String!) {
+  addToWishlist(productId: $productId) {
+    productId
+  }
+}
+
+mutation RemoveFromWishlist($productId: String!) {
+  removeFromWishlist(productId: $productId)
+}
+
+query isWishListed($productId: String!) {
+  isWishListed(productId: $productId)
+}

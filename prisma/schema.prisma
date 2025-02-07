@@ -35,9 +35,10 @@ model User {
   orderHistory   Order[]
   payment        Payment[]
   review         Review[]
-  wishlist       Wishlist?
+  wishlist       Wishlist? @relation(fields: [wishlistId], references: [id])
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  wishlistId     String?
 }
 
 model Account {
@@ -201,10 +202,9 @@ model Address {
 model Wishlist {
   id        String    @id @default(uuid())
   userId    String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
-  user      User      @relation(fields: [userId], references: [id])
+  productId String    @unique
+  User      User[]
+  Product   Product[]
 }
 
 model Shipping {

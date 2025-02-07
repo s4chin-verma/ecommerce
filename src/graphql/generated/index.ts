@@ -68,6 +68,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory?: Maybe<Category>;
   addProduct?: Maybe<Product>;
+  addToWishlist?: Maybe<Wishlist>;
   createAddress?: Maybe<Address>;
   createOrder?: Maybe<Order>;
   createUser?: Maybe<User>;
@@ -76,6 +77,7 @@ export type Mutation = {
   deleteProduct?: Maybe<Product>;
   editMenu?: Maybe<Category>;
   editUserRole?: Maybe<User>;
+  removeFromWishlist?: Maybe<Scalars['Boolean']['output']>;
   updateAddress?: Maybe<Address>;
   updateOrder?: Maybe<Order>;
   updateProduct?: Maybe<Product>;
@@ -98,6 +100,11 @@ export type MutationAddProductArgs = {
   price: Scalars['Float']['input'];
   sellingPrice: Scalars['Float']['input'];
   stock: Scalars['Int']['input'];
+};
+
+
+export type MutationAddToWishlistArgs = {
+  productId: Scalars['String']['input'];
 };
 
 
@@ -157,6 +164,11 @@ export type MutationEditMenuArgs = {
 export type MutationEditUserRoleArgs = {
   id: Scalars['String']['input'];
   role: Role;
+};
+
+
+export type MutationRemoveFromWishlistArgs = {
+  productId: Scalars['String']['input'];
 };
 
 
@@ -294,6 +306,8 @@ export type Query = {
   getProducts?: Maybe<QueryGetProductsConnection>;
   getUser?: Maybe<User>;
   getUsers?: Maybe<Array<User>>;
+  isWishListed?: Maybe<Scalars['Boolean']['output']>;
+  wishListedProducts?: Maybe<Array<Wishlist>>;
 };
 
 
@@ -337,6 +351,16 @@ export type QueryGetProductsArgs = {
 
 export type QueryGetUserArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryIsWishListedArgs = {
+  productId: Scalars['String']['input'];
+};
+
+
+export type QueryWishListedProductsArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type QueryGetProductsConnection = {
@@ -405,10 +429,8 @@ export type User = {
 
 export type Wishlist = {
   __typename?: 'Wishlist';
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  products?: Maybe<Array<Product>>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  productId?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -502,6 +524,27 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
+
+export type AddToWishlistMutationVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type AddToWishlistMutation = { __typename?: 'Mutation', addToWishlist?: { __typename?: 'Wishlist', productId?: string | null } | null };
+
+export type RemoveFromWishlistMutationVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type RemoveFromWishlistMutation = { __typename?: 'Mutation', removeFromWishlist?: boolean | null };
+
+export type IsWishListedQueryVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type IsWishListedQuery = { __typename?: 'Query', isWishListed?: boolean | null };
 
 
 export const GetAddressesByUserIdDocument = gql`
@@ -712,4 +755,33 @@ export const CreateUserDocument = gql`
 
 export function useCreateUserMutation() {
   return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+};
+export const AddToWishlistDocument = gql`
+    mutation AddToWishlist($productId: String!) {
+  addToWishlist(productId: $productId) {
+    productId
+  }
+}
+    `;
+
+export function useAddToWishlistMutation() {
+  return Urql.useMutation<AddToWishlistMutation, AddToWishlistMutationVariables>(AddToWishlistDocument);
+};
+export const RemoveFromWishlistDocument = gql`
+    mutation RemoveFromWishlist($productId: String!) {
+  removeFromWishlist(productId: $productId)
+}
+    `;
+
+export function useRemoveFromWishlistMutation() {
+  return Urql.useMutation<RemoveFromWishlistMutation, RemoveFromWishlistMutationVariables>(RemoveFromWishlistDocument);
+};
+export const IsWishListedDocument = gql`
+    query isWishListed($productId: String!) {
+  isWishListed(productId: $productId)
+}
+    `;
+
+export function useIsWishListedQuery(options: Omit<Urql.UseQueryArgs<IsWishListedQueryVariables>, 'query'>) {
+  return Urql.useQuery<IsWishListedQuery, IsWishListedQueryVariables>({ query: IsWishListedDocument, ...options });
 };
