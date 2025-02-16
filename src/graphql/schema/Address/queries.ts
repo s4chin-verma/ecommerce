@@ -7,12 +7,14 @@ builder.prismaObject('Address', {
     id: t.exposeID('id'),
     user: t.relation('user'),
     userId: t.exposeString('userId'),
-    addressLine1: t.exposeString('addressLine1'),
-    addressLine2: t.exposeString('addressLine2', { nullable: true }),
+    name: t.exposeString('name'),
+    phone: t.exposeString('phone'),
+    postalCode: t.exposeString('postalCode'),
+    addressLine: t.exposeString('addressLine'),
+    landmark: t.exposeString('landmark'),
     city: t.exposeString('city'),
     state: t.exposeString('state'),
-    postalCode: t.exposeString('postalCode'),
-    country: t.exposeString('country'),
+    alternatePhone: t.exposeString('alternatePhone', { nullable: true }),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
   }),
@@ -36,7 +38,7 @@ builder.queryFields(t => ({
         ...query,
         where: { userId: args.userId },
         orderBy: {
-          createdAt: 'desc',
+          updatedAt: 'desc',
         },
       });
 

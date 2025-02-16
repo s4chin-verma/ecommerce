@@ -1,28 +1,196 @@
 'use client';
 
-import { use, useState } from 'react';
-import { Search, CreditCard, HelpCircle } from 'lucide-react';
+import React, { createContext, use, useContext, useState } from 'react';
+import { AuthCheckout } from '../components/auth-checkout';
+import { DeliverySection } from '../components/delivery';
+import { OffersSection } from '../components/offers';
+import { PaymentSection } from '../components/payment';
+import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { indianStates } from '@/lib/content/state';
-import { OrderSummary } from '../components/summary';
+import { cn } from '@/lib/utils';
 
+export enum CheckoutStep {
+  AUTH = 'auth',
+  DELIVERY = 'delivery',
+  OFFERS = 'offers',
+  PAYMENT = 'payment',
+}
+
+type StepStatus = {
+  isCompleted: boolean;
+  wasVisited: boolean;
+};
+
+type CheckoutContextType = {
+  activeStep: CheckoutStep;
+  setActiveStep: (step: CheckoutStep) => void;
+  isStepComplete: (step: CheckoutStep) => boolean;
+  markStepComplete: (step: CheckoutStep) => void;
+  stepStatuses: Record<CheckoutStep, StepStatus>;
+  handleStepChange: (step: CheckoutStep) => void;
+};
+
+const CheckoutContext = createContext<CheckoutContextType | undefined>(
+  undefined
+);
+
+const CheckoutSection = ({
+  step,
+  stepNumber,
+  title,
+  children,
+}: {
+  step: CheckoutStep;
+  stepNumber: number;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  const { activeStep, isStepComplete, handleStepChange, stepStatuses } =
+    useCheckoutContext();
+  const isActive = activeStep === step;
+  const isCompleted = isStepComplete(step);
+  const wasVisited = stepStatuses[step].wasVisited;
+
+  return (
+    <Card
+      className={cn(
+        'border rounded-none transition-all duration-200',
+        isActive ? 'bg-white' : 'bg-gray-50',
+        wasVisited && !isActive && 'opacity-90'
+      )}
+    >
+      <CardHeader
+        className={cn(
+          'border-b py-4',
+          isActive ? 'bg-orange-50' : 'bg-gray-50',
+          isCompleted && !isActive && 'bg-green-50'
+        )}
+      >
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex items-center space-x-5">
+            <div
+              className={cn(
+                'w-7 h-7 rounded-sm flex items-center justify-center text-white',
+                {
+                  'bg-green-500': isCompleted,
+                  'bg-orange-500': isActive,
+                  'bg-gray-300': !isCompleted && !isActive,
+                }
+              )}
+            >
+              {stepNumber}
+            </div>
+            <h2
+              className={cn(
+                'text-base font-medium',
+                isActive ? 'text-orange-600' : 'text-gray-600'
+              )}
+            >
+              {title}
+            </h2>
+          </div>
+          <div>
+            {isCompleted && !isActive && (
+              <Button
+                className={cn(
+                  'rounded-none border px-10',
+                  'hover:bg-orange-50 hover:text-orange-700'
+                )}
+                variant="ghost"
+                onClick={() => handleStepChange(step)}
+              >
+                <span className="text-sm font-medium text-orange-900">
+                  CHANGE
+                </span>
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardHeader>
+      {isActive && <>{children}</>}
+    </Card>
+  );
+};
+
+export const useCheckoutContext = () => {
+  const context = useContext(CheckoutContext);
+  if (!context) {
+    throw new Error(
+      'useCheckoutContext must be used within a CheckoutProvider'
+    );
+  }
+  return context;
+};
+
+export const CheckoutProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [activeStep, setActiveStep] = useState<CheckoutStep>(CheckoutStep.AUTH);
+  const [stepStatuses, setStepStatuses] = useState<
+    Record<CheckoutStep, StepStatus>
+  >({
+    [CheckoutStep.AUTH]: { isCompleted: false, wasVisited: true },
+    [CheckoutStep.DELIVERY]: { isCompleted: false, wasVisited: false },
+    [CheckoutStep.OFFERS]: { isCompleted: false, wasVisited: false },
+    [CheckoutStep.PAYMENT]: { isCompleted: false, wasVisited: false },
+  });
+
+  const markStepComplete = (step: CheckoutStep) => {
+    setStepStatuses(prev => ({
+      ...prev,
+      [step]: { ...prev[step], isCompleted: true },
+    }));
+
+    const steps = Object.values(CheckoutStep);
+    const currentIndex = steps.indexOf(step);
+    if (currentIndex < steps.length - 1) {
+      const nextStep = steps[currentIndex + 1];
+      setActiveStep(nextStep);
+      setStepStatuses(prev => ({
+        ...prev,
+        [nextStep]: { ...prev[nextStep], wasVisited: true },
+      }));
+    }
+  };
+
+  const handleStepChange = (step: CheckoutStep) => {
+    setActiveStep(step);
+
+    // Mark all steps up to this one as visited
+    const steps = Object.values(CheckoutStep);
+    const targetIndex = steps.indexOf(step);
+
+    setStepStatuses(prev => {
+      const newStatuses = { ...prev };
+      steps.forEach((s, index) => {
+        if (index <= targetIndex) {
+          newStatuses[s] = { ...newStatuses[s], wasVisited: true };
+        }
+      });
+      return newStatuses;
+    });
+  };
+
+  const isStepComplete = (step: CheckoutStep) => stepStatuses[step].isCompleted;
+
+  return (
+    <CheckoutContext.Provider
+      value={{
+        activeStep,
+        setActiveStep,
+        isStepComplete,
+        markStepComplete,
+        stepStatuses,
+        handleStepChange,
+      }}
+    >
+      {children}
+    </CheckoutContext.Provider>
+  );
+};
+// Main checkout page component
 export default function Page({
   params,
   searchParams,
@@ -35,175 +203,53 @@ export default function Page({
   const _id = resolvedParams._id;
   const quantity = parseInt(resolvedSearchParams.quantity || '1');
 
-  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
-  const [saveInformation, setSaveInformation] = useState(false);
-  const [emailNews, setEmailNews] = useState(false);
-
   return (
-    <main className="bg-gray-50">
-      <section className="max-w-6xl mx-auto">
-        <div className="min-h-scree">
-          <div className="max-w-7xl mx-auto px-4 py-8">
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Main Checkout Form */}
-              <div className="md:col-span-2 space-y-8">
-                {/* Contact Section */}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-semibold">Contact</h2>
-                    <Button variant="link" className="text-blue-600">
-                      Log in
-                    </Button>
-                  </div>
-                  <Input
-                    type="text"
-                    placeholder="Email or mobile phone number"
-                    className="w-full"
-                  />
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="emailNews"
-                      checked={emailNews}
-                      onCheckedChange={checked =>
-                        setEmailNews(checked as boolean)
-                      }
-                    />
-                    <Label htmlFor="emailNews">
-                      Email me with news and offers
-                    </Label>
-                  </div>
+    <CheckoutProvider>
+      <main className="bg-gray-50">
+        <section className="max-w-6xl mx-auto">
+          <div className="min-h-screen">
+            <div className="max-w-7xl mx-auto px-4 py-8">
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="md:col-span-2 space-y-5">
+                  <CheckoutSection
+                    step={CheckoutStep.AUTH}
+                    stepNumber={1}
+                    title="LOGIN OR SIGNUP"
+                  >
+                    <AuthCheckout />
+                  </CheckoutSection>
+
+                  <CheckoutSection
+                    step={CheckoutStep.DELIVERY}
+                    stepNumber={2}
+                    title="DELIVERY ADDRESS"
+                  >
+                    <DeliverySection />
+                  </CheckoutSection>
+
+                  <CheckoutSection
+                    step={CheckoutStep.OFFERS}
+                    stepNumber={3}
+                    title="OFFERS"
+                  >
+                    <OffersSection />
+                  </CheckoutSection>
+
+                  <CheckoutSection
+                    step={CheckoutStep.PAYMENT}
+                    stepNumber={4}
+                    title="PAYMENT"
+                  >
+                    <PaymentSection />
+                  </CheckoutSection>
                 </div>
 
-                {/* Delivery Section */}
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold">Delivery</h2>
-                  <Select defaultValue="US">
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Country/Region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="US">United States</SelectItem>
-                      <SelectItem value="CA">Canada</SelectItem>
-                      <SelectItem value="UK">United Kingdom</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input placeholder="First name (optional)" />
-                    <Input placeholder="Last name" required />
-                  </div>
-
-                  <div className="relative">
-                    <Input placeholder="Address" required />
-                    <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                  </div>
-
-                  <Input placeholder="Apartment, suite, etc. (optional)" />
-
-                  <div className="grid grid-cols-6 gap-4">
-                    <Input placeholder="City" className="col-span-2" required />
-                    <div className="col-span-2">
-                      <Select defaultValue="">
-                        <SelectTrigger>
-                          <SelectValue placeholder="State" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {indianStates.map(state => (
-                            <SelectItem key={state.value} value={state.value}>
-                              {state.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Input
-                      placeholder="ZIP code"
-                      className="col-span-2"
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="saveInfo"
-                      checked={saveInformation}
-                      onCheckedChange={checked =>
-                        setSaveInformation(checked as boolean)
-                      }
-                    />
-                    <Label htmlFor="saveInfo">
-                      Save this information for next time
-                    </Label>
-                  </div>
-                </div>
-
-                {/* Shipping Method */}
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold">Shipping method</h2>
-                  <div className="bg-gray-50 p-4 rounded-md">
-                    <p className="text-gray-600">
-                      Enter your shipping address to view available shipping
-                      methods.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Payment Section */}
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold">Payment</h2>
-                  <p className="text-sm text-gray-600">
-                    All transactions are secure and encrypted.
-                  </p>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <CreditCard className="h-5 w-5 mr-2" />
-                        Credit card
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <Input placeholder="Card number" type="text" />
-                      <div className="grid grid-cols-2 gap-4">
-                        <Input placeholder="Expiration date (MM/YY)" />
-                        <div className="relative">
-                          <Input placeholder="Security code" />
-                          <HelpCircle className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                        </div>
-                      </div>
-                      <Input placeholder="Name on card" />
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="useShipping"
-                          checked={useShippingAsBilling}
-                          onCheckedChange={checked =>
-                            setUseShippingAsBilling(checked as boolean)
-                          }
-                        />
-                        <Label htmlFor="useShipping">
-                          Use shipping address as billing address
-                        </Label>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        Pay now
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg h-fit">
-                <h1 className="font-semibold text-2xl mb-5 mt-1.5">
-                  Order Item
-                </h1>
-                <OrderSummary _id={_id} quantity={quantity} />
+                {/* <OrderSummary _id={_id} quantity={quantity} /> */}
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </CheckoutProvider>
   );
 }

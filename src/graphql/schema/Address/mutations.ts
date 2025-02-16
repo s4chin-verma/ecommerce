@@ -12,7 +12,6 @@ builder.mutationFields(t => ({
       city: t.arg.string({ required: true }),
       state: t.arg.string({ required: true }),
       postalCode: t.arg.string({ required: true }),
-      country: t.arg.string({ required: true }),
     },
     resolve: async (query, _, args, context) => {
       const userRole = (await context).user?.role;
@@ -34,7 +33,6 @@ builder.mutationFields(t => ({
       city: t.arg.string(),
       state: t.arg.string(),
       postalCode: t.arg.string(),
-      country: t.arg.string(),
     },
     resolve: async (query, _, args, context) => {
       const userRole = (await context).user?.role;

@@ -21,12 +21,14 @@ export type Scalars = {
 
 export type Address = {
   __typename?: 'Address';
-  addressLine1?: Maybe<Scalars['String']['output']>;
-  addressLine2?: Maybe<Scalars['String']['output']>;
+  addressLine?: Maybe<Scalars['String']['output']>;
+  alternatePhone?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  landMark?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
   postalCode?: Maybe<Scalars['String']['output']>;
   state?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -112,7 +114,6 @@ export type MutationCreateAddressArgs = {
   addressLine1: Scalars['String']['input'];
   addressLine2?: InputMaybe<Scalars['String']['input']>;
   city: Scalars['String']['input'];
-  country: Scalars['String']['input'];
   postalCode: Scalars['String']['input'];
   state: Scalars['String']['input'];
   userId: Scalars['String']['input'];
@@ -176,7 +177,6 @@ export type MutationUpdateAddressArgs = {
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
-  country?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   postalCode?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
@@ -439,7 +439,7 @@ export type GetAddressesByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetAddressesByUserIdQuery = { __typename?: 'Query', getAddressesByUserId?: Array<{ __typename?: 'Address', addressLine1?: string | null, addressLine2?: string | null, city?: string | null, country?: string | null, id?: string | null, postalCode?: string | null, state?: string | null }> | null };
+export type GetAddressesByUserIdQuery = { __typename?: 'Query', getAddressesByUserId?: Array<{ __typename?: 'Address', id?: string | null, name?: string | null, phone?: string | null, postalCode?: string | null, addressLine?: string | null, landMark?: string | null, city?: string | null, state?: string | null, alternatePhone?: string | null }> | null };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -514,6 +514,13 @@ export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null }> | null };
 
+export type GetUserForCheckoutQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetUserForCheckoutQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', firstName?: string | null, lastName?: string | null, phone?: string | null } | null };
+
 export type GetUserQueryVariables = Exact<{
   getUserId: Scalars['String']['input'];
 }>;
@@ -557,13 +564,15 @@ export type IsWishListedQuery = { __typename?: 'Query', isWishListed?: boolean |
 export const GetAddressesByUserIdDocument = gql`
     query GetAddressesByUserId($userId: String!) {
   getAddressesByUserId(userId: $userId) {
-    addressLine1
-    addressLine2
-    city
-    country
     id
+    name
+    phone
     postalCode
+    addressLine
+    landMark
+    city
     state
+    alternatePhone
   }
 }
     `;
@@ -749,6 +758,19 @@ export const GetUsersDocument = gql`
 
 export function useGetUsersQuery(options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({ query: GetUsersDocument, ...options });
+};
+export const GetUserForCheckoutDocument = gql`
+    query GetUserForCheckout($userId: String!) {
+  getUser(id: $userId) {
+    firstName
+    lastName
+    phone
+  }
+}
+    `;
+
+export function useGetUserForCheckoutQuery(options: Omit<Urql.UseQueryArgs<GetUserForCheckoutQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetUserForCheckoutQuery, GetUserForCheckoutQueryVariables>({ query: GetUserForCheckoutDocument, ...options });
 };
 export const GetUserDocument = gql`
     query GetUser($getUserId: String!) {

@@ -44,12 +44,13 @@ const addressSchema = z.object({
 
 export interface Address {
   id: string;
+  firstName: string;
+  lastName: string | null;
   addressLine1: string;
   addressLine2: string | null;
   city: string;
   state: string;
   postalCode: string;
-  country: string;
 }
 
 interface AddressFormData {
@@ -215,9 +216,7 @@ export function AddressManagement({
   const formatAddress = (address: Address) => {
     return `${address.addressLine1}${
       address.addressLine2 ? `, ${address.addressLine2}` : ''
-    }, ${address.city}, ${address.state} ${address.postalCode}, ${
-      address.country
-    }`;
+    }, ${address.city}, ${address.state} ${address.postalCode}`;
   };
 
   if (isLoading) {
@@ -303,7 +302,6 @@ export function AddressManagement({
                         city: selectedAddress.city,
                         state: selectedAddress.state,
                         postalCode: selectedAddress.postalCode,
-                        country: selectedAddress.country,
                       }
                     : undefined
                 }

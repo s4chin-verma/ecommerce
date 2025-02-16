@@ -15,7 +15,7 @@ import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 
 export const MobileNav: FC = () => {
   return (
-    <nav>
+    <nav className="visible md:invisible">
       <div className="bg-orange-100 px-4 py-3 flex justify-between items-center">
         <Link href="/" className="text-3xl font-bold mr-12 cursor-pointer">
           Gems
