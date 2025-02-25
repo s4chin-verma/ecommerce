@@ -26,7 +26,7 @@ export type Address = {
   city?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  landMark?: Maybe<Scalars['String']['output']>;
+  landmark?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   postalCode?: Maybe<Scalars['String']['output']>;
@@ -111,12 +111,14 @@ export type MutationAddToWishlistArgs = {
 
 
 export type MutationCreateAddressArgs = {
-  addressLine1: Scalars['String']['input'];
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  addressLine: Scalars['String']['input'];
+  alternatePhone?: InputMaybe<Scalars['String']['input']>;
   city: Scalars['String']['input'];
+  landmark: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
   postalCode: Scalars['String']['input'];
   state: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
 };
 
 
@@ -439,7 +441,21 @@ export type GetAddressesByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetAddressesByUserIdQuery = { __typename?: 'Query', getAddressesByUserId?: Array<{ __typename?: 'Address', id?: string | null, name?: string | null, phone?: string | null, postalCode?: string | null, addressLine?: string | null, landMark?: string | null, city?: string | null, state?: string | null, alternatePhone?: string | null }> | null };
+export type GetAddressesByUserIdQuery = { __typename?: 'Query', getAddressesByUserId?: Array<{ __typename?: 'Address', id?: string | null, name?: string | null, phone?: string | null, postalCode?: string | null, addressLine?: string | null, landmark?: string | null, city?: string | null, state?: string | null, alternatePhone?: string | null }> | null };
+
+export type CreateAddressMutationVariables = Exact<{
+  addressLine: Scalars['String']['input'];
+  city: Scalars['String']['input'];
+  landmark: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+  postalCode: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  alternatePhone?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateAddressMutation = { __typename?: 'Mutation', createAddress?: { __typename?: 'Address', id?: string | null } | null };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -569,7 +585,7 @@ export const GetAddressesByUserIdDocument = gql`
     phone
     postalCode
     addressLine
-    landMark
+    landmark
     city
     state
     alternatePhone
@@ -579,6 +595,26 @@ export const GetAddressesByUserIdDocument = gql`
 
 export function useGetAddressesByUserIdQuery(options: Omit<Urql.UseQueryArgs<GetAddressesByUserIdQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAddressesByUserIdQuery, GetAddressesByUserIdQueryVariables>({ query: GetAddressesByUserIdDocument, ...options });
+};
+export const CreateAddressDocument = gql`
+    mutation CreateAddress($addressLine: String!, $city: String!, $landmark: String!, $name: String!, $phone: String!, $postalCode: String!, $state: String!, $alternatePhone: String) {
+  createAddress(
+    addressLine: $addressLine
+    city: $city
+    landmark: $landmark
+    name: $name
+    phone: $phone
+    postalCode: $postalCode
+    state: $state
+    alternatePhone: $alternatePhone
+  ) {
+    id
+  }
+}
+    `;
+
+export function useCreateAddressMutation() {
+  return Urql.useMutation<CreateAddressMutation, CreateAddressMutationVariables>(CreateAddressDocument);
 };
 export const GetCategoriesDocument = gql`
     query GetCategories {

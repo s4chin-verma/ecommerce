@@ -31,10 +31,11 @@ import {
   UpdateProductMutation,
   UpdateProductMutationVariables,
 } from '@/graphql/generated';
-import CategorySelect from '../../components/CategorySelect';
+
 import { Loader } from 'lucide-react';
 import { DeleteProductButton } from '../../components/DeleteProductButton';
 import { useEffect } from 'react';
+import { CategorySelect } from '../../components/CategorySelect';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const { toast } = useToast();

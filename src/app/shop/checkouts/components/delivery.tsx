@@ -16,11 +16,14 @@ import {
 } from '@/components/ui/select';
 import { indianStates } from '@/lib/content/state';
 import {
+  CreateAddressDocument,
+  CreateAddressMutation,
+  CreateAddressMutationVariables,
   GetAddressesByUserIdDocument,
   GetAddressesByUserIdQuery,
   GetAddressesByUserIdQueryVariables,
 } from '@/graphql/generated';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { useSession } from 'next-auth/react';
 import { useCheckoutContext, CheckoutStep } from '../[_id]/page';
 import { cn } from '@/lib/utils';
@@ -34,6 +37,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 
 const addressSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -46,7 +50,6 @@ const addressSchema = z.object({
   city: z.string().min(2, 'City is required'),
   state: z.string().min(2, 'State is required'),
   alternatePhone: z.string().optional(),
-  saveAddress: z.boolean().default(false),
 });
 
 type AddressFormData = z.infer<typeof addressSchema>;
@@ -58,15 +61,10 @@ export const DeliverySection = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null
   );
-
-  const [{ data, fetching }] = useQuery<
-    GetAddressesByUserIdQuery,
-    GetAddressesByUserIdQueryVariables
-  >({
-    query: GetAddressesByUserIdDocument,
-    variables: { userId: session?.user?.id as string },
-    pause: status !== 'authenticated',
-  });
+  const formatAddress = (address: Address) => {
+    return `${address.addressLine}, ${address.landmark}, ${address.city}, ${address.state} ${address.postalCode}`;
+  };
+  const { toast } = useToast();
 
   const form = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
@@ -79,18 +77,50 @@ export const DeliverySection = () => {
       city: '',
       state: '',
       alternatePhone: '',
-      saveAddress: false,
     },
   });
 
-  const formatAddress = (address: Address) => {
-    return `${address.addressLine}, ${address.landmark}, ${address.city}, ${address.state} ${address.postalCode}`;
-  };
+  const [{ data, fetching }] = useQuery<
+    GetAddressesByUserIdQuery,
+    GetAddressesByUserIdQueryVariables
+  >({
+    query: GetAddressesByUserIdDocument,
+    variables: { userId: session?.user?.id as string },
+    pause: status !== 'authenticated',
+  });
+
+  const [result, createAddress] = useMutation<
+    CreateAddressMutation,
+    CreateAddressMutationVariables
+  >(CreateAddressDocument);
 
   const onSubmit = async (data: AddressFormData) => {
-    console.log('her is data', data);
-
-    // markStepComplete(CheckoutStep.DELIVERY);
+    try {
+      const response = await createAddress({
+        ...data,
+      });
+      if (response.error) {
+        toast({
+          title: 'Error',
+          description: `${response.error}`,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Address added successfully!',
+        });
+        setSelectedAddressId(response.data?.createAddress?.id as string);
+        form.reset();
+        markStepComplete(CheckoutStep.DELIVERY);
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleAddressSelection = (addressId: string) => {
@@ -282,23 +312,6 @@ export const DeliverySection = () => {
                 )}
               />
             </div>
-
-            <FormField
-              control={form.control}
-              name="saveAddress"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormLabel>Save this address for future deliveries</FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <div className="flex space-x-4">
               <Button

@@ -5,6 +5,7 @@ import { AuthCheckout } from '../components/auth-checkout';
 import { DeliverySection } from '../components/delivery';
 import { OffersSection } from '../components/offers';
 import { PaymentSection } from '../components/payment';
+import { OrderSummary } from '../components/summary';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -244,7 +245,9 @@ export default function Page({
                   </CheckoutSection>
                 </div>
 
-                {/* <OrderSummary _id={_id} quantity={quantity} /> */}
+                <div>
+                  <OrderSummary _id={_id} quantity={quantity} />
+                </div>
               </div>
             </div>
           </div>

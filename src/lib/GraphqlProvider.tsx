@@ -23,7 +23,6 @@ const GraphqlProvider = ({ children, graphqlApiKey }: Props) => {
     const client = createClient({
       url: graphql_api,
       exchanges: [cacheExchange, ssr, fetchExchange],
-      // disable this in development for you to be able to access your sandbox
 
       fetchOptions: () => {
         const apiKey = graphqlApiKey;

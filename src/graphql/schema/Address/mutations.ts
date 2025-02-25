@@ -6,21 +6,33 @@ builder.mutationFields(t => ({
   createAddress: t.prismaField({
     type: 'Address',
     args: {
-      userId: t.arg.string({ required: true }),
-      addressLine1: t.arg.string({ required: true }),
-      addressLine2: t.arg.string(),
+      name: t.arg.string({ required: true }),
+      postalCode: t.arg.string({ required: true }),
+      phone: t.arg.string({ required: true }),
+      addressLine: t.arg.string({ required: true }),
+      landmark: t.arg.string({ required: true }),
       city: t.arg.string({ required: true }),
       state: t.arg.string({ required: true }),
-      postalCode: t.arg.string({ required: true }),
+      alternatePhone: t.arg.string(),
     },
     resolve: async (query, _, args, context) => {
-      const userRole = (await context).user?.role;
+      const userRole = context.user?.role;
       if (userRole !== 'USER' && userRole !== 'ADMIN') {
         throw new GraphQLError('You must be logged in to create an address');
       }
       return prisma.address.create({
         ...query,
-        data: args,
+        data: {
+          name: args.name,
+          postalCode: args.postalCode,
+          phone: args.phone,
+          addressLine: args.addressLine,
+          landmark: args.landmark,
+          city: args.city,
+          state: args.state,
+          alternatePhone: args.alternatePhone,
+          user: { connect: { id: context.user?.id } },
+        },
       });
     },
   }),

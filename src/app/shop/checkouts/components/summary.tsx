@@ -192,5 +192,3 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     </Card>
   );
 };
-
-export default OrderSummary;

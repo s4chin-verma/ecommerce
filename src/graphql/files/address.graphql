@@ -11,3 +11,27 @@ query GetAddressesByUserId($userId: String!) {
     alternatePhone
   }
 }
+
+mutation CreateAddress(
+  $addressLine: String!
+  $city: String!
+  $landmark: String!
+  $name: String!
+  $phone: String!
+  $postalCode: String!
+  $state: String!
+  $alternatePhone: String
+) {
+  createAddress(
+    addressLine: $addressLine
+    city: $city
+    landmark: $landmark
+    name: $name
+    phone: $phone
+    postalCode: $postalCode
+    state: $state
+    alternatePhone: $alternatePhone
+  ) {
+    id
+  }
+}
