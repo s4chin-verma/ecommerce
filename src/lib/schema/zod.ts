@@ -65,3 +65,18 @@ export const registerSchema = z
     }
   });
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
+
+export const addressSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  phone: z
+    .string()
+    .regex(/^\d{10}$/, 'Phone number should be exactly 10 digits'),
+  postalCode: z.string().regex(/^\d{6}$/, 'Invalid ZIP code'),
+  addressLine: z.string().min(5, 'Address is required'),
+  landmark: z.string().min(2, 'Landmark is required'),
+  city: z.string().min(2, 'City is required'),
+  state: z.string().min(2, 'State is required'),
+  alternatePhone: z.string().optional(),
+});
+
+type AddressFormData = z.infer<typeof addressSchema>;

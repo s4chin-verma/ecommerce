@@ -43,3 +43,31 @@ mutation CreateUser(
     id
   }
 }
+
+mutation UpdateUserFullName($firstName: String!, $lastName: String!) {
+  updateUser(firstName: $firstName, lastName: $lastName) {
+    id
+    firstName
+    lastName
+  }
+}
+
+mutation UpdateUserEmail($email: String!) {
+  updateUser(email: $email) {
+    id
+    email
+  }
+}
+
+mutation UpdateUserPhone($phone: String!) {
+  updateUser(phone: $phone) {
+    id
+    phone
+  }
+}
+
+mutation UpdateUserPassword($password: String!) {
+  updateUser(password: $password) {
+    id
+  }
+}

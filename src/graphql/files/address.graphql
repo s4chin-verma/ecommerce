@@ -35,3 +35,9 @@ mutation CreateAddress(
     id
   }
 }
+
+mutation DeleteAddress($deleteAddressId: String!) {
+  deleteAddress(id: $deleteAddressId) {
+    id
+  }
+}

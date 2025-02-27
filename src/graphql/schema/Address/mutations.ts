@@ -1,5 +1,6 @@
 import { builder } from '../../builder';
 import { GraphQLError } from 'graphql';
+import { checkUserAuth } from '@/graphql/ctx';
 import prisma from '@/lib/prisma';
 
 builder.mutationFields(t => ({
@@ -16,10 +17,7 @@ builder.mutationFields(t => ({
       alternatePhone: t.arg.string(),
     },
     resolve: async (query, _, args, context) => {
-      const userRole = context.user?.role;
-      if (userRole !== 'USER' && userRole !== 'ADMIN') {
-        throw new GraphQLError('You must be logged in to create an address');
-      }
+      checkUserAuth(context);
       return prisma.address.create({
         ...query,
         data: {
@@ -40,22 +38,31 @@ builder.mutationFields(t => ({
     type: 'Address',
     args: {
       id: t.arg.string({ required: true }),
-      addressLine1: t.arg.string(),
-      addressLine2: t.arg.string(),
+      name: t.arg.string(),
+      postalCode: t.arg.string(),
+      phone: t.arg.string(),
+      addressLine: t.arg.string(),
+      landmark: t.arg.string(),
       city: t.arg.string(),
       state: t.arg.string(),
-      postalCode: t.arg.string(),
+      alternatePhone: t.arg.string(),
     },
     resolve: async (query, _, args, context) => {
-      const userRole = (await context).user?.role;
-      if (userRole !== 'USER' && userRole !== 'ADMIN') {
-        throw new GraphQLError('You must be logged in to update an address');
-      }
-      const { id, ...data } = args;
+      checkUserAuth(context);
+
       return prisma.address.update({
         ...query,
-        where: { id },
-        data,
+        where: { id: args.id },
+        data: {
+          name: args.name ?? undefined,
+          postalCode: args.postalCode ?? undefined,
+          phone: args.phone ?? undefined,
+          addressLine: args.addressLine ?? undefined,
+          landmark: args.landmark ?? undefined,
+          city: args.city ?? undefined,
+          state: args.state ?? undefined,
+          alternatePhone: args.alternatePhone ?? undefined,
+        },
       });
     },
   }),
@@ -65,10 +72,7 @@ builder.mutationFields(t => ({
       id: t.arg.string({ required: true }),
     },
     resolve: async (query, _, args, context) => {
-      const userRole = (await context).user?.role;
-      if (userRole !== 'USER' && userRole !== 'ADMIN') {
-        throw new GraphQLError('You must be logged in to delete an address');
-      }
+      const user = checkUserAuth(context);
       return prisma.address.delete({
         ...query,
         where: { id: args.id },

@@ -85,6 +85,7 @@ export type Mutation = {
   updateProduct?: Maybe<Product>;
   updateStatus?: Maybe<Order>;
   updateStock?: Maybe<Product>;
+  updateUser?: Maybe<User>;
 };
 
 
@@ -176,10 +177,13 @@ export type MutationRemoveFromWishlistArgs = {
 
 
 export type MutationUpdateAddressArgs = {
-  addressLine1?: InputMaybe<Scalars['String']['input']>;
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  addressLine?: InputMaybe<Scalars['String']['input']>;
+  alternatePhone?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
+  landmark?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
   postalCode?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
 };
@@ -216,6 +220,17 @@ export type MutationUpdateStatusArgs = {
 export type MutationUpdateStockArgs = {
   id: Scalars['String']['input'];
   stock: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  emailVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Role>;
 };
 
 export type Order = {
@@ -457,6 +472,13 @@ export type CreateAddressMutationVariables = Exact<{
 
 export type CreateAddressMutation = { __typename?: 'Mutation', createAddress?: { __typename?: 'Address', id?: string | null } | null };
 
+export type DeleteAddressMutationVariables = Exact<{
+  deleteAddressId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteAddressMutation = { __typename?: 'Mutation', deleteAddress?: { __typename?: 'Address', id?: string | null } | null };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -555,6 +577,35 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
 
+export type UpdateUserFullNameMutationVariables = Exact<{
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserFullNameMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null, firstName?: string | null, lastName?: string | null } | null };
+
+export type UpdateUserEmailMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserEmailMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null, email?: string | null } | null };
+
+export type UpdateUserPhoneMutationVariables = Exact<{
+  phone: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserPhoneMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null, phone?: string | null } | null };
+
+export type UpdateUserPasswordMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null } | null };
+
 export type AddToWishlistMutationVariables = Exact<{
   productId: Scalars['String']['input'];
 }>;
@@ -615,6 +666,17 @@ export const CreateAddressDocument = gql`
 
 export function useCreateAddressMutation() {
   return Urql.useMutation<CreateAddressMutation, CreateAddressMutationVariables>(CreateAddressDocument);
+};
+export const DeleteAddressDocument = gql`
+    mutation DeleteAddress($deleteAddressId: String!) {
+  deleteAddress(id: $deleteAddressId) {
+    id
+  }
+}
+    `;
+
+export function useDeleteAddressMutation() {
+  return Urql.useMutation<DeleteAddressMutation, DeleteAddressMutationVariables>(DeleteAddressDocument);
 };
 export const GetCategoriesDocument = gql`
     query GetCategories {
@@ -840,6 +902,54 @@ export const CreateUserDocument = gql`
 
 export function useCreateUserMutation() {
   return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+};
+export const UpdateUserFullNameDocument = gql`
+    mutation UpdateUserFullName($firstName: String!, $lastName: String!) {
+  updateUser(firstName: $firstName, lastName: $lastName) {
+    id
+    firstName
+    lastName
+  }
+}
+    `;
+
+export function useUpdateUserFullNameMutation() {
+  return Urql.useMutation<UpdateUserFullNameMutation, UpdateUserFullNameMutationVariables>(UpdateUserFullNameDocument);
+};
+export const UpdateUserEmailDocument = gql`
+    mutation UpdateUserEmail($email: String!) {
+  updateUser(email: $email) {
+    id
+    email
+  }
+}
+    `;
+
+export function useUpdateUserEmailMutation() {
+  return Urql.useMutation<UpdateUserEmailMutation, UpdateUserEmailMutationVariables>(UpdateUserEmailDocument);
+};
+export const UpdateUserPhoneDocument = gql`
+    mutation UpdateUserPhone($phone: String!) {
+  updateUser(phone: $phone) {
+    id
+    phone
+  }
+}
+    `;
+
+export function useUpdateUserPhoneMutation() {
+  return Urql.useMutation<UpdateUserPhoneMutation, UpdateUserPhoneMutationVariables>(UpdateUserPhoneDocument);
+};
+export const UpdateUserPasswordDocument = gql`
+    mutation UpdateUserPassword($password: String!) {
+  updateUser(password: $password) {
+    id
+  }
+}
+    `;
+
+export function useUpdateUserPasswordMutation() {
+  return Urql.useMutation<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>(UpdateUserPasswordDocument);
 };
 export const AddToWishlistDocument = gql`
     mutation AddToWishlist($productId: String!) {

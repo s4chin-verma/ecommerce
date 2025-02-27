@@ -11,11 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model User {
   id             String    @id @default(uuid())
   firstName      String
@@ -28,17 +23,17 @@ model User {
   phone          String?
   password       String
   role           Role      @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  wishlistId     String?
   Account        Account[]
-  Session        Session[]
   address        Address[]
   cart           Cart[]
   orderHistory   Order[]
   payment        Payment[]
   review         Review[]
+  Session        Session[]
   wishlist       Wishlist? @relation(fields: [wishlistId], references: [id])
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  wishlistId     String?
 }
 
 model Account {
@@ -47,15 +42,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -82,10 +76,10 @@ model Review {
   userId    String
   rating    Int
   comment   String
-  product   Product  @relation(fields: [productId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Product {
@@ -99,47 +93,37 @@ model Product {
   totalSale    Int           @default(0)
   ratings      Float?
   categoryId   String
-  category     Category      @relation(fields: [categoryId], references: [id])
-  CartProduct  CartProduct[]
-  Wishlist     Wishlist?     @relation(fields: [wishlistId], references: [id])
   wishlistId   String?
-  Review       Review[]
-  Order        Order[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-}
-
-enum OrderStatus {
-  ORDERED
-  CONFIRMED
-  SHIPPED
-  OUT_FOR_DELIVERY
-  DELIVERED
-  CANCELLED
-  RETURNED
+  CartProduct  CartProduct[]
+  Order        Order[]
+  category     Category      @relation(fields: [categoryId], references: [id])
+  Wishlist     Wishlist?     @relation(fields: [wishlistId], references: [id])
+  Review       Review[]
 }
 
 model Order {
   id              String      @id @default(cuid())
   orderNumber     String      @unique
-  userId          String
+  deliveryTime    DateTime?   @default(now())
   userName        String
   userPhone       String
-  productId       String
   paymentToken    String?
-  quantity        Int
+  paid            Boolean     @default(false)
   addressId       String
   deliveryFee     Float       @default(4)
   serviceFee      Float       @default(3)
-  discount        Float?
-  subtotal        Float
-  paid            Boolean     @default(false)
-  orderDate       DateTime    @default(now())
-  deliveryTime    DateTime?   @default(now())
   status          OrderStatus @default(ORDERED)
+  discount        Float?
+  orderDate       DateTime    @default(now())
+  userId          String
+  productId       String
+  quantity        Int
+  subtotal        Float
   deliveryAddress Address     @relation(fields: [addressId], references: [id])
-  User            User?       @relation(fields: [userId], references: [id])
-  product         Product?    @relation(fields: [productId], references: [id])
+  product         Product     @relation(fields: [productId], references: [id])
+  User            User        @relation(fields: [userId], references: [id])
   Payment         Payment[]
   Shipping        Shipping[]
 }
@@ -187,26 +171,26 @@ model Payment {
 model Address {
   id             String   @id @default(uuid())
   userId         String
-  name           String
-  phone          String
-  postalCode     String
-  addressLine    String
-  landmark       String
   city           String
   state          String
-  alternatePhone String?
-  user           User     @relation(fields: [userId], references: [id])
-  Order          Order[]
+  postalCode     String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  name           String
+  addressLine    String
+  alternatePhone String?
+  phone          String
+  landmark       String
+  user           User     @relation(fields: [userId], references: [id])
+  Order          Order[]
 }
 
 model Wishlist {
   id        String    @id @default(uuid())
   userId    String
   productId String
-  User      User[]
   Product   Product[]
+  User      User[]
 }
 
 model Shipping {
@@ -219,4 +203,19 @@ model Shipping {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   order             Order    @relation(fields: [orderId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  ORDERED
+  SHIPPED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CONFIRMED
+  CANCELLED
+  RETURNED
 }

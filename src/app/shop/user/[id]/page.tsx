@@ -5,8 +5,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from 'urql';
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PersonalInfo, UserData } from '../components/personal-info';
+import { Order, OrderHistory } from '../components/orders';
 import { AddressManagement } from '../components/address';
 import { Address } from '@prisma/client';
 import { use } from 'react';
@@ -21,7 +21,6 @@ import {
   GetUserQuery,
   GetUserQueryVariables,
 } from '@/graphql/generated';
-import { Order, OrderHistory } from '../components/orders';
 
 const ProfileSkeleton = () => {
   return (
@@ -98,36 +97,29 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   useEffect(() => {
     if (ordersError) {
       toast({
-        title: 'Error fetching address data',
+        title: 'Error fetching orders data',
         description: ordersError.message,
       });
     }
   }, [ordersError, toast]);
 
-  const user = {
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    avatar: '/placeholder-avatar.jpg',
-  };
-
   const handleTabChange = (tab: string) => {
     if (tab === 'addresses' && !addressData && !addressFetching) {
       executeAddressQuery();
-      console.log(addressData);
     }
     if (tab === 'orders' && !ordersData && !ordersFetching) {
       executeOrdersQuery();
-      console.log(ordersData);
     }
   };
 
   if (userFetching) {
     return (
-      <div className="mx-auto py-10 mt-32 max-w-6xl px-3">
+      <main className="mx-auto pt-40 max-w-6xl px-3">
         <ProfileSkeleton />
-      </div>
+      </main>
     );
   }
+  const user = userData?.getUser;
 
   if (!userData) return;
 
@@ -135,20 +127,17 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <main className="px-3 pt-40 pb-10 max-w-6xl mx-auto min-h-6xl">
       <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
       <div className="flex items-center space-x-4 mb-6">
-        <Avatar className="w-20 h-20">
-          <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback>
-            {user.name
-              .split(' ')
-              .map(n => n[0])
-              .join('')}
-          </AvatarFallback>
-        </Avatar>
+        <div className="h-20 w-20 rounded-full bg-orange-50 flex items-center justify-center">
+          <h3 className="text-xl  font-semibold">
+            {user?.firstName?.[0]?.toUpperCase() ?? ''}
+            {user?.lastName?.[0]?.toUpperCase() ?? ''}
+          </h3>
+        </div>
         <div>
           <h2 className="text-2xl font-semibold">
-            {userData?.getUser?.firstName} {userData?.getUser?.lastName}
+            {user?.firstName} {user?.lastName}
           </h2>
-          <p className="text-muted-foreground">{userData?.getUser?.email}</p>
+          <p className="text-muted-foreground">{user?.email}</p>
         </div>
       </div>
       <Tabs
@@ -163,23 +152,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <TabsTrigger value="payment">Payment Methods</TabsTrigger>
         </TabsList>
         <TabsContent value="personal-info">
-          <PersonalInfo data={userData as UserData} />
+          <PersonalInfo user={user as UserData} />
         </TabsContent>
         <TabsContent value="addresses">
           <AddressManagement
             addresses={addressData?.getAddressesByUserId as Address[]}
             isLoading={addressFetching}
-            onAddAddress={async data => {
-              // Add your mutation logic here
-              console.log('Adding address:', data);
-            }}
-            onUpdateAddress={async (id, data) => {
-              // Add your mutation logic here
-              console.log('Updating address:', id, data);
-            }}
-            onDeleteAddress={async id => {
-              // Add your mutation logic here
-              console.log('Deleting address:', id);
+            refetchAddresses={async () => {
+              executeAddressQuery({
+                requestPolicy: 'network-only',
+              });
             }}
           />
         </TabsContent>
@@ -188,8 +170,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             orders={ordersData?.getOrderByUserId as Order[]}
             isLoading={ordersFetching}
             onRefresh={async () => {
-              await executeOrdersQuery({
-                requestPolicy: 'network-only', // This forces a fresh fetch from the server
+              executeOrdersQuery({
+                requestPolicy: 'network-only',
               });
             }}
           />

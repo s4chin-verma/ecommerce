@@ -38,19 +38,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-
-const addressSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  phone: z
-    .string()
-    .regex(/^\d{10}$/, 'Phone number should be exactly 10 digits'),
-  postalCode: z.string().regex(/^\d{6}$/, 'Invalid ZIP code'),
-  addressLine: z.string().min(5, 'Address is required'),
-  landmark: z.string().min(2, 'Landmark is required'),
-  city: z.string().min(2, 'City is required'),
-  state: z.string().min(2, 'State is required'),
-  alternatePhone: z.string().optional(),
-});
+import { addressSchema } from '@/lib/schema/zod';
 
 type AddressFormData = z.infer<typeof addressSchema>;
 
@@ -89,7 +77,7 @@ export const DeliverySection = () => {
     pause: status !== 'authenticated',
   });
 
-  const [result, createAddress] = useMutation<
+  const [_, createAddress] = useMutation<
     CreateAddressMutation,
     CreateAddressMutationVariables
   >(CreateAddressDocument);
@@ -271,9 +259,9 @@ export const DeliverySection = () => {
                         <SelectValue placeholder="Select State" />
                       </SelectTrigger>
                       <SelectContent>
-                        {indianStates.map(state => (
-                          <SelectItem key={state.value} value={state.value}>
-                            {state.label}
+                        {indianStates.map((state, index) => (
+                          <SelectItem key={index} value={state}>
+                            {state}
                           </SelectItem>
                         ))}
                       </SelectContent>
