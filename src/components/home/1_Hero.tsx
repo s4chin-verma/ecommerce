@@ -37,7 +37,14 @@ const Hero: NextPage = () => {
     <section className="relative pt-28 pb-20 md:pt-56">
       {windowWidth !== undefined && windowWidth >= 768 ? (
         <div className="absolute inset-0 -z-10 min-h-[850px]">
-          <Image src={currentImage} alt="banner" fill quality={100} priority />
+          <Image
+            src={currentImage}
+            alt="banner"
+            fill
+            quality={100}
+            sizes="100vw"
+            priority
+          />
         </div>
       ) : (
         <div className="absolute inset-0 -z-10 bg-theme -mb-36"></div>

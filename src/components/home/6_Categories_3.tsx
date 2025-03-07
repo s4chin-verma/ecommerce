@@ -7,7 +7,7 @@ import {
   ProductCarouselWrapper,
 } from './ui';
 import Image from 'next/image';
-import { Product } from '@prisma/client';
+import { ProductCardProps } from '@/lib/interface';
 
 const Categories_3: React.FC = () => {
   return (
@@ -21,7 +21,8 @@ const Categories_3: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover"
               alt=""
               loading="lazy"
-              fill
+              width={400}
+              height={300}
             />
             <div className="absolute inset-0 bg-[#00000073]"></div>
             <h5 className="text-white uppercase text-xs z-10">CATEGORIES</h5>
@@ -42,7 +43,7 @@ const Categories_3: React.FC = () => {
               {dummyProducts.slice(2, 5).map((product, index) => (
                 <ProductCard
                   key={index}
-                  product={product as Product}
+                  product={product as ProductCardProps}
                   className="mx-0 sm:mx-3"
                 />
               ))}

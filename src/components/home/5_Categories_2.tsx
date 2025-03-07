@@ -30,7 +30,8 @@ const Template: React.FC<TemplateProps> = ({ children, imageUrl }) => {
       <Image
         src={imageUrl}
         alt=""
-        fill
+        height={288}
+        width={140}
         loading="lazy"
         className="absolute top-0 left-0 w-full h-full object-cover"
       />

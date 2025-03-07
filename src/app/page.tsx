@@ -26,9 +26,9 @@ const Home = () => {
         <BrandCarousal />
         {/* <Categories_1 /> */}
         <Categories_2 />
-        {/* <Categories_3 /> */}
-        {/* <Categories_4 /> */}
-        {/* <Categories_5 /> */}
+        <Categories_3 />
+        <Categories_4 />
+        <Categories_5 />
         {/* <Categories_6 /> */}
         {/* <Categories_7 /> */}
         {/* <Categories_8 /> */}

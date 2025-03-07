@@ -2,7 +2,7 @@ import AddToCartButton from './AddToCartButton';
 import CategoryLink from './CategoryLink';
 import { CommonHeading } from './CommonHeading';
 import { ProductCarouselWrapper } from './ProductCarouselWrapper';
-import { ProductGrid, ProductCard } from './ProductCard';
+import { ProductGrid, ProductCard, ProductCardSkelton } from './ProductCard';
 
 // Export all UI components for reusability
 export {
@@ -12,4 +12,5 @@ export {
   ProductCarouselWrapper,
   ProductGrid,
   ProductCard,
+  ProductCardSkelton,
 };

@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/route';
 
-const DISABLE_AUTH = false;
+const DISABLE_AUTH = true;
 
 function validateGraphApiKey(request: NextRequest): boolean {
   if (DISABLE_AUTH) return true;

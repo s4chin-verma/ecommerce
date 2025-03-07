@@ -1,18 +1,59 @@
-import { Product } from '@prisma/client';
-import { ProductCarouselWrapper, CommonHeading, ProductCard } from './ui';
-import { dummyProducts } from '@/data/data';
+import {
+  ProductCarouselWrapper,
+  CommonHeading,
+  ProductCardSkelton,
+  ProductCard,
+} from '@/components/home/ui';
+import {
+  GetProductByCategoryIdDocument,
+  GetProductByCategoryIdQuery,
+  GetProductByCategoryIdQueryVariables,
+} from '@/graphql/generated';
+import { toast } from 'sonner';
+import { useQuery } from 'urql';
+import { ProductCardProps } from '@/lib/interface';
+import { useEffect } from 'react';
 
 const Categories_5: React.FC = () => {
+  const [{ data, fetching, error }] = useQuery<
+    GetProductByCategoryIdQuery,
+    GetProductByCategoryIdQueryVariables
+  >({
+    query: GetProductByCategoryIdDocument,
+    variables: { categoryId: '67020cc2-525a-49a8-bfeb-c4542e7ee984' },
+  });
+
+  const products = data?.getProductByCategory;
+  useEffect(() => {
+    if (error) {
+      const errorMessage = error.message.replace('[GraphQL] ', '');
+      toast(errorMessage);
+    }
+  }, [error]);
+
   return (
     <section>
       <div className="max-w-6xl mx-auto py-10">
-        <CommonHeading>Bright Diamond for Bright Women</CommonHeading>
+        <CommonHeading categoryHref="">
+          Bright Diamond for Bright Women
+        </CommonHeading>
         <div className="mt-10">
-          <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
-            {dummyProducts.map((product, index) => (
-              <ProductCard key={index} product={product as Product} />
-            ))}
-          </ProductCarouselWrapper>
+          {fetching ? (
+            <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <ProductCardSkelton key={i} />
+              ))}
+            </ProductCarouselWrapper>
+          ) : (
+            <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
+              {products?.map((product, index) => (
+                <ProductCard
+                  key={index}
+                  product={product as ProductCardProps}
+                />
+              ))}
+            </ProductCarouselWrapper>
+          )}
         </div>
       </div>
     </section>

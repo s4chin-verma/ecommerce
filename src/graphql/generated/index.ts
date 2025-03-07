@@ -320,6 +320,7 @@ export type Query = {
   getOrderByOrderId?: Maybe<Order>;
   getOrderByUserId?: Maybe<Array<Order>>;
   getProduct?: Maybe<Product>;
+  getProductByCategory?: Maybe<Array<Product>>;
   getProducts?: Maybe<QueryGetProductsConnection>;
   getUser?: Maybe<User>;
   getUsers?: Maybe<Array<User>>;
@@ -355,6 +356,11 @@ export type QueryGetOrderByUserIdArgs = {
 
 export type QueryGetProductArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetProductByCategoryArgs = {
+  categoryId: Scalars['String']['input'];
 };
 
 
@@ -538,6 +544,13 @@ export type GetProductForCheckOutQueryVariables = Exact<{
 
 
 export type GetProductForCheckOutQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, images?: Array<string> | null, name?: string | null, sellingPrice?: number | null, price?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
+
+export type GetProductByCategoryIdQueryVariables = Exact<{
+  categoryId: Scalars['String']['input'];
+}>;
+
+
+export type GetProductByCategoryIdQuery = { __typename?: 'Query', getProductByCategory?: Array<{ __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null }> | null };
 
 export type GetProductsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -808,6 +821,27 @@ export const GetProductForCheckOutDocument = gql`
 
 export function useGetProductForCheckOutQuery(options: Omit<Urql.UseQueryArgs<GetProductForCheckOutQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductForCheckOutQuery, GetProductForCheckOutQueryVariables>({ query: GetProductForCheckOutDocument, ...options });
+};
+export const GetProductByCategoryIdDocument = gql`
+    query GetProductByCategoryId($categoryId: String!) {
+  getProductByCategory(categoryId: $categoryId) {
+    id
+    name
+    description
+    images
+    price
+    ratings
+    sellingPrice
+    stock
+    category {
+      title
+    }
+  }
+}
+    `;
+
+export function useGetProductByCategoryIdQuery(options: Omit<Urql.UseQueryArgs<GetProductByCategoryIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductByCategoryIdQuery, GetProductByCategoryIdQueryVariables>({ query: GetProductByCategoryIdDocument, ...options });
 };
 export const GetProductsDocument = gql`
     query GetProducts($first: Int, $after: String) {
