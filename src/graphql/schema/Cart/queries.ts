@@ -1,25 +1,30 @@
+import { checkUserAuth } from '@/graphql/ctx';
 import { builder } from '../../builder';
 import prisma from '@/lib/prisma';
 
-builder.prismaObject('Cart', {
+builder.prismaObject('CartProduct', {
   fields: t => ({
     id: t.exposeID('id'),
-    user: t.relation('user'),
     userId: t.exposeString('userId'),
-    products: t.relation('products'),
-    totalAmount: t.exposeFloat('totalAmount'),
+    user: t.relation('user'),
+    productId: t.exposeString('productId'),
+    product: t.relation('product'),
+    quantity: t.exposeInt('quantity'),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
   }),
 });
 
-builder.prismaObject('CartProduct', {
-  fields: t => ({
-    id: t.exposeID('id'),
-    product: t.relation('product'),
-    productId: t.exposeString('productId'),
-    cart: t.relation('cart'),
-    cartId: t.exposeString('cartId'),
-    quantity: t.exposeInt('quantity'),
+builder.queryFields(t => ({
+  getCartItems: t.prismaField({
+    type: ['CartProduct'],
+    resolve: async (query, _, args, context) => {
+      const user = checkUserAuth(context);
+      return await prisma.cartProduct.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: 'desc' },
+        ...query,
+      });
+    },
   }),
-});
+}));

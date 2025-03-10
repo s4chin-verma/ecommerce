@@ -103,6 +103,22 @@ query GetProductByCategoryId($categoryId: String!) {
   }
 }
 
+query GetLimitedProduct($limit: Int!) {
+  getLimitedProduct(limit: $limit) {
+    id
+    name
+    description
+    images
+    price
+    ratings
+    sellingPrice
+    stock
+    category {
+      title
+    }
+  }
+}
+
 query GetProducts($first: Int, $after: String) {
   getProducts(first: $first, after: $after) {
     edges {

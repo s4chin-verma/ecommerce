@@ -1,13 +1,9 @@
 import { dummyProducts } from '@/data/data';
 import { Card, CardDescription, CardTitle } from '../ui/card';
-import {
-  CategoryLink,
-  CommonHeading,
-  ProductCard,
-  ProductCarouselWrapper,
-} from './ui';
+import { CategoryLink, CommonHeading, ProductCarouselWrapper } from './ui';
 import Image from 'next/image';
 import { ProductCardProps } from '@/lib/interface';
+import { ProductCard, ProductCardSkelton } from '@/components/shop/ProductCard';
 
 const Categories_3: React.FC = () => {
   return (

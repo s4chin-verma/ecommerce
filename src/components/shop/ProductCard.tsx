@@ -10,29 +10,14 @@ import AddToCartButton from './AddToCartButton';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
+import { ProductCardProps } from '@/lib/interface';
 
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sellingPrice: number;
-  stock: number;
-  images: string[];
-  categoryId: string;
-  wishlistId: string;
-  ratings: number | null;
-  category: { title: string };
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ProductCardProps {
-  product: Product;
+interface CardProps {
+  product: ProductCardProps;
   className?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
+const ProductCard: React.FC<CardProps> = ({ className, product }) => {
   const renderStars = (rating: number | null) => {
     return rating ? '⭐'.repeat(Math.round(rating)) : '';
   };
@@ -94,7 +79,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
               </p>
             </>
           )}
-          <AddToCartButton className="mt-2" />
+          <div
+            onClick={e => e.preventDefault()}
+            onMouseDown={e => e.stopPropagation()}
+          >
+            <AddToCartButton
+              className="mt-2"
+              productId={product.id}
+              stock={product.stock}
+            />
+          </div>
         </CardFooter>
       </Card>
     </Link>
@@ -102,7 +96,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ className, product }) => {
 };
 
 interface ProductGridProps {
-  products: Product[];
+  products: ProductCardProps[];
   className?: string;
 }
 
@@ -123,7 +117,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, className }) => {
 
 const ProductCardSkelton = () => (
   <Card className="mx-3 rounded-2xl">
-    <Skeleton className="h-96 w-15 rounded-2xl" />
+    <Skeleton className="h-[418px] w-15 rounded-2xl" />
   </Card>
 );
 

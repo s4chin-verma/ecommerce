@@ -1,10 +1,4 @@
 import {
-  ProductCarouselWrapper,
-  CommonHeading,
-  ProductCardSkelton,
-  ProductCard,
-} from '@/components/home/ui';
-import {
   GetProductByCategoryIdDocument,
   GetProductByCategoryIdQuery,
   GetProductByCategoryIdQueryVariables,
@@ -13,6 +7,8 @@ import { toast } from 'sonner';
 import { useQuery } from 'urql';
 import { ProductCardProps } from '@/lib/interface';
 import { useEffect } from 'react';
+import { ProductCarouselWrapper, CommonHeading } from '@/components/home/ui';
+import { ProductCard, ProductCardSkelton } from '@/components/shop/ProductCard';
 
 const Categories_5: React.FC = () => {
   const [{ data, fetching, error }] = useQuery<
@@ -40,7 +36,7 @@ const Categories_5: React.FC = () => {
         <div className="mt-10">
           {fetching ? (
             <ProductCarouselWrapper autoplayDelay={2000} slidesToShow={4}>
-              {Array.from({ length: 10 }).map((_, i) => (
+              {Array.from({ length: 6 }).map((_, i) => (
                 <ProductCardSkelton key={i} />
               ))}
             </ProductCarouselWrapper>

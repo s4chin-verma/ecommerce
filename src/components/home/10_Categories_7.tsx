@@ -1,12 +1,9 @@
 import { dummyProducts } from '@/data/data';
 import { Card, CardDescription, CardTitle } from '../ui/card';
-import {
-  CategoryLink,
-  CommonHeading,
-  ProductCard,
-  ProductCarouselWrapper,
-} from './ui';
+import { CategoryLink, CommonHeading, ProductCarouselWrapper } from './ui';
 import { Product } from '@prisma/client';
+import { ProductCardProps } from '@/lib/interface';
+import { ProductCard, ProductCardSkelton } from '@/components/shop/ProductCard';
 
 const Categories_7: React.FC = () => {
   return (
@@ -28,7 +25,10 @@ const Categories_7: React.FC = () => {
             <div className="md:w-1/2">
               <ProductCarouselWrapper slidesToShow={2} autoplayDelay={4000}>
                 {dummyProducts.slice(2, 5).map((product, index) => (
-                  <ProductCard key={index} product={product as Product} />
+                  <ProductCard
+                    key={index}
+                    product={product as ProductCardProps}
+                  />
                 ))}
               </ProductCarouselWrapper>
             </div>

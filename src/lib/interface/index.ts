@@ -13,3 +13,17 @@ export interface ProductCardProps {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CartItems {
+  id: string;
+  quantity: number;
+  product: {
+    id: string;
+    name: string;
+    images: string[];
+    price: number;
+    sellingPrice: number;
+    stock: number;
+    category: { title: string };
+  };
+}

@@ -25,9 +25,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { signIn, getSession, useSession } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { toast } from '@/components/ui/use-toast';
 import { User } from '@prisma/client';
 import {
   AlertDialog,
@@ -40,6 +39,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -47,7 +47,6 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
-  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
@@ -71,36 +70,26 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        toast({
-          title: 'Error',
-          description: result.error,
-          variant: 'destructive',
-        });
+        toast.error(result.error);
       } else {
         const session = await getSession();
         if (session?.user) {
           if ((session.user as User).role === 'ADMIN') {
             setIsAdmin(true);
-            toast({
-              title: 'Logged in successfully!',
-              description: 'Welcome back Admin!',
+            toast.success('Welcome back', {
+              description:
+                'Admin access detected click on button to got to dashboard',
             });
           } else {
             router.push('/');
-            toast({
-              title: 'Logged in successfully!',
-              description: 'Welcome back!',
+            toast.success('Welcome back', {
+              description: 'You have successfully logged in.',
             });
           }
         }
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive',
-      });
+      toast.error('Some error occurred while logging in');
     } finally {
       setIsLoading(false);
     }
@@ -210,7 +199,7 @@ export default function LoginPage() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => router.push('/')}>
-                No, go to user dashboard
+                No, go to home page
               </AlertDialogCancel>
               <AlertDialogAction onClick={() => router.push('/admin')}>
                 Yes, go to admin dashboard

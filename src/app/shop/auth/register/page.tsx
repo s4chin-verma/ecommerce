@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserPlus, Mail, Phone, Lock, User, Loader2 } from 'lucide-react';
+import { UserPlus, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -24,7 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
 import { RegisterSchemaType, registerSchema } from '@/lib/schema/zod';
 import {
   CreateUserDocument,
@@ -33,6 +32,7 @@ import {
 } from '@/graphql/generated';
 import { useMutation } from 'urql';
 import { NextPage } from 'next';
+import { toast } from 'sonner';
 
 const Page: NextPage = () => {
   const [result, createUser] = useMutation<
@@ -63,29 +63,15 @@ const Page: NextPage = () => {
         password: data.password,
       });
       if (response.error) {
-        const graphQLError = response.error as {
-          graphQLErrors: { message: string }[];
-        };
-        const errorMessage =
-          graphQLError.graphQLErrors[0]?.message || 'An unknown error occurred';
-        toast({
-          title: 'Error',
-          description: errorMessage,
-          variant: 'destructive',
-        });
+        toast.error(response.error.graphQLErrors[0].message);
       } else {
-        toast({
-          title: 'Account created successfully!',
+        toast.success('Account created successfully', {
           description: 'You can now log in with your new account.',
         });
         router.push('/shop/auth/login');
       }
     } catch {
-      toast({
-        title: 'Error',
-        description: 'Failed to create account. Please try again.',
-        variant: 'destructive',
-      });
+      toast.error('Failed to create account. Please try again');
     }
   };
 

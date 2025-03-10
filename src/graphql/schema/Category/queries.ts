@@ -6,7 +6,6 @@ builder.prismaObject('Category', {
   fields: t => ({
     id: t.exposeID('id'),
     title: t.exposeString('title'),
-    description: t.exposeString('description'),
     image: t.exposeString('image'),
     products: t.relation('products'),
   }),

@@ -30,9 +30,11 @@ const CollectionCard: FC<CategoryWithQuantity> = ({
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col pb-3 pt-4">
-          <CardTitle className="">{title}</CardTitle>
-          <CardDescription className="mt-2">{quantity} items</CardDescription>
+        <CardFooter className="flex flex-col py-2">
+          <CardTitle className="text-xl md:text-2xl">{title}</CardTitle>
+          <CardDescription className="md:mt-2">
+            {quantity} items
+          </CardDescription>
         </CardFooter>
       </Card>
     </Link>

@@ -6,6 +6,7 @@ import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
 import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
 import { Cart } from '@/components/shop/Cart';
+import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 
 const pagesLink = [
   { title: 'About us', href: '/shop/about-us' },
@@ -33,7 +34,7 @@ const Collection = [
 
 const DesktopNav = () => {
   return (
-    <div className="invisible md:visible">
+    <div className="hidden md:block">
       <HeaderStrip />
       <nav className="max-w-6xl mx-auto px-3 flex items-center">
         <Link href="/" className="text-4xl font-bold mr-12 cursor-pointer">

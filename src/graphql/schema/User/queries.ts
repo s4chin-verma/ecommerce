@@ -19,7 +19,6 @@ builder.prismaObject('User', {
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
     review: t.relation('review'),
-    cart: t.relation('cart'),
     payment: t.relation('payment'),
   }),
 });

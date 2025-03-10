@@ -1,6 +1,6 @@
-import { NextPage } from 'next';
-import { CollectionGrid } from '@/components/CollectionCard';
 import prisma from '@/lib/prisma';
+import { NextPage } from 'next';
+import { CollectionGrid } from '@/app/shop/collections/components/CollectionCard';
 import { Category } from '@prisma/client';
 
 export type CategoryWithQuantity = Category & { quantity: number };
@@ -12,7 +12,6 @@ const Page: NextPage = async () => {
         id: true,
         title: true,
         image: true,
-        description: true,
       },
     });
 
@@ -31,7 +30,7 @@ const Page: NextPage = async () => {
   const collections = await getCategories();
 
   return (
-    <main className="pt-36 pb-20">
+    <main className="pt-16 md:pt-36 pb-20">
       <section className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 mt-2">
           Collections

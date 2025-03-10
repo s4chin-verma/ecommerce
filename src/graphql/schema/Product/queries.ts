@@ -1,6 +1,7 @@
 import { builder } from '../../builder';
 import prisma from '@/lib/prisma';
 import { GraphQLError } from 'graphql';
+import { argsToArgsConfig } from 'graphql/type/definition';
 
 builder.prismaObject('Product', {
   fields: t => ({
@@ -67,6 +68,23 @@ builder.queryFields(t => ({
         ...query,
       });
       if (products.length < 0) throw new GraphQLError('No products found');
+      return products;
+    },
+  }),
+
+  getLimitedProduct: t.prismaField({
+    type: ['Product'],
+    args: {
+      limit: t.arg.int({ required: true }),
+    },
+    resolve: async (query, _parent, args, context) => {
+      const products = await prisma.product.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: args.limit,
+        ...query,
+      });
+
+      if (products.length === 0) throw new GraphQLError('No products found');
       return products;
     },
   }),

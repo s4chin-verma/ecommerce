@@ -173,12 +173,10 @@ export default function Page({
                   <div className="pt-4 pl-3 pb-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
                       {products.map(product => (
-                        <Link
-                          href={`/shop/collections/${collectionName}/${product?.id}`}
+                        <ProductCard
                           key={product?.id}
-                        >
-                          <ProductCard product={product as Product} />
-                        </Link>
+                          product={product as Product}
+                        />
                       ))}
                     </div>
                   </div>

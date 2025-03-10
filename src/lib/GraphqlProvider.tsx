@@ -38,7 +38,7 @@ const GraphqlProvider = ({ children, graphqlApiKey }: Props) => {
   return (
     <UrqlProvider client={client} ssr={ssr}>
       <Toaster />
-      <SonnerToaster />
+      <SonnerToaster expand={true} richColors theme="light" />
       {children}
     </UrqlProvider>
   );

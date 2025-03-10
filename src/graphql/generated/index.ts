@@ -36,30 +36,20 @@ export type Address = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
-export type Cart = {
-  __typename?: 'Cart';
+export type CartProduct = {
+  __typename?: 'CartProduct';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  products?: Maybe<Array<CartProduct>>;
-  totalAmount?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Product>;
+  productId?: Maybe<Scalars['String']['output']>;
+  quantity?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
 
-export type CartProduct = {
-  __typename?: 'CartProduct';
-  cart?: Maybe<Cart>;
-  cartId?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  product?: Maybe<Product>;
-  productId?: Maybe<Scalars['String']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
 export type Category = {
   __typename?: 'Category';
-  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   image?: Maybe<Scalars['String']['output']>;
   products?: Maybe<Array<Product>>;
@@ -70,17 +60,20 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory?: Maybe<Category>;
   addProduct?: Maybe<Product>;
+  addToCart?: Maybe<CartProduct>;
   addToWishlist?: Maybe<Wishlist>;
   createAddress?: Maybe<Address>;
   createOrder?: Maybe<Order>;
   createUser?: Maybe<User>;
   deleteAddress?: Maybe<Address>;
+  deleteCartItem?: Maybe<CartProduct>;
   deleteMenu?: Maybe<Category>;
   deleteProduct?: Maybe<Product>;
   editMenu?: Maybe<Category>;
   editUserRole?: Maybe<User>;
   removeFromWishlist?: Maybe<Scalars['Boolean']['output']>;
   updateAddress?: Maybe<Address>;
+  updateCartItemQuantity?: Maybe<CartProduct>;
   updateOrder?: Maybe<Order>;
   updateProduct?: Maybe<Product>;
   updateStatus?: Maybe<Order>;
@@ -90,7 +83,7 @@ export type Mutation = {
 
 
 export type MutationAddCategoryArgs = {
-  description: Scalars['String']['input'];
+  image: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -103,6 +96,12 @@ export type MutationAddProductArgs = {
   price: Scalars['Float']['input'];
   sellingPrice: Scalars['Float']['input'];
   stock: Scalars['Int']['input'];
+};
+
+
+export type MutationAddToCartArgs = {
+  productId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
 };
 
 
@@ -148,6 +147,11 @@ export type MutationDeleteAddressArgs = {
 };
 
 
+export type MutationDeleteCartItemArgs = {
+  cartItemId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteMenuArgs = {
   id: Scalars['String']['input'];
 };
@@ -186,6 +190,12 @@ export type MutationUpdateAddressArgs = {
   phone?: InputMaybe<Scalars['String']['input']>;
   postalCode?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateCartItemQuantityArgs = {
+  cartItemId: Scalars['String']['input'];
+  change: Scalars['Int']['input'];
 };
 
 
@@ -315,8 +325,10 @@ export type Query = {
   getAddressById?: Maybe<Address>;
   getAddressesByUserId?: Maybe<Array<Address>>;
   getAllAddresses?: Maybe<Array<Address>>;
+  getCartItems?: Maybe<Array<CartProduct>>;
   getCategories?: Maybe<Array<Category>>;
   getCategory?: Maybe<Category>;
+  getLimitedProduct?: Maybe<Array<Product>>;
   getOrderByOrderId?: Maybe<Order>;
   getOrderByUserId?: Maybe<Array<Order>>;
   getProduct?: Maybe<Product>;
@@ -341,6 +353,11 @@ export type QueryGetAddressesByUserIdArgs = {
 
 export type QueryGetCategoryArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetLimitedProductArgs = {
+  limit: Scalars['Int']['input'];
 };
 
 
@@ -433,7 +450,6 @@ export type Shipping = {
 export type User = {
   __typename?: 'User';
   address?: Maybe<Array<Address>>;
-  cart?: Maybe<Array<Cart>>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   emailVerified?: Maybe<Scalars['Boolean']['output']>;
@@ -484,6 +500,34 @@ export type DeleteAddressMutationVariables = Exact<{
 
 
 export type DeleteAddressMutation = { __typename?: 'Mutation', deleteAddress?: { __typename?: 'Address', id?: string | null } | null };
+
+export type AddToCartMutationVariables = Exact<{
+  productId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type AddToCartMutation = { __typename?: 'Mutation', addToCart?: { __typename?: 'CartProduct', id?: string | null } | null };
+
+export type UpdateCartItemQuantityMutationVariables = Exact<{
+  cartItemId: Scalars['String']['input'];
+  change: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateCartItemQuantityMutation = { __typename?: 'Mutation', updateCartItemQuantity?: { __typename?: 'CartProduct', id?: string | null } | null };
+
+export type DeleteCartItemMutationVariables = Exact<{
+  cartItemId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCartItemMutation = { __typename?: 'Mutation', deleteCartItem?: { __typename?: 'CartProduct', id?: string | null } | null };
+
+export type GetCartItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCartItemsQuery = { __typename?: 'Query', getCartItems?: Array<{ __typename?: 'CartProduct', id?: string | null, quantity?: number | null, product?: { __typename?: 'Product', id?: string | null, name?: string | null, images?: Array<string> | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null }> | null };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -551,6 +595,13 @@ export type GetProductByCategoryIdQueryVariables = Exact<{
 
 
 export type GetProductByCategoryIdQuery = { __typename?: 'Query', getProductByCategory?: Array<{ __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null }> | null };
+
+export type GetLimitedProductQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type GetLimitedProductQuery = { __typename?: 'Query', getLimitedProduct?: Array<{ __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null }> | null };
 
 export type GetProductsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -690,6 +741,62 @@ export const DeleteAddressDocument = gql`
 
 export function useDeleteAddressMutation() {
   return Urql.useMutation<DeleteAddressMutation, DeleteAddressMutationVariables>(DeleteAddressDocument);
+};
+export const AddToCartDocument = gql`
+    mutation AddToCart($productId: String!, $quantity: Int!) {
+  addToCart(productId: $productId, quantity: $quantity) {
+    id
+  }
+}
+    `;
+
+export function useAddToCartMutation() {
+  return Urql.useMutation<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument);
+};
+export const UpdateCartItemQuantityDocument = gql`
+    mutation UpdateCartItemQuantity($cartItemId: String!, $change: Int!) {
+  updateCartItemQuantity(cartItemId: $cartItemId, change: $change) {
+    id
+  }
+}
+    `;
+
+export function useUpdateCartItemQuantityMutation() {
+  return Urql.useMutation<UpdateCartItemQuantityMutation, UpdateCartItemQuantityMutationVariables>(UpdateCartItemQuantityDocument);
+};
+export const DeleteCartItemDocument = gql`
+    mutation DeleteCartItem($cartItemId: String!) {
+  deleteCartItem(cartItemId: $cartItemId) {
+    id
+  }
+}
+    `;
+
+export function useDeleteCartItemMutation() {
+  return Urql.useMutation<DeleteCartItemMutation, DeleteCartItemMutationVariables>(DeleteCartItemDocument);
+};
+export const GetCartItemsDocument = gql`
+    query GetCartItems {
+  getCartItems {
+    id
+    quantity
+    product {
+      id
+      name
+      images
+      price
+      sellingPrice
+      stock
+      category {
+        title
+      }
+    }
+  }
+}
+    `;
+
+export function useGetCartItemsQuery(options?: Omit<Urql.UseQueryArgs<GetCartItemsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCartItemsQuery, GetCartItemsQueryVariables>({ query: GetCartItemsDocument, ...options });
 };
 export const GetCategoriesDocument = gql`
     query GetCategories {
@@ -842,6 +949,27 @@ export const GetProductByCategoryIdDocument = gql`
 
 export function useGetProductByCategoryIdQuery(options: Omit<Urql.UseQueryArgs<GetProductByCategoryIdQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductByCategoryIdQuery, GetProductByCategoryIdQueryVariables>({ query: GetProductByCategoryIdDocument, ...options });
+};
+export const GetLimitedProductDocument = gql`
+    query GetLimitedProduct($limit: Int!) {
+  getLimitedProduct(limit: $limit) {
+    id
+    name
+    description
+    images
+    price
+    ratings
+    sellingPrice
+    stock
+    category {
+      title
+    }
+  }
+}
+    `;
+
+export function useGetLimitedProductQuery(options: Omit<Urql.UseQueryArgs<GetLimitedProductQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetLimitedProductQuery, GetLimitedProductQueryVariables>({ query: GetLimitedProductDocument, ...options });
 };
 export const GetProductsDocument = gql`
     query GetProducts($first: Int, $after: String) {

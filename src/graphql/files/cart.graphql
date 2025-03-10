@@ -1,0 +1,35 @@
+mutation AddToCart($productId: String!, $quantity: Int!) {
+  addToCart(productId: $productId, quantity: $quantity) {
+    id
+  }
+}
+
+mutation UpdateCartItemQuantity($cartItemId: String!, $change: Int!) {
+  updateCartItemQuantity(cartItemId: $cartItemId, change: $change) {
+    id
+  }
+}
+
+mutation DeleteCartItem($cartItemId: String!) {
+  deleteCartItem(cartItemId: $cartItemId) {
+    id
+  }
+}
+
+query GetCartItems {
+  getCartItems {
+    id
+    quantity
+    product {
+      id
+      name
+      images
+      price
+      sellingPrice
+      stock
+      category {
+        title
+      }
+    }
+  }
+}

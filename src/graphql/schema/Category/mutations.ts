@@ -7,10 +7,11 @@ builder.mutationFields(t => ({
     type: 'Category',
     args: {
       title: t.arg.string({ required: true }),
-      description: t.arg.string({ required: true }),
+      image: t.arg.string({ required: true }),
     },
     resolve: async (query, _, args, context) => {
       const newCategory = await prisma.category.create({
+        ...query,
         data: { ...args },
       });
       return newCategory;
@@ -29,7 +30,7 @@ builder.mutationFields(t => ({
       }
       const updatedCategory = await prisma.category.update({
         where: { id: args.id },
-        data: { title: args.title, description: args.description },
+        data: { title: args.title },
       });
       return updatedCategory;
     },
