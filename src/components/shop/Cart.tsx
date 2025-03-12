@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -13,8 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
-import Image from 'next/image';
+import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
 import { useMutation, useQuery } from 'urql';
 import {
@@ -30,11 +29,11 @@ import {
 } from '@/graphql/generated';
 import { CartItems } from '@/lib/interface';
 import { toast } from 'sonner';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export function Cart() {
   const [open, setOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItems[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
 
   const [{ data, fetching, error }] = useQuery<
     GetCartItemsQuery,
@@ -88,32 +87,12 @@ export function Cart() {
     }
   };
 
-  const updateQuantity = (id: string, change: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(0, item.quantity + change) }
-          : item
-      )
-    );
-  };
+  const cartItemsList = (data?.getCartItems as CartItems[]) || [];
 
-  const removeItem = (id: string) => {
-    console.log('removing item');
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
-
-  useEffect(() => {
-    setTotalItems(cartItems.reduce((sum, item) => sum + item.quantity, 0));
-  }, [cartItems, open]);
-
-  const subtotal = cartItems.reduce(
+  const subtotal = cartItemsList?.reduce(
     (sum, item) => sum + item.product.sellingPrice * item.quantity,
     0
   );
-
-  const cartItemsList = (data?.getCartItems as CartItems[]) || [];
-
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -128,22 +107,23 @@ export function Cart() {
           <div className="block md:hidden">
             <ShoppingCart className="h-6 w-6" />
           </div>
-
-          <div className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-xs text-white font-medium">
-            {totalItems}
-          </div>
         </div>
       </SheetTrigger>
 
-      <SheetContent className="w-full sm:w-[740px]">
-        <SheetHeader>
-          <SheetTitle>Your Cart</SheetTitle>
-          <SheetDescription>
-            Review and manage your selected items.
-          </SheetDescription>
-        </SheetHeader>
+      <SheetContent className="w-full sm:w-[740px] flex flex-col h-full p-0">
+        <div className="p-6 pb-0">
+          <SheetHeader>
+            <SheetTitle className="flex justify-between items-center text-xl pr-6">
+              <span>Your Cart</span>
+              <span>{cartItemsList.length} | Items</span>
+            </SheetTitle>
+            <SheetDescription>
+              Review and manage your selected items.
+            </SheetDescription>
+          </SheetHeader>
+        </div>
 
-        <div className="flex flex-col justify-between">
+        <div className="flex-grow overflow-auto p-6">
           {fetching ? (
             <div className="flex flex-col items-center justify-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mb-4"></div>
@@ -163,11 +143,11 @@ export function Cart() {
               <p className="text-gray-500">Your cart is empty</p>
             </div>
           ) : (
-            <ScrollArea className="h-[400px]">
-              <div className="flex flex-col space-y-4 my-4">
+            <ScrollArea className="h-full">
+              <div className="flex flex-col space-y-4 mb-4">
                 {cartItemsList.map(item => (
                   <Card key={item.id}>
-                    <CardHeader className="flex flex-row items-center gap-4">
+                    <CardHeader className="flex flex-row items-center gap-4 p-3">
                       <div className="relative w-16 h-16">
                         <Image
                           src={
@@ -194,10 +174,10 @@ export function Cart() {
                         </p>
                       </div>
                     </CardHeader>
-                    <CardFooter className="flex justify-between">
+                    <CardFooter className="flex justify-between px-3 pb-3">
                       <div className="flex items-center">
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="icon"
                           onClick={() => decrementCartQuantity(item.id)}
                           disabled={item.quantity === 0}
@@ -206,7 +186,7 @@ export function Cart() {
                         </Button>
                         <span className="mx-4">{item.quantity}</span>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="icon"
                           onClick={() => incrementCartItemQuantity(item.id)}
                           disabled={item.quantity >= item.product.stock}
@@ -220,7 +200,7 @@ export function Cart() {
                         )}
                       </div>
                       <Button
-                        variant="destructive"
+                        variant="ghost"
                         size="icon"
                         onClick={() => deleteItemFromCart(item.id)}
                       >
@@ -234,28 +214,35 @@ export function Cart() {
           )}
         </div>
 
-        <div className="mt-6 space-y-4">
-          <div className="flex justify-between">
-            <span className="font-semibold">Subtotal:</span>
-            <span>${subtotal.toFixed(2)}</span>
+        <div className="border-t border-gray-200 bg-gray-50 p-6 mt-auto">
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <span className="font-semibold">Subtotal:</span>
+              <span> &#8377;{subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold">Shipping:</span>
+              <span>Calculated at checkout</span>
+            </div>
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total:</span>
+              <span> &#8377;{subtotal.toFixed(2)}</span>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="font-semibold">Shipping:</span>
-            <span>Calculated at checkout</span>
-          </div>
-          <div className="flex justify-between text-lg font-bold">
-            <span>Total:</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
-        </div>
 
-        <SheetFooter className="mt-6">
-          <SheetClose asChild>
-            <Button className="w-full" disabled={cartItemsList.length === 0}>
-              Proceed to Checkout
-            </Button>
-          </SheetClose>
-        </SheetFooter>
+          <SheetFooter className="mt-6">
+            <SheetClose asChild>
+              <Link href={`/shop/checkouts/`} className="w-full">
+                <Button
+                  className="w-full"
+                  disabled={cartItemsList.length === 0}
+                >
+                  Proceed to Checkout
+                </Button>
+              </Link>
+            </SheetClose>
+          </SheetFooter>
+        </div>
       </SheetContent>
     </Sheet>
   );

@@ -266,13 +266,11 @@ export default function Page({
                   </div>
 
                   <div className="flex gap-4 justify-start pt-6 pr-20">
-                    {/* Add to Cart Button */}
                     <Button className="w-full flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 rounded-3xl border border-gray-300 shadow-sm transition-all">
                       <span>Add To Cart</span>
                       <ShoppingCart className="h-5 w-5" />
                     </Button>
 
-                    {/* Buy It Now / Out of Stock Button */}
                     {stock > 0 ? (
                       <Link
                         href={`/shop/checkouts/${product.id}?quantity=${quantity}`}
