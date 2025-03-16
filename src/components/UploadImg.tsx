@@ -1,30 +1,37 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Cloud } from 'lucide-react';
-import { SupabaseImageUpload } from '@/lib/supabase'; // Assuming you have this in your utils
-import { toast } from '@/components/ui/use-toast';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { Cloud, Loader2 } from 'lucide-react';
+import { SupabaseImageUpload } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 type Props = {
-  handleCallback: (url: string) => void; // Change this to handle URL instead of file
+  handleCallback: (url: string) => void;
   id?: string;
   maxSizeMB?: number;
+  isFormSubmitted?: boolean;
 };
 
 const UploadImg = ({
   handleCallback,
   id = 'image-upload',
-  maxSizeMB = 50,
+  maxSizeMB = 10,
+  isFormSubmitted = false,
 }: Props) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [prevFormSubmitted, setPrevFormSubmitted] = useState(false);
+
+  // This useEffect will detect when isFormSubmitted changes from false to true
+  useEffect(() => {
+    if (isFormSubmitted && !prevFormSubmitted) {
+      setImagePreview(null);
+    }
+    setPrevFormSubmitted(isFormSubmitted);
+  }, [isFormSubmitted, prevFormSubmitted]);
 
   const handleFile = async (file: File) => {
     if (file.size / 1024 / 1024 > maxSizeMB) {
-      toast({
-        title: 'Error',
-        description: `File size too big (max ${maxSizeMB}MB)`,
-        variant: 'destructive',
-      });
+      toast.warning(`File size too big (max ${maxSizeMB}MB)`);
       return;
     }
 
@@ -38,11 +45,7 @@ const UploadImg = ({
       };
       reader.readAsDataURL(file);
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to upload image. Please try again.',
-        variant: 'destructive',
-      });
+      toast.error('Failed to upload image. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -112,7 +115,7 @@ const UploadImg = ({
           <span className="sr-only">Photo upload</span>
         </div>
         {loading ? (
-          <p className="text-center text-sm text-gray-500">Uploading...</p>
+          <Loader2 className="animate-spin h-6 w-6" />
         ) : (
           imagePreview && (
             <img

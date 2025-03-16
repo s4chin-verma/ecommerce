@@ -6,7 +6,6 @@ import { SearchBar } from '@/components/Layouts/ui/SearchBar';
 import { UserMenu } from '@/components/Layouts/ui/UserMenu';
 import { HeaderStrip } from '@/components/Layouts/ui/HeaderStrip';
 import { Cart } from '@/components/shop/Cart';
-import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 
 const pagesLink = [
   { title: 'About us', href: '/shop/about-us' },

@@ -582,6 +582,13 @@ export type GetProductQueryVariables = Exact<{
 
 export type GetProductQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, images?: Array<string> | null, price?: number | null, ratings?: number | null, sellingPrice?: number | null, stock?: number | null, category?: { __typename?: 'Category', title?: string | null } | null } | null };
 
+export type GetProductForUpdateQueryVariables = Exact<{
+  getProductId: Scalars['String']['input'];
+}>;
+
+
+export type GetProductForUpdateQuery = { __typename?: 'Query', getProduct?: { __typename?: 'Product', id?: string | null, name?: string | null, images?: Array<string> | null, description?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, createdAt?: any | null, updatedAt?: any | null, category?: { __typename?: 'Category', id?: string | null, title?: string | null } | null } | null };
+
 export type GetProductForCheckOutQueryVariables = Exact<{
   productId: Scalars['String']['input'];
 }>;
@@ -909,6 +916,29 @@ export const GetProductDocument = gql`
 
 export function useGetProductQuery(options: Omit<Urql.UseQueryArgs<GetProductQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductQuery, GetProductQueryVariables>({ query: GetProductDocument, ...options });
+};
+export const GetProductForUpdateDocument = gql`
+    query GetProductForUpdate($getProductId: String!) {
+  getProduct(id: $getProductId) {
+    id
+    name
+    images
+    description
+    price
+    sellingPrice
+    stock
+    category {
+      id
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useGetProductForUpdateQuery(options: Omit<Urql.UseQueryArgs<GetProductForUpdateQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetProductForUpdateQuery, GetProductForUpdateQueryVariables>({ query: GetProductForUpdateDocument, ...options });
 };
 export const GetProductForCheckOutDocument = gql`
     query GetProductForCheckOut($productId: String!) {

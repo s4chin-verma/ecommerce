@@ -9,7 +9,7 @@ export interface ProductCardProps {
   categoryId: string;
   wishlistId: string;
   ratings: number | null;
-  category: { title: string };
+  category: { id: string; title: string };
   createdAt: Date;
   updatedAt: Date;
 }

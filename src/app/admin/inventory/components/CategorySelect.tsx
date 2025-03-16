@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@urql/next';
 import {
   Select,
@@ -19,16 +19,43 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface CategorySelectProps {
   onValueChange: (value: string) => void;
+  value?: string;
+  isFormSubmitted?: boolean;
 }
 
-const CategorySelect: React.FC<CategorySelectProps> = ({ onValueChange }) => {
+const CategorySelect: React.FC<CategorySelectProps> = ({
+  onValueChange,
+  value = '',
+  isFormSubmitted = false,
+}) => {
+  const [selectedValue, setSelectedValue] = useState<string>(value);
+  const [prevFormSubmitted, setPrevFormSubmitted] = useState(false);
+
   const [{ data, fetching, error }, executeQuery] = useQuery<
     GetCategoriesQuery,
     GetCategoriesQueryVariables
   >({
     query: GetCategoriesDocument,
-    pause: true,
+    pause: false,
   });
+
+  useEffect(() => {
+    if (isFormSubmitted && !prevFormSubmitted) setSelectedValue('');
+
+    setPrevFormSubmitted(isFormSubmitted);
+  }, [isFormSubmitted, prevFormSubmitted]);
+
+  useEffect(() => {
+    if (value !== selectedValue) setSelectedValue(value);
+  }, [value]);
+
+  const handleValueChange = useCallback(
+    (val: string) => {
+      setSelectedValue(val);
+      onValueChange(val);
+    },
+    [onValueChange]
+  );
 
   const handleOpenChange = useCallback(
     (open: boolean) => {
@@ -40,7 +67,11 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onValueChange }) => {
   );
 
   return (
-    <Select onValueChange={onValueChange} onOpenChange={handleOpenChange}>
+    <Select
+      value={selectedValue}
+      onValueChange={handleValueChange}
+      onOpenChange={handleOpenChange}
+    >
       <SelectTrigger className="w-[180px] cursor-pointer">
         <SelectValue placeholder="Category" />
       </SelectTrigger>

@@ -20,6 +20,7 @@ import {
 import { useQuery } from 'urql';
 import { WishListIcon } from '@/app/shop/collections/components/wishlist';
 import Link from 'next/link';
+import { ProductCardProps as Product } from '@/lib/interface';
 
 const ProductDetailSkeleton = () => (
   <div className="grid md:grid-cols-2 gap-8 px-3">
@@ -83,20 +84,6 @@ const RatingStars = ({ rating }: { rating: number }) => {
     </div>
   );
 };
-
-interface Product {
-  id: string;
-  name: string | null;
-  description: string | null;
-  images: string[];
-  price: number | null;
-  ratings: number | null;
-  sellingPrice: number | null;
-  stock: number | null;
-  category: {
-    title: string | null;
-  } | null;
-}
 
 export default function Page({
   params,

@@ -30,25 +30,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
-import { ProductCard } from '@/components/home/ui';
+import { ProductCard } from '@/components/shop/ProductCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import Link from 'next/link';
+import { ProductCardProps as Product } from '@/lib/interface';
 
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sellingPrice: number;
-  stock: number;
-  images: string[];
-  categoryId: string;
-  wishlistId: string;
-  ratings: number | null;
-  category: { title: string };
-  createdAt: Date;
-  updatedAt: Date;
-}
 export interface ProductEdge {
   node: Product;
   cursor: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -31,9 +31,15 @@ import { CartItems } from '@/lib/interface';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export function Cart() {
+export const Cart = () => {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname.startsWith('/shop/cart')) {
+    return null;
+  }
 
   const [{ data, fetching, error }] = useQuery<
     GetCartItemsQuery,
@@ -93,6 +99,13 @@ export function Cart() {
     (sum, item) => sum + item.product.sellingPrice * item.quantity,
     0
   );
+
+  useEffect(() => {
+    if (error?.graphQLErrors?.[0]?.message === 'UNAUTHENTICATED')
+      toast.error('You need an account to access your cart');
+    else if (error) toast.error('Unable to access your cart');
+  }, [error]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -129,10 +142,24 @@ export function Cart() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mb-4"></div>
               <p className="text-gray-500">Loading your cart...</p>
             </div>
+          ) : error?.graphQLErrors?.[0]?.message === 'UNAUTHENTICATED' ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="text-red-500 text-3xl mb-3">⚠️</div>
+              <p className="text-gray-500 text-sm">
+                You need an account to access your cart
+              </p>
+              <Link href="/shop/auth/login">
+                <Button variant="link" size="lg">
+                  Login
+                </Button>
+              </Link>
+            </div>
           ) : error ? (
-            <div className="flex flex-col items-center justify-center h-64">
-              <div className="text-red-500 mb-4">⚠️</div>
-              <p className="text-gray-700">Could not load your cart</p>
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="text-red-500 mb-4 text-2xl">⚠️</div>
+              <p className="text-gray-700 font-semibold">
+                Could not load your cart
+              </p>
               <p className="text-gray-500 text-sm mt-2">
                 Please try again later
               </p>
@@ -230,7 +257,7 @@ export function Cart() {
             </div>
           </div>
 
-          <SheetFooter className="mt-6">
+          <div className="mt-6">
             <SheetClose asChild>
               <Link href={`/shop/checkouts/`} className="w-full">
                 <Button
@@ -241,9 +268,20 @@ export function Cart() {
                 </Button>
               </Link>
             </SheetClose>
-          </SheetFooter>
+            <SheetClose asChild>
+              <Link href={`/shop/cart/`} className="w-full">
+                <Button
+                  className="w-full underline"
+                  variant="link"
+                  disabled={cartItemsList.length === 0}
+                >
+                  Got to Cart Page
+                </Button>
+              </Link>
+            </SheetClose>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
   );
-}
+};

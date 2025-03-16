@@ -1,5 +1,4 @@
 import { FC, useCallback } from 'react';
-import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useMutation } from 'urql';
@@ -19,6 +18,7 @@ import {
   DeleteProductMutation,
   DeleteProductMutationVariables,
 } from '@/graphql/generated';
+import { toast } from 'sonner';
 
 interface Props {
   children: string;
@@ -26,7 +26,6 @@ interface Props {
 }
 
 const DeleteProductButton: FC<Props> = ({ children, productId }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const [result, deleteProduct] = useMutation<
     DeleteProductMutation,
@@ -37,16 +36,9 @@ const DeleteProductButton: FC<Props> = ({ children, productId }) => {
     const response = await deleteProduct({ deleteProductId: productId });
 
     if (response.error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete product. Please try again.',
-        variant: 'destructive',
-      });
+      toast.error('Failed to delete product');
     } else {
-      toast({
-        title: 'Success',
-        description: 'Product deleted successfully!',
-      });
+      toast.success('Product deleted successfully!');
       router.push('/admin/inventory');
     }
   }, [deleteProduct, productId, toast, router]);

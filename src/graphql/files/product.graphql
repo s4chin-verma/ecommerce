@@ -73,6 +73,24 @@ query GetProduct($getProductId: String!) {
   }
 }
 
+query GetProductForUpdate($getProductId: String!) {
+  getProduct(id: $getProductId) {
+    id
+    name
+    images
+    description
+    price
+    sellingPrice
+    stock
+    category {
+      id
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}
+
 query GetProductForCheckOut($productId: String!) {
   getProduct(id: $productId) {
     id
