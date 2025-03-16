@@ -7,6 +7,22 @@ query GetUsers {
   }
 }
 
+query GetCustomers {
+  getUsers {
+    id
+    firstName
+    lastName
+    email
+    emailVerified
+    phone
+    role
+    createdAt
+    orderHistory {
+      id
+    }
+  }
+}
+
 query GetUserForCheckout($userId: String!) {
   getUser(id: $userId) {
     firstName

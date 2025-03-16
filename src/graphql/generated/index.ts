@@ -124,9 +124,15 @@ export type MutationCreateAddressArgs = {
 
 export type MutationCreateOrderArgs = {
   addressId: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
-  total: Scalars['Float']['input'];
-  userEmail: Scalars['String']['input'];
+  deliveryFee?: InputMaybe<Scalars['Float']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  orderNumber: Scalars['String']['input'];
+  paid: Scalars['Boolean']['input'];
+  paymentToken: Scalars['String']['input'];
+  productId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+  serviceFee?: InputMaybe<Scalars['Float']['input']>;
+  subtotal: Scalars['Int']['input'];
   userId: Scalars['String']['input'];
   userName: Scalars['String']['input'];
   userPhone: Scalars['String']['input'];
@@ -202,7 +208,6 @@ export type MutationUpdateCartItemQuantityArgs = {
 export type MutationUpdateOrderArgs = {
   deliveryTime?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
   paid?: InputMaybe<Scalars['Boolean']['input']>;
   paymentToken?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<OrderStatus>;
@@ -622,6 +627,11 @@ export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null }> | null };
+
+export type GetCustomersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCustomersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', id?: string | null, firstName?: string | null, lastName?: string | null, email?: string | null, emailVerified?: boolean | null, phone?: string | null, role?: Role | null, createdAt?: any | null, orderHistory?: Array<{ __typename?: 'Order', id?: string | null }> | null }> | null };
 
 export type GetUserForCheckoutQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -1048,6 +1058,27 @@ export const GetUsersDocument = gql`
 
 export function useGetUsersQuery(options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({ query: GetUsersDocument, ...options });
+};
+export const GetCustomersDocument = gql`
+    query GetCustomers {
+  getUsers {
+    id
+    firstName
+    lastName
+    email
+    emailVerified
+    phone
+    role
+    createdAt
+    orderHistory {
+      id
+    }
+  }
+}
+    `;
+
+export function useGetCustomersQuery(options?: Omit<Urql.UseQueryArgs<GetCustomersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCustomersQuery, GetCustomersQueryVariables>({ query: GetCustomersDocument, ...options });
 };
 export const GetUserForCheckoutDocument = gql`
     query GetUserForCheckout($userId: String!) {

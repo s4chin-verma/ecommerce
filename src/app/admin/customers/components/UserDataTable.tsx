@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 
-export type UserData = {
+export type UserDataWithRelation = {
   id: string;
   firstName: string;
   lastName: string;
@@ -41,12 +41,12 @@ export type UserData = {
   phone: string | null;
   role: string;
   createdAt: Date;
-  _count: {
-    orderHistory: number;
-  };
+  orderHistory: {
+    id: string;
+  }[];
 };
 
-export const columns: ColumnDef<UserData>[] = [
+export const columns: ColumnDef<UserDataWithRelation>[] = [
   {
     accessorKey: 'index',
     header: 'SR. No',
@@ -149,14 +149,14 @@ export const columns: ColumnDef<UserData>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-center font-medium">
-          {row.original._count.orderHistory}
+          {row.original.orderHistory.length}
         </div>
       );
     },
   },
 ];
 
-export function UsersDataTable({ data }: { data: UserData[] }) {
+export function UsersDataTable({ data }: { data: UserDataWithRelation[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
