@@ -120,16 +120,16 @@ enum OrderStatus {
 model Order {
   id              String      @id @default(uuid())
   orderNumber     String      @unique
-  deliveryTime    DateTime?   @default(now())
   userName        String
   userPhone       String
   paymentToken    String?
   paid            Boolean     @default(false)
   addressId       String
-  deliveryFee     Float       @default(4)
-  serviceFee      Float       @default(3)
+  deliveryFee     Float?      @default(0)
+  serviceFee      Float?      @default(0)
   status          OrderStatus @default(ORDERED)
-  discount        Float?
+  discount        Float?      @default(0)
+  deliveryTime    DateTime?   @default(now())
   orderDate       DateTime    @default(now())
   userId          String
   productId       String

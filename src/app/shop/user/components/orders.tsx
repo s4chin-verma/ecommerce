@@ -21,6 +21,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export interface Order {
   id: string;
@@ -46,7 +47,7 @@ interface OrderHistoryProps {
   onRefresh?: () => Promise<void>;
 }
 
-const getStatusIcon = (status: Order['status']) => {
+export const getStatusIcon = (status: Order['status']) => {
   const icons = {
     ORDERED: <Clock className="h-4 w-4" />,
     CONFIRMED: <CheckCircle2 className="h-4 w-4" />,
@@ -129,7 +130,7 @@ export function OrderHistory({
                 className="flex items-center border rounded-lg p-3 space-x-4"
               >
                 {order.product[0]?.image ? (
-                  <img
+                  <Image
                     src={order.product[0].image}
                     alt={order.product[0].name}
                     className="w-16 h-16 object-cover rounded"

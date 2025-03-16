@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -8,7 +8,6 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -37,16 +36,11 @@ export const Cart = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname.startsWith('/shop/cart')) {
-    return null;
-  }
-
   const [{ data, fetching, error }] = useQuery<
     GetCartItemsQuery,
     GetCartItemsQueryVariables
   >({
     query: GetCartItemsDocument,
-    pause: !open,
   });
 
   const [result, updateCartItemQuantity] = useMutation<
@@ -58,6 +52,10 @@ export const Cart = () => {
     DeleteCartItemMutation,
     DeleteCartItemMutationVariables
   >(DeleteCartItemDocument);
+
+  if (pathname.startsWith('/shop/cart')) {
+    return null;
+  }
 
   const incrementCartItemQuantity = async (id: string) => {
     try {
@@ -93,18 +91,12 @@ export const Cart = () => {
     }
   };
 
-  const cartItemsList = (data?.getCartItems as CartItems[]) || [];
+  const cartItemsList = open ? (data?.getCartItems as CartItems[]) || [] : [];
 
   const subtotal = cartItemsList?.reduce(
     (sum, item) => sum + item.product.sellingPrice * item.quantity,
     0
   );
-
-  useEffect(() => {
-    if (error?.graphQLErrors?.[0]?.message === 'UNAUTHENTICATED')
-      toast.error('You need an account to access your cart');
-    else if (error) toast.error('Unable to access your cart');
-  }, [error]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

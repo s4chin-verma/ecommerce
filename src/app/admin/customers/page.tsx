@@ -1,35 +1,12 @@
-'use server';
-
-import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { UsersDataTable } from './UserDataTable';
+import {
+  UserData,
+  UsersDataTable,
+} from '@/app/admin/customers/components/UserDataTable';
+import { getUsers } from '@/app/admin/customers/action';
+import { NextPage } from 'next';
 
-export async function getUsers() {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      emailVerified: true,
-      phone: true,
-      role: true,
-      createdAt: true,
-      _count: {
-        select: {
-          orderHistory: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-
-  return users;
-}
-// Page component that fetches data and renders the data table
-export default async function CustomersPage() {
+const Page: NextPage = async () => {
   const users = await getUsers();
 
   return (
@@ -38,8 +15,10 @@ export default async function CustomersPage() {
         <CardTitle>Recent Customers</CardTitle>
       </CardHeader>
       <CardContent>
-        <UsersDataTable data={users} />
+        <UsersDataTable data={users as UserData[]} />
       </CardContent>
     </Card>
   );
-}
+};
+
+export default Page;

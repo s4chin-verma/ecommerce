@@ -10,13 +10,19 @@ builder.mutationFields(t => ({
   createOrder: t.prismaField({
     type: 'Order',
     args: {
+      orderNumber: t.arg.string({ required: true }),
       userName: t.arg.string({ required: true }),
-      userId: t.arg.string({ required: true }),
-      userEmail: t.arg.string({ required: true }),
       userPhone: t.arg.string({ required: true }),
+      paymentToken: t.arg.string({ required: true }),
+      paid: t.arg.boolean({ required: true }),
       addressId: t.arg.string({ required: true }),
-      note: t.arg.string(),
-      total: t.arg.float({ required: true }),
+      deliveryFee: t.arg.float(),
+      serviceFee: t.arg.float(),
+      discount: t.arg.float(),
+      userId: t.arg.string({ required: true }),
+      productId: t.arg.string({ required: true }),
+      quantity: t.arg.int({ required: true }),
+      subtotal: t.arg.int({ required: true }),
     },
     resolve: async (query, _, args) => {
       const orderNumber = generateOrderNumber();
@@ -24,7 +30,6 @@ builder.mutationFields(t => ({
         ...query,
         data: {
           ...args,
-          orderNumber,
         },
       });
       return order;
@@ -55,7 +60,6 @@ builder.mutationFields(t => ({
       paid: t.arg.boolean(),
       paymentToken: t.arg.string(),
       deliveryTime: t.arg.string(),
-      note: t.arg.string(),
     },
     resolve: async (query, _, args) => {
       const order = await prisma.order.update({
@@ -68,7 +72,6 @@ builder.mutationFields(t => ({
           deliveryTime: args.deliveryTime
             ? new Date(args.deliveryTime)
             : undefined,
-          note: args.note,
         },
       });
       return order;

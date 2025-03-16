@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, CheckCircle, ChevronDown, XCircle } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -30,131 +30,183 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import { OrderStatus } from '@prisma/client';
 
-export type UserData = {
+export type OrderWithRelations = {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  emailVerified: boolean;
-  phone: string | null;
-  role: string;
-  createdAt: Date;
-  _count: {
-    orderHistory: number;
+  orderNumber: string;
+  userName: string;
+  userPhone: string;
+  paid: boolean;
+  deliveryFee: number;
+  serviceFee: number;
+  status: OrderStatus;
+  orderDate: Date;
+  quantity: number;
+  subtotal: number;
+  product: {
+    id: string;
+    name: string;
+  };
+  User: {
+    email: string;
   };
 };
 
-export const columns: ColumnDef<UserData>[] = [
+const columns: ColumnDef<OrderWithRelations>[] = [
   {
-    accessorKey: 'index',
-    header: 'SR. No',
-    cell: ({ row }) => <div>{row.index + 1}</div>,
+    accessorKey: 'orderNumber',
+    header: 'Order #',
+    cell: ({ row }) => (
+      <div className="font-medium">{row.original.orderNumber}</div>
+    ),
   },
   {
-    accessorKey: 'name',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="pl-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Full Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
-      const fullName = `${firstName} ${lastName}`;
-
-      return <div className="font-medium">{fullName}</div>;
-    },
+    accessorKey: 'userName',
+    header: 'Customer Name',
+    cell: ({ row }) => <div>{row.original.userName}</div>,
   },
   {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="pl-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.original.email}</div>,
-  },
-  {
-    accessorKey: 'emailVerified',
-    header: 'Verified',
-    cell: ({ row }) => {
-      const isVerified = row.original.emailVerified;
-
-      return (
-        <div className="flex justify-start">
-          {isVerified ? (
-            <CheckCircle className="text-green-500 h-5 w-5" />
-          ) : (
-            <XCircle className="text-red-500 h-5 w-5" />
-          )}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'phone',
+    accessorKey: 'userPhone',
     header: 'Phone',
-    cell: ({ row }) => <div>{row.original.phone || 'N/A'}</div>,
+    cell: ({ row }) => <div>{row.original.userPhone}</div>,
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'paid',
+    header: 'Payment',
+    cell: ({ row }) => (
+      <Badge variant={row.original.paid ? 'success' : 'warning'}>
+        {row.original.paid ? 'Paid' : 'Pending'}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: 'deliveryFee',
+    header: 'Delivery Fee',
+    cell: ({ row }) => (
+      <div className="text-right">₹{row.original.deliveryFee.toFixed(2)}</div>
+    ),
+  },
+  {
+    accessorKey: 'serviceFee',
+    header: 'Service Fee',
+    cell: ({ row }) => (
+      <div className="text-right">₹{row.original.serviceFee.toFixed(2)}</div>
+    ),
+  },
+  {
+    accessorKey: 'status',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="px-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Joined Date
+          Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
+      const status = row.original.status;
+
+      const variants: Record<
+        OrderStatus,
+        | 'default'
+        | 'outline'
+        | 'secondary'
+        | 'destructive'
+        | 'success'
+        | 'warning'
+        | 'info'
+        | 'pending'
+        | 'neutral'
+      > = {
+        ORDERED: 'default',
+        CONFIRMED: 'success',
+        SHIPPED: 'info',
+        OUT_FOR_DELIVERY: 'pending',
+        DELIVERED: 'success',
+        CANCELLED: 'destructive',
+        RETURNED: 'warning',
+      };
+
       return (
-        <div>{format(new Date(row.original.createdAt), 'MMM d, yyyy')}</div>
+        <Badge variant={variants[status]}>
+          {status.charAt(0) + status.slice(1).toLowerCase()}
+        </Badge>
       );
     },
   },
   {
-    accessorKey: 'orderCount',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Orders
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: 'product.name',
+    header: 'Product',
     cell: ({ row }) => {
-      return (
-        <div className="text-center font-medium">
-          {row.original._count.orderHistory}
+      const tooltipContent = (
+        <div className="space-y-2 p-2">
+          <div>
+            <strong>Product ID:</strong> {row.original.product.id}
+          </div>
+          <div>
+            <strong>Quantity:</strong> {row.original.quantity}
+          </div>
+          <div>
+            <strong>Subtotal:</strong> ₹{row.original.subtotal.toFixed(2)}
+          </div>
+          <div>
+            <strong>Customer Email:</strong> {row.original.User.email}
+          </div>
         </div>
       );
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center cursor-help">
+                {row.original.product.name}
+                <Info className="h-4 w-4 ml-2 text-muted-foreground" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="max-w-md">
+              {tooltipContent}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
+  },
+
+  {
+    accessorKey: 'orderDate',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Order Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div>{format(new Date(row.original.orderDate), 'PPP p')}</div>;
     },
   },
 ];
 
-export function UsersDataTable({ data }: { data: UserData[] }) {
+export function OrdersDataTable({ data }: { data: OrderWithRelations[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -183,10 +235,12 @@ export function UsersDataTable({ data }: { data: UserData[] }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter by email..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          placeholder="Filter by order number..."
+          value={
+            (table.getColumn('orderNumber')?.getFilterValue() as string) ?? ''
+          }
           onChange={event =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
+            table.getColumn('orderNumber')?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -256,7 +310,7 @@ export function UsersDataTable({ data }: { data: UserData[] }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No orders found.
                 </TableCell>
               </TableRow>
             )}
@@ -265,8 +319,7 @@ export function UsersDataTable({ data }: { data: UserData[] }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} order(s) total.
         </div>
         <div className="space-x-2">
           <Button

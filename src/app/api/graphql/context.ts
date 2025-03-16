@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { NextRequest } from 'next/server';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 
 const DISABLE_AUTH = true;
 

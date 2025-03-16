@@ -9,8 +9,9 @@ const Categories_4: React.FC = () => {
             We Make Jewelry to...
           </h1>
           <p className="text-xs md:text-sm max-w-lg text-start">
-            Our gems exude grace and sophistication. Whether you're attending a
-            formal event or adding a touch of glamour to your everyday.
+            Our gems exude grace and sophistication. Whether you&apos;re
+            attending a formal event or adding a touch of glamour to your
+            everyday.
           </p>
           <CategoryLink href="" className="mt-5 text-sm text-black  " />
         </div>

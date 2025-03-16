@@ -8,7 +8,7 @@ const Page: NextPage = () => {
         <div className="max-w-6xl mx-auto px-3">
           <div className="md:w-1/2">
             <BackButton />
-            <h1 className="heading-primary">Faq's</h1>
+            <h1 className="heading-primary">Faq&apos;s</h1>
             <p className="text-base">
               People will always seek help and advice. They are unwilling to
               pick up the phone, walk into a store, or wait hours (even minutes)

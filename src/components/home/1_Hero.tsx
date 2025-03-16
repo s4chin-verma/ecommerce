@@ -1,23 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { NextPage } from 'next';
 import { Icon } from '@iconify/react';
 import { CategoryLink } from './ui';
 import { LogOut } from 'lucide-react';
-import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 import Image from 'next/image';
 
 const Hero: NextPage = () => {
-  const windowWidth = useWindowWidth();
-  const images = ['/banner1.webp', '/banner2.webp'];
-  const headings = [
-    'Sparking Brilliance Gemstone',
-    'Trending Jewellery For Womens',
-  ];
+  const images = useMemo(() => ['/banner1.webp', '/banner2.webp'], []);
+  const headings = useMemo(
+    () => ['Sparking Brilliance Gemstone', 'Trending Jewellery For Womens'],
+    []
+  );
 
   const [currentHeading, setCurrentHeading] = useState(headings[0]);
   const [currentImage, setCurrentImage] = useState(images[0]);
@@ -35,20 +33,18 @@ const Hero: NextPage = () => {
 
   return (
     <section className="relative pt-28 pb-20 md:pt-56">
-      {windowWidth !== undefined && windowWidth >= 768 ? (
-        <div className="absolute inset-0 -z-10 min-h-[850px]">
-          <Image
-            src={currentImage}
-            alt="banner"
-            fill
-            quality={100}
-            sizes="100vw"
-            priority
-          />
-        </div>
-      ) : (
-        <div className="absolute inset-0 -z-10 bg-theme -mb-36"></div>
-      )}
+      <div className="absolute inset-0 -z-10 min-h-[850px] hidden md:block">
+        <Image
+          src={currentImage}
+          alt="banner"
+          fill
+          quality={100}
+          sizes="100vw"
+          priority
+        />
+      </div>
+
+      <div className="absolute inset-0 -z-10 bg-theme -mb-36 block md:hidden"></div>
 
       <div className="max-w-6xl mx-auto px-3 relative">
         <div className="absolute left-9 -bottom-16 rotate-90 md:rotate-0 md:-left-7 md:top-40">

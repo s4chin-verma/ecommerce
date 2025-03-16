@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { ArrowDownNarrowWideIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { CheckoutStep, useCheckoutContext } from '../[_id]/page';
+import { useCheckoutContext, CheckoutStep } from './utils';
 
 export const OffersSection = () => {
   const { markStepComplete } = useCheckoutContext();

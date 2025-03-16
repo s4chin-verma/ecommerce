@@ -1,4 +1,5 @@
-import { Product } from '@/components/home/ui/ProductCard';
+import { ProductCardProps as Product } from '@/lib/interface';
+
 export const dummyProducts: Product[] = [
   {
     id: '1',

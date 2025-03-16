@@ -3,31 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductsDataTable } from '@/app/admin/inventory/components/ProductDataTable';
-import prisma from '@/lib/prisma';
 
-export async function getProducts() {
-  return prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      sellingPrice: true,
-      stock: true,
-      totalSale: true,
-      ratings: true,
-      category: {
-        select: {
-          title: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-}
+import { getProducts } from './action';
 
 const Page: NextPage = async () => {
   const products = await getProducts();

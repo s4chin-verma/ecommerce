@@ -47,7 +47,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
 
   useEffect(() => {
     if (value !== selectedValue) setSelectedValue(value);
-  }, [value]);
+  }, [value, selectedValue]);
 
   const handleValueChange = useCallback(
     (val: string) => {

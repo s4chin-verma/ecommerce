@@ -72,7 +72,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     if (!id) return;
     if (userFetching) return;
     executeUserQuery();
-    console.log(addressData);
     return;
   }, [id, userFetching, executeUserQuery]);
 

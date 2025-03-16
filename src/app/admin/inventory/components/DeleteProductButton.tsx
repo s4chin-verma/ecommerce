@@ -32,16 +32,20 @@ const DeleteProductButton: FC<Props> = ({ children, productId }) => {
     DeleteProductMutationVariables
   >(DeleteProductDocument);
 
-  const handleDelete = useCallback(async () => {
-    const response = await deleteProduct({ deleteProductId: productId });
+  const handleDelete = async () => {
+    try {
+      const response = await deleteProduct({ deleteProductId: productId });
 
-    if (response.error) {
-      toast.error('Failed to delete product');
-    } else {
-      toast.success('Product deleted successfully!');
-      router.push('/admin/inventory');
+      if (response.error) {
+        toast.error('Failed to delete product');
+      } else {
+        toast.success('Product deleted successfully!');
+        router.push('/admin/inventory');
+      }
+    } catch (e) {
+      toast.error('An unexpected error occurred. Please try again.');
     }
-  }, [deleteProduct, productId, toast, router]);
+  };
 
   return (
     <div className="flex space-x-2">

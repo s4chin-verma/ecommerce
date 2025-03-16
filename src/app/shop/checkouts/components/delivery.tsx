@@ -25,7 +25,6 @@ import {
 } from '@/graphql/generated';
 import { useMutation, useQuery } from 'urql';
 import { useSession } from 'next-auth/react';
-import { useCheckoutContext, CheckoutStep } from '../[_id]/page';
 import { cn } from '@/lib/utils';
 import { Address } from '@prisma/client';
 import {
@@ -39,6 +38,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { addressSchema } from '@/lib/schema/zod';
+import { useCheckoutContext, CheckoutStep } from './utils';
 
 type AddressFormData = z.infer<typeof addressSchema>;
 

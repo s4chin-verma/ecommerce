@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Cloud, Loader2 } from 'lucide-react';
 import { SupabaseImageUpload } from '@/lib/supabase';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 type Props = {
   handleCallback: (url: string) => void;
@@ -118,7 +119,7 @@ const UploadImg = ({
           <Loader2 className="animate-spin h-6 w-6" />
         ) : (
           imagePreview && (
-            <img
+            <Image
               src={imagePreview}
               alt="Preview"
               className="h-full w-full rounded-md object-cover"

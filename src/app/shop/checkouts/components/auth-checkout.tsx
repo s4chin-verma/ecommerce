@@ -1,12 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { CardContent, CardFooter } from '@/components/ui/card';
 import { Truck, Bell, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useQuery } from 'urql';
@@ -16,7 +11,7 @@ import {
   GetUserForCheckoutQueryVariables,
 } from '@/graphql/generated';
 import { LogoutDialog } from '@/components/LogoutDialog';
-import { useCheckoutContext, CheckoutStep } from '../[_id]/page';
+import { useCheckoutContext, CheckoutStep } from './utils';
 
 export const AuthCheckout = () => {
   const { data: session, status } = useSession();
@@ -31,16 +26,14 @@ export const AuthCheckout = () => {
     pause: status !== 'authenticated',
   });
 
-  const handleCheckout = useCallback(() => {
-    // Add your checkout logic here
+  const handleCheckout = () => {
     markStepComplete(CheckoutStep.AUTH);
     console.log('Processing checkout for user:', data?.getUser);
-  }, [markStepComplete]);
+  };
 
-  const handleContinue = useCallback(() => {
-    // Add your login/signup continuation logic here
+  const handleContinue = () => {
     console.log('Continuing with authentication');
-  }, []);
+  };
 
   return (
     <>
@@ -90,7 +83,7 @@ export const AuthCheckout = () => {
               className="w-full"
             />
             <div className="text-sm text-gray-600">
-              By continuing, you agree to Flipkart's{' '}
+              By continuing, you agree to{' '}
               <Button variant="link" className="text-blue-600 p-0 h-auto">
                 Terms of Use
               </Button>{' '}
@@ -132,8 +125,8 @@ export const AuthCheckout = () => {
       </CardContent>
       {status === 'authenticated' && !fetching && (
         <CardFooter className="text-xs">
-          Please note that upon clicking "Logout" you will lose all items in
-          cart and will be redirected to the home page.
+          Please note that upon clicking &quot;Logout&quot; you will lose all
+          items in cart and will be redirected to the home page.
         </CardFooter>
       )}
     </>

@@ -95,8 +95,8 @@ const Page: NextPage = () => {
           <p className="paragraph-primary">
             We have made every effort to display as accurately as possible the
             colors and images of our products that appear at the store. We
-            cannot guarantee that your computer monitor's display of any color
-            will be accurate.
+            cannot guarantee that your computer monitor&apos;s display of any
+            color will be accurate.
           </p>
           <p className="paragraph-primary">
             We reserve the right, but are not obligated, to limit the sales of

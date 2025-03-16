@@ -15,6 +15,15 @@ const badgeVariants = cva(
         destructive:
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'text-foreground',
+        success:
+          'border-transparent bg-green-100 text-green-700 hover:bg-green-200', // Light Green for Success
+        warning:
+          'border-transparent bg-yellow-100 text-yellow-700 hover:bg-yellow-200', // Light Yellow for Warnings
+        info: 'border-transparent bg-blue-100 text-blue-700 hover:bg-blue-200', // Light Blue for Informational Messages
+        pending:
+          'border-transparent bg-orange-100 text-orange-700 hover:bg-orange-200', // Light Orange for Pending Status
+        neutral:
+          'border-transparent bg-gray-100 text-gray-700 hover:bg-gray-200',
       },
     },
     defaultVariants: {

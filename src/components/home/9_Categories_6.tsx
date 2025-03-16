@@ -13,8 +13,8 @@ const Categories_6 = () => {
               Gemstones Jewels That Enchant
             </h2>
             <p className="text-sm md:text-base">
-              the essence of natural beauty. Whether you're seeking a pop of
-              color or a harmonious blend, our Gemstone.
+              the essence of natural beauty. Whether you&apos;re seeking a pop
+              of color or a harmonious blend, our Gemstone.
             </p>
             <div className="relative">
               <Input
