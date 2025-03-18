@@ -5,7 +5,6 @@ import { useQuery } from 'urql';
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -17,8 +16,7 @@ import {
   GetProductsQuery,
   GetProductsQueryVariables,
 } from '@/graphql/generated';
-import { notFound } from 'next/navigation';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { AvailabilityFilter } from '@/app/shop/collections/components/Availability';
 import { ProductTypeFilter } from '@/app/shop/collections/components/ProductType';
 import { PriceFilter } from '@/app/shop/collections/components/Price';
@@ -29,10 +27,11 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, PackageSearch, AlertCircle } from 'lucide-react';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductCardProps as Product } from '@/lib/interface';
+import { cn } from '@/lib/utils';
 
 export interface ProductEdge {
   node: Product;
@@ -42,6 +41,8 @@ export interface ProductEdge {
 export interface PageInfo {
   hasNextPage: boolean;
   endCursor: string | null;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
 }
 
 export interface ProductsResponse {
@@ -51,11 +52,11 @@ export interface ProductsResponse {
   };
 }
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 6;
 
 const ProductCardSkelton = () => (
   <Card className="mx-3 rounded-2xl">
-    <Skeleton className="h-96 w-15 rounded-2xl" />
+    <Skeleton className="h-96 w-full rounded-2xl" />
   </Card>
 );
 
@@ -66,38 +67,51 @@ export default function Page({
 }) {
   const resolvedParams = use(params);
   const collectionName = resolvedParams.collectionName;
-  if (!collectionName) notFound();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [cursor, setCursor] = useState<string | null>(null);
+  const [paginationDirection, setPaginationDirection] = useState<
+    'forward' | 'backward'
+  >('forward');
+
+  const [endCursor, setEndCursor] = useState<string | null>(null);
+  const [startCursor, setStartCursor] = useState<string | null>(null);
+
   const [{ data, fetching, error }] = useQuery<
     GetProductsQuery,
     GetProductsQueryVariables
   >({
     query: GetProductsDocument,
     variables: {
-      first: ITEMS_PER_PAGE,
-      after: cursor,
+      first: paginationDirection === 'forward' ? ITEMS_PER_PAGE : null,
+      after: paginationDirection === 'forward' ? endCursor : null,
+      last: paginationDirection === 'backward' ? ITEMS_PER_PAGE : null,
+      before: paginationDirection === 'backward' ? startCursor : null,
     },
   });
 
-  if (error)
-    return <div className="text-red-500 p-4">Error: {error.message}</div>;
-
   const products = data?.getProducts?.edges?.map(edge => edge?.node) || [];
-  const pageInfo = data?.getProducts?.pageInfo;
+  const pageInfo = data?.getProducts?.pageInfo as PageInfo;
 
-  const handlePageChange = (pageNumber: number): void => {
-    if (pageNumber < currentPage) {
-      // TODO: Implement backward pagination
-      return;
+  const handleNextPage = (): void => {
+    if (pageInfo?.hasNextPage && pageInfo?.endCursor) {
+      setCurrentPage(currentPage + 1);
+      setEndCursor(pageInfo.endCursor);
+      setPaginationDirection('forward');
+
+      if (pageInfo.startCursor) setStartCursor(pageInfo.startCursor);
     }
-
-    setCurrentPage(pageNumber);
-    setCursor(pageInfo?.endCursor || null);
   };
 
-  const totalPages = pageInfo?.hasNextPage ? currentPage + 1 : currentPage;
+  const handlePreviousPage = (): void => {
+    if (currentPage > 1 && pageInfo?.hasPreviousPage && pageInfo?.startCursor) {
+      setCurrentPage(currentPage - 1);
+      setStartCursor(pageInfo.startCursor);
+      setPaginationDirection('backward');
+
+      if (pageInfo.endCursor) setEndCursor(pageInfo.endCursor);
+    }
+  };
+
   const handleFilterChange = () => {};
 
   return (
@@ -118,7 +132,7 @@ export default function Page({
               />
             </ScrollArea>
           </div>
-          <div className="flex flex-col w-[75%] h-full border-l border-gray-500">
+          <div className="flex flex-col w-[75%] h-full border-l border-gray-500 pb-10">
             <div className="border-b py-2 px-3 border-gray-500 h-16">
               <div className="flex items-center justify-between">
                 <h1 className="ml-3">
@@ -142,7 +156,28 @@ export default function Page({
               </div>
             </div>
 
-            {fetching ? (
+            {error ? (
+              <div className="flex flex-col items-center justify-center p-16 text-center">
+                <div className="bg-red-50 p-6 rounded-xl border border-red-200 shadow-md max-w-md">
+                  <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                  <h2 className="text-xl font-bold text-red-700 mb-2">
+                    Something went wrong
+                  </h2>
+                  <p className="text-gray-700 mb-4">
+                    We couldn't fetch the products at this time.
+                  </p>
+                  <p className="text-red-600 bg-red-100 p-2 rounded text-sm mb-4">
+                    {error.message}
+                  </p>
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            ) : fetching ? (
               <div className="pt-4 pb-10 pl-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
                   {[1, 2, 3, 4, 5, 6].map(i => (
@@ -153,7 +188,22 @@ export default function Page({
             ) : (
               <>
                 {!products || products.length === 0 ? (
-                  <h1 className="text-center my-5">No Product Found</h1>
+                  <div className="flex flex-col items-center justify-center h-96 text-center px-4">
+                    <PackageSearch className="h-24 w-24 text-gray-400 mb-6" />
+                    <h1 className="text-2xl font-bold text-gray-700 mb-3">
+                      No products found
+                    </h1>
+                    <p className="text-gray-500 mb-6 max-w-md">
+                      We couldn't find any products matching your criteria. Try
+                      adjusting your filters or browse other collections.
+                    </p>
+                    <Button
+                      onClick={() => window.location.reload()}
+                      className="bg-black text-white hover:bg-gray-800 transition-colors"
+                    >
+                      Reset Filters
+                    </Button>
+                  </div>
                 ) : (
                   <div className="pt-4 pl-3 pb-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
@@ -166,58 +216,45 @@ export default function Page({
                     </div>
                   </div>
                 )}
-                s
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        onClick={() =>
-                          currentPage > 1 && handlePageChange(currentPage - 1)
-                        }
-                        className={
-                          currentPage === 1
-                            ? 'pointer-events-none opacity-50'
-                            : ''
-                        }
-                      />
-                    </PaginationItem>
 
-                    {[...Array(Math.min(totalPages, 5))].map((_, index) => (
-                      <PaginationItem key={index + 1}>
+                {products && products.length > 0 && (
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          onClick={handlePreviousPage}
+                          className={cn(
+                            'cursor-pointer',
+                            currentPage === 1
+                              ? 'pointer-events-none opacity-50 '
+                              : 'cursor-pointer'
+                          )}
+                        />
+                      </PaginationItem>
+
+                      {/* Simple page number indicator - not clickable */}
+                      <PaginationItem>
                         <PaginationLink
-                          href="#"
-                          onClick={e => {
-                            e.preventDefault();
-                            handlePageChange(index + 1);
-                          }}
-                          isActive={currentPage === index + 1}
+                          isActive={false}
+                          className="pointer-events-none"
                         >
-                          {index + 1}
+                          {currentPage}
                         </PaginationLink>
                       </PaginationItem>
-                    ))}
 
-                    {totalPages > 5 && (
                       <PaginationItem>
-                        <PaginationEllipsis />
+                        <PaginationNext
+                          onClick={handleNextPage}
+                          className={
+                            !pageInfo?.hasNextPage
+                              ? 'pointer-events-none opacity-50 cursor-pointer'
+                              : 'cursor-pointer'
+                          }
+                        />
                       </PaginationItem>
-                    )}
-
-                    <PaginationItem>
-                      <PaginationNext
-                        onClick={() =>
-                          pageInfo?.hasNextPage &&
-                          handlePageChange(currentPage + 1)
-                        }
-                        className={
-                          !pageInfo?.hasNextPage
-                            ? 'pointer-events-none opacity-50'
-                            : ''
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                    </PaginationContent>
+                  </Pagination>
+                )}
               </>
             )}
           </div>

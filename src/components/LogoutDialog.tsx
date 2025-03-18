@@ -1,7 +1,8 @@
-import React, { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -12,29 +13,19 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { toast } from '@/components/ui/use-toast';
 
-interface Props {
-  children: ReactNode;
-}
-
-export const LogoutDialog: FC<Props> = ({ children }) => {
+export const LogoutDialog = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const handleSignOut = async () => {
     try {
       await signOut({ redirect: false });
       router.push('/');
-      toast({
-        title: 'Logged out successfully',
+      toast.success('Logged out successfully', {
         description: 'You have been securely logged out of your account.',
-        duration: 5000,
       });
     } catch (error) {
-      toast({
-        title: 'Error logging out',
-        description: 'An unexpected error occurred. Please try again.',
-        duration: 5000,
-        variant: 'destructive',
+      toast.error('Error logging out', {
+        description: 'An unexpected error occurred. Please try again',
       });
     }
   };

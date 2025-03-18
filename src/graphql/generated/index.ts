@@ -618,10 +618,12 @@ export type GetLimitedProductQuery = { __typename?: 'Query', getLimitedProduct?:
 export type GetProductsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, images?: Array<string> | null, ratings?: number | null, createdAt?: any | null, categoryId?: string | null, wishlistId?: string | null, updatedAt?: any | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null } } | null };
+export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, images?: Array<string> | null, ratings?: number | null, createdAt?: any | null, categoryId?: string | null, wishlistId?: string | null, updatedAt?: any | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null, hasPreviousPage: boolean, startCursor?: string | null } } | null };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1012,8 +1014,8 @@ export function useGetLimitedProductQuery(options: Omit<Urql.UseQueryArgs<GetLim
   return Urql.useQuery<GetLimitedProductQuery, GetLimitedProductQueryVariables>({ query: GetLimitedProductDocument, ...options });
 };
 export const GetProductsDocument = gql`
-    query GetProducts($first: Int, $after: String) {
-  getProducts(first: $first, after: $after) {
+    query GetProducts($first: Int, $after: String, $last: Int, $before: String) {
+  getProducts(first: $first, after: $after, last: $last, before: $before) {
     edges {
       node {
         id
@@ -1037,6 +1039,8 @@ export const GetProductsDocument = gql`
     pageInfo {
       hasNextPage
       endCursor
+      hasPreviousPage
+      startCursor
     }
   }
 }

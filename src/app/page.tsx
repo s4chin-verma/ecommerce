@@ -13,7 +13,6 @@ import {
   Categories_7,
   Categories_8,
 } from '@/components/home';
-import { lazy, Suspense } from 'react';
 import { Footer } from '@/components/Layouts/Footer';
 import { NavBar } from '@/components/Layouts/NavBar';
 
