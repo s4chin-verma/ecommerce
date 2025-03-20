@@ -1,7 +1,6 @@
 'use client';
 
 import { User } from 'lucide-react';
-import { useWindowWidth } from '@/lib/hooks/useWindowWidth';
 import { FC } from 'react';
 import Link from 'next/link';
 import {
@@ -14,7 +13,6 @@ import { useSession } from 'next-auth/react';
 import { LogoutDialog } from '@/components/LogoutDialog';
 
 const UserMenu: FC = () => {
-  const windowWidth = useWindowWidth();
   const { data: session, status } = useSession();
 
   const userLinks =
@@ -31,13 +29,10 @@ const UserMenu: FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
-        {windowWidth !== undefined && windowWidth > 768 ? (
-          <div className="rounded-full bg-gray-800 p-2 cursor-pointer">
-            <User className="h-2 w-2 md:h-6 md:w-6 text-white" />
-          </div>
-        ) : (
-          <User />
-        )}
+        <div className="rounded-full bg-gray-800 p-2 cursor-pointer hidden md:block">
+          <User className="h-2 w-2 md:h-6 md:w-6 text-white" />
+        </div>
+        <User className="block md:hidden" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {userLinks.map((link, index) => (

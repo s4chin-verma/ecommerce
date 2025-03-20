@@ -124,7 +124,7 @@ export default function Page() {
       ) : (
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="lg:w-2/3">
-            <div className="space-y-4 mt-4">
+            <div className="space-y-4">
               {cartItemsList.map(item => (
                 <Card
                   key={item.id}
@@ -159,7 +159,7 @@ export default function Page() {
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between mt-auto">
+                      <div className="flex items-center mt-auto gap-7">
                         <div className="flex items-center border rounded-full">
                           <Button
                             variant="ghost"
@@ -189,14 +189,14 @@ export default function Page() {
                           </span>
                         )}
 
-                        <div className="md:w-1/12 flex justify-end">
+                        <div className=" flex justify-end">
                           <Button
                             variant="ghost"
                             size="icon"
                             className="text-red-500 hover:text-red-600 hover:bg-red-50"
                             onClick={() => deleteItemFromCart(item.id)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-5 w-5" />
                           </Button>
                         </div>
                       </div>
@@ -208,7 +208,7 @@ export default function Page() {
 
             <div className="mt-8 flex items-center">
               <Link
-                href="/shop"
+                href="/"
                 className="text-sm flex items-center text-gray-600 hover:text-black"
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />

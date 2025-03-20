@@ -342,6 +342,7 @@ export type Query = {
   getUser?: Maybe<User>;
   getUsers?: Maybe<Array<User>>;
   isWishListed?: Maybe<Scalars['Boolean']['output']>;
+  searchProducts?: Maybe<Array<Product>>;
   wishListedProducts?: Maybe<Array<Wishlist>>;
 };
 
@@ -401,6 +402,11 @@ export type QueryGetUserArgs = {
 
 export type QueryIsWishListedArgs = {
   productId: Scalars['String']['input'];
+};
+
+
+export type QuerySearchProductsArgs = {
+  query: Scalars['String']['input'];
 };
 
 
@@ -624,6 +630,13 @@ export type GetProductsQueryVariables = Exact<{
 
 
 export type GetProductsQuery = { __typename?: 'Query', getProducts?: { __typename?: 'QueryGetProductsConnection', edges?: Array<{ __typename?: 'QueryGetProductsConnectionEdge', cursor: string, node?: { __typename?: 'Product', id?: string | null, name?: string | null, description?: string | null, price?: number | null, sellingPrice?: number | null, stock?: number | null, images?: Array<string> | null, ratings?: number | null, createdAt?: any | null, categoryId?: string | null, wishlistId?: string | null, updatedAt?: any | null, category?: { __typename?: 'Category', title?: string | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+
+export type SearchProductQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+}>;
+
+
+export type SearchProductQuery = { __typename?: 'Query', searchProducts?: Array<{ __typename?: 'Product', id?: string | null, name?: string | null, images?: Array<string> | null, category?: { __typename?: 'Category', id?: string | null, title?: string | null } | null }> | null };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1048,6 +1061,23 @@ export const GetProductsDocument = gql`
 
 export function useGetProductsQuery(options?: Omit<Urql.UseQueryArgs<GetProductsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetProductsQuery, GetProductsQueryVariables>({ query: GetProductsDocument, ...options });
+};
+export const SearchProductDocument = gql`
+    query SearchProduct($query: String!) {
+  searchProducts(query: $query) {
+    id
+    name
+    images
+    category {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useSearchProductQuery(options: Omit<Urql.UseQueryArgs<SearchProductQueryVariables>, 'query'>) {
+  return Urql.useQuery<SearchProductQuery, SearchProductQueryVariables>({ query: SearchProductDocument, ...options });
 };
 export const GetUsersDocument = gql`
     query GetUsers {

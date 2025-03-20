@@ -88,4 +88,41 @@ builder.queryFields(t => ({
       return products;
     },
   }),
+
+  searchProducts: t.prismaField({
+    type: ['Product'],
+    args: {
+      query: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _parent, args, _context) => {
+      const searchTerm = args.query.trim();
+
+      if (!searchTerm || searchTerm.length < 2) {
+        return [];
+      }
+
+      const products = await prisma.product.findMany({
+        where: {
+          OR: [
+            { name: { contains: searchTerm, mode: 'insensitive' } },
+            {
+              category: {
+                title: { contains: searchTerm, mode: 'insensitive' },
+              },
+            },
+          ],
+        },
+        include: {
+          category: true,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+        take: 10,
+        ...query,
+      });
+
+      return products;
+    },
+  }),
 }));

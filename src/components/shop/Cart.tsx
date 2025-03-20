@@ -179,7 +179,16 @@ export const Cart = () => {
                         />
                       </div>
                       <div className="flex-1 space-y-1.5">
-                        <h3 className="font-semibold">{item.product.name}</h3>
+                        <SheetClose asChild>
+                          <Link
+                            className="font-semibold hover:underline"
+                            href={`/shop/collections/${item.product.category.title.toLocaleLowerCase()}/${
+                              item?.product.id
+                            }`}
+                          >
+                            {item.product.name}
+                          </Link>
+                        </SheetClose>
                         <p className="text-sm text-gray-700">
                           &#8377; {item.product.sellingPrice.toFixed(2)}
                           {item.product.price !== item.product.sellingPrice && (
@@ -234,19 +243,9 @@ export const Cart = () => {
         </div>
 
         <div className="border-t border-gray-200 bg-gray-50 p-6 mt-auto">
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="font-semibold">Subtotal:</span>
-              <span> &#8377;{subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold">Shipping:</span>
-              <span>Calculated at checkout</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold">
-              <span>Total:</span>
-              <span> &#8377;{subtotal.toFixed(2)}</span>
-            </div>
+          <div className="flex justify-between text-lg font-bold">
+            <span>Total:</span>
+            <span> &#8377; {subtotal.toFixed(2)}</span>
           </div>
 
           <div className="mt-6">
