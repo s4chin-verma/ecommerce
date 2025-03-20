@@ -31,11 +31,11 @@ const Collection = [
   { title: 'Bracelet', href: '/shop/bracelet' },
 ];
 
-const DesktopNav = () => {
+const DesktopNav = ({ showHeaderStrip = true }) => {
   return (
     <div className="hidden md:block">
-      <HeaderStrip />
-      <nav className="max-w-6xl mx-auto px-3 flex items-center">
+      {showHeaderStrip && <HeaderStrip />}
+      <nav className="max-w-6xl mx-auto px-3 flex items-center py-3">
         <Link href="/" className="text-4xl font-bold mr-12 cursor-pointer">
           Luxe
         </Link>
