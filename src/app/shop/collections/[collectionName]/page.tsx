@@ -164,7 +164,7 @@ export default function Page({
                     Something went wrong
                   </h2>
                   <p className="text-gray-700 mb-4">
-                    We couldn't fetch the products at this time.
+                    We couldn&apos;t fetch the products at this time.
                   </p>
                   <p className="text-red-600 bg-red-100 p-2 rounded text-sm mb-4">
                     {error.message}
@@ -194,8 +194,8 @@ export default function Page({
                       No products found
                     </h1>
                     <p className="text-gray-500 mb-6 max-w-md">
-                      We couldn't find any products matching your criteria. Try
-                      adjusting your filters or browse other collections.
+                      We couldn&apos;t find any products matching your criteria.
+                      Try adjusting your filters or browse other collections.
                     </p>
                     <Button
                       onClick={() => window.location.reload()}
