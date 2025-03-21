@@ -54,7 +54,7 @@ const HeaderStrip: FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           <Link
-            href={'/contact-us'}
+            href={'/shop/contact-us'}
             className="flex items-center gap-2 cursor-pointer"
           >
             <Phone className="h-4 w-4" />

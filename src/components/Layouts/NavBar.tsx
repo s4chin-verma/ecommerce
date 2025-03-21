@@ -4,12 +4,14 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { MobileNav } from '@/components/Layouts/ui/MobileNav';
 import { DesktopNav } from '@/components/Layouts/ui/DesktopNav';
+import { cn } from '@/lib/utils';
 
 const NavBar = () => {
   const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -17,6 +19,9 @@ const NavBar = () => {
 
       // Check if at top of page
       setIsAtTop(currentScrollY <= 10);
+
+      // Set hasScrolled state to track if user has scrolled at all
+      setHasScrolled(currentScrollY > 10);
 
       // If scrolled down more than 100px, hide the navbar
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -49,29 +54,13 @@ const NavBar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        visible ? 'translate-y-0 animate-bounce-in' : '-translate-y-full'
-      } ${!isAtTop ? 'bg-theme shadow-md' : 'bg-transparent'}`}
+      className={cn(
+        'top-0 left-0 right-0 z-50 transition-all duration-300',
+        visible ? 'translate-y-0' : '-translate-y-full',
+        !isAtTop ? 'bg-theme shadow-md' : 'bg-transparent',
+        hasScrolled ? 'sticky' : 'absolute'
+      )}
     >
-      <style jsx global>{`
-        @keyframes bounceIn {
-          0% {
-            transform: translateY(-100%);
-          }
-          60% {
-            transform: translateY(10px);
-          }
-          80% {
-            transform: translateY(-5px);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-        .animate-bounce-in {
-          animation: bounceIn 0.5s ease;
-        }
-      `}</style>
       <DesktopNav showHeaderStrip={isAtTop} />
       <MobileNav />
     </header>
